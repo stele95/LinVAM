@@ -5,8 +5,7 @@ import threading
 import os, pyaudio
 import shutil
 import re
-from pocketsphinx.pocketsphinx import *
-from sphinxbase.sphinxbase import *
+from pocketsphinx import *
 from soundfiles import SoundFiles
 
 
@@ -22,12 +21,12 @@ class ProfileExecutor(threading.Thread):
         self.m_listening = False
         self.m_cmdThreads = {}
 
-        self.m_config = Decoder.default_config()
-        self.m_config.set_string('-hmm', os.path.join('model', 'en-us/en-us'))
-        self.m_config.set_string('-dict', os.path.join('model', 'en-us/cmudict-en-us.dict'))
-        self.m_config.set_string('-kws', 'command.list')
-        # you usually don't want all this info stuff as a regular user. it just covers up init messages
-        self.m_config.set_string('-logfn', '/dev/null')
+        self.m_config = Config(
+            hmm=os.path.join('model', 'en-us/en-us'),
+            dict=os.path.join('model', 'en-us/cmudict-en-us.dict'),
+            kws='command.list',
+            logfn='/dev/null'
+        )
 
         self.m_pyaudio = pyaudio.PyAudio()
         self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True)
