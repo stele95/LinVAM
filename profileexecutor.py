@@ -211,12 +211,12 @@ class ProfileExecutor(threading.Thread):
         flag = False
         for w_command in w_commands:
             parts = w_command['name'].split(',')
-
             for part in parts:
                 if part.lower() == p_cmdName:
-                    print(part)
                     flag = True
                     break
+            if flag == True:
+                break
 
         if flag == False:
             return
