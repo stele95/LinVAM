@@ -59,12 +59,10 @@ class ProfileExecutor(threading.Thread):
         #print ("writing command list")
         w_commandWordFile = open(self.getSettingsPath('command.list'), 'w')
         w_commands = self.m_profile['commands']
-        i = 0
         for w_command in w_commands:
-            if i != 0:
-                w_commandWordFile.write('\n')
-            w_commandWordFile.write(w_command['name'].lower() + ' /1e-%d/' % w_command['threshold'])
-            i = i + 1
+            parts = w_command['name'].split(',')
+            for part in parts:
+                w_commandWordFile.write(part.lower() + ' /1e-%d/' % w_command['threshold'] + '\n')
         w_commandWordFile.close()
         self.m_config.set_string('-kws', self.getSettingsPath('command.list'))
         # load new command list into decoder and restart it
@@ -213,9 +211,18 @@ class ProfileExecutor(threading.Thread):
         w_commands = self.m_profile['commands']
         flag = False
         for w_command in w_commands:
-            if w_command['name'].lower() == p_cmdName:
-                flag = True
-                break
+            parts = []
+            if w_command['name'].find(',') != -1:
+                parts = w_command['name'].split(',')
+            else:
+                parts.append(w_command['name'])
+
+            for part in parts:
+                if part.lower() == p_cmdName:
+                    print(part)
+                    flag = True
+                    break
+
         if flag == False:
             return
 
