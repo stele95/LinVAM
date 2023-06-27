@@ -211,11 +211,7 @@ class ProfileExecutor(threading.Thread):
         w_commands = self.m_profile['commands']
         flag = False
         for w_command in w_commands:
-            parts = []
-            if w_command['name'].find(',') != -1:
-                parts = w_command['name'].split(',')
-            else:
-                parts.append(w_command['name'])
+            parts = w_command['name'].split(',')
 
             for part in parts:
                 if part.lower() == p_cmdName:
