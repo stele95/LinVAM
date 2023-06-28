@@ -29,7 +29,12 @@ class ProfileExecutor(threading.Thread):
         )
 
         self.m_pyaudio = pyaudio.PyAudio()
-        self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True)
+
+        try:
+            self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True)
+        except:
+            samplerate = int(self.m_pyaudio.get_device_info_by_index(0).get('defaultSampleRate'))
+            self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True)
 
         # Process audio chunk by chunk. On keyword detected perform action and restart search
         self.m_decoder = Decoder(self.m_config)
