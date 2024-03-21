@@ -1,4 +1,4 @@
-request hellbomb /1e-10/
+request hell bomb /1e-10/
 request jump pack /1e-10/
 request supply pack /1e-10/
 request grenade launcher /1e-10/
@@ -21,8 +21,6 @@ request rocket launcher /1e-10/
 request laser cannon /1e-10/
 request arc thrower /1e-10/
 request reinforcement /1e-10/
-request sos beacon /1e-10/
-request help beacon /1e-10/
 request resupply /1e-10/
 request supplies /1e-10/
 request drive delivery /1e-10/
