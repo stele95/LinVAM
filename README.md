@@ -90,7 +90,7 @@ Multiple profiles are supported.  To create a new profile for a specific task/ga
 
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/gui.png)
 ### Key combinations
-To assign key combinations first decide which functional key to press by clicking on Ctrl, Alt, Shift or Win to denote left or right key then press the actual command key
+To assign key combinations, input the wanted sequence in the input field. Keys are separated by ```+```, use ``hold`` and ``release`` keywords for representing when a specific key should be held or released.
 
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/combination.png)
 ### Complex commands
