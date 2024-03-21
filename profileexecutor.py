@@ -144,8 +144,7 @@ class ProfileExecutor(threading.Thread):
         w_actionName = p_action['name']
         if w_actionName == 'key action':
             w_key = p_action['key']
-            w_type = p_action['type']
-            self.pressKey(w_key, w_type)
+            self.pressKey(w_key)
         elif w_actionName == 'pause action':
             print("Sleep ", p_action['time'])
             time.sleep(p_action['time'])
@@ -254,60 +253,229 @@ class ProfileExecutor(threading.Thread):
         self.m_sound.play(sound_file)
 
 
-    def pressKey(self, w_key, w_type):
-        if self.p_parent.m_config['noroot'] == 1:
-            # xdotool has a different key mapping. translate old existing mappings of special keys
-            # use this to find key name: xev -event keyboard
-            w_key = re.sub('left ctrl', 'Control_L', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right ctrl', 'Control_R', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('left shift', 'Shift_L', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right shift', 'Shift_R', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('left alt', 'Alt_L', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right alt', 'Alt_R', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('left windows', 'Super_L', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right windows', 'Super_R', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('tab', 'Tab', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('esc', 'Escape', w_key, flags=re.IGNORECASE)
+    def pressKey(self, w_key):
+        #if self.p_parent.m_config['noroot'] == 1:
+            # ydotool has a different key mapping.
+            # check /usr/include/linux/input-event-codes.h for key mappings
+            original_key = w_key
+            keys = w_key.split('+')
+            commands = ""
+            for key in keys:
+                commands += self.createKeyEvent(key) + " "
+            os.system('ydotool key -d 75 ' + commands)
+            print("original command: ", original_key)
+            print("ydotool converted command: ", commands)
 
-            w_key = re.sub('left', 'Left', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right', 'Right', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('up', 'Up', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('down', 'Down', w_key, flags=re.IGNORECASE)
-
-            w_key = re.sub('ins$', 'Insert', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('del$', 'Delete', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('home', 'Home', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('end', 'End', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('Page\s?up', 'Prior', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('Page\s?down', 'Next', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('return', 'Return', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('enter', 'Return', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('backspace', 'BackSpace', w_key, flags=re.IGNORECASE)
-
-            w_key = w_key.replace('insert', 'Insert')
-            w_key = w_key.replace('delete', 'Delete')
-
-            window_cmd = ""
-            if not self.p_parent.m_config['xdowindowid'] == None:
-                window_cmd = " windowactivate --sync " + str(self.p_parent.m_config['xdowindowid'])
-
-            if w_type == 1:
-                os.system('xdotool ' + window_cmd + ' keydown ' + str(w_key) )
-                print("pressed key: ", w_key)
-            elif w_type == 0:
-                os.system('xdotool' + window_cmd + ' keyup ' + str(w_key))
-                print("released key: ", w_key)
-            elif w_type == 10:
-                os.system('xdotool' + window_cmd + ' key ' + str(w_key))
-                print("pressed and released key: ", w_key)
+    def createKeyEvent(self, w_key):
+        if "hold" in w_key:
+            w_key = re.sub('hold', '', w_key, flags=re.IGNORECASE)
+            w_key = self.mapKey(w_key.strip())
+            return str(w_key) + ":1"
+        elif "release" in w_key:
+            w_key = re.sub('release', '', w_key, flags=re.IGNORECASE)
+            w_key = self.mapKey(w_key.strip())
+            return str(w_key) + ":0"
         else:
-            if w_type == 1:
-                keyboard.press(w_key)
-                print("pressed key: ", w_key)
-            elif w_type == 0:
-                keyboard.release(w_key)
-                print("released key: ", w_key)
-            elif w_type == 10:
-                keyboard.press(w_key)
-                keyboard.release(w_key)
-                print("pressed and released key: ", w_key)
+            w_key = self.mapKey(w_key.strip())
+            return str(w_key) + ":1 " + str(w_key) + ":0"
+
+    def mapKey(self, w_key):
+        match w_key.casefold():
+            case 'left ctrl':
+                return '29'
+            case 'right ctrl':
+                return '97'
+            case 'left shift':
+                return '42'
+            case 'right shift':
+                return '54'
+            case 'left alt':
+                return '56'
+            case 'right alt':
+                return '100'
+            case 'left windows':
+                return '125'
+            case 'right windows':
+                return '126'
+            case 'tab':
+                return '15'
+            case 'esc':
+                return '1'
+            case 'left':
+                return '105'
+            case 'right':
+                return '106'
+            case 'up':
+                return '103'
+            case 'down':
+                return '108'
+            case 'insert':
+                return '110'
+            case 'delete':
+                return '111'
+            case 'home':
+                return '102'
+            case 'end':
+                return '107'
+            case 'pageup':
+                return '104'
+            case 'pagedown':
+                return '109'
+            case 'return':
+                return '28'
+            case 'enter':
+                return '28'
+            case 'backspace':
+                return '14'
+            case '1':
+                return '2'
+            case '2':
+                return '3'
+            case '3':
+                return '4'
+            case '4':
+                return '5'
+            case '5':
+                return '6'
+            case '6':
+                return '7'
+            case '7':
+                return '8'
+            case '8':
+                return '9'
+            case '9':
+                return '10'
+            case '0':
+                return '11'
+            case '-':
+                return '12'
+            case '=':
+                return '13'
+            case 'q':
+                return '16'
+            case 'w':
+                return '17'
+            case 'e':
+                return '18'
+            case 'r':
+                return '19'
+            case 't':
+                return '20'
+            case 'y':
+                return '21'
+            case 'u':
+                return '22'
+            case 'i':
+                return '23'
+            case 'o':
+                return '24'
+            case 'p':
+                return '25'
+            case 'left bracket':
+                return '26'
+            case 'right bracket':
+                return '27'
+            case 'a':
+                return '30'
+            case 's':
+                return '31'
+            case 'd':
+                return '32'
+            case 'f':
+                return '33'
+            case 'g':
+                return '34'
+            case 'h':
+                return '35'
+            case 'j':
+                return '36'
+            case 'k':
+                return '37'
+            case 'l':
+                return '38'
+            case ';':
+                return '39'
+            case '\'':
+                return '40'
+            case 'backslash':
+                return '43'
+            case 'z':
+                return '44'
+            case 'x':
+                return '45'
+            case 'c':
+                return '46'
+            case 'v':
+                return '47'
+            case 'b':
+                return '48'
+            case 'n':
+                return '49'
+            case 'm':
+                return '50'
+            case ',':
+                return '51'
+            case '.':
+                return '52'
+            case 'forwardslash':
+                return '53'
+            case 'space':
+                return '57'
+            case 'capslock':
+                return '58'
+            case 'f1':
+                return '59'
+            case 'f2':
+                return '60'
+            case 'f3':
+                return '61'
+            case 'f4':
+                return '62'
+            case 'f5':
+                return '63'
+            case 'f6':
+                return '64'
+            case 'f7':
+                return '65'
+            case 'f8':
+                return '66'
+            case 'f9':
+                return '67'
+            case 'f10':
+                return '68'
+            case 'f11':
+                return '87'
+            case 'f12':
+                return '88'
+            case 'scrolllock':
+                return '70'
+            case 'numlock':
+                return '69'
+            case 'n7': # Num 7
+                return '71'
+            case 'n8': # Num 8
+                return '72'
+            case 'n9': # Num 9
+                return '73'
+            case 'n-': # Num -
+                return '74'
+            case 'n4': # Num 4
+                return '75'
+            case 'n5': # Num 5
+                return '76'
+            case 'n6': # Num 6
+                return '77'
+            case 'nplus': # Num +
+                return '78'
+            case 'n1': # Num 1
+                return '79'
+            case 'n2': # Num 2
+                return '80'
+            case 'n3': # Num 3
+                return '81'
+            case 'n0': # Num 0
+                return '82'
+            case 'ndot': # Num .
+                return '83'
+            case _:
+                return w_key
