@@ -303,27 +303,27 @@ class MainWnd(QWidget):
 
 		# try to help: if -noroot is supplied, but no xdowindowid, try to determine the id
 		# Elite Dangerous only
-		try:
-			args = shlex.split('xdotool search --name "\(CLIENT\)"')
-			window_id = str(subprocess.check_output(args))
-			window_id = window_id.replace('b\'', '')
-			window_id = window_id.replace('\\n\'','')
-		except subprocess.CalledProcessError:
-			window_id = None
-			pass
-
-		if not window_id == None:
-			# check if it's really the Client we want
-			try:
-				window_name = subprocess.check_output(['xdotool', 'getwindowname', str(window_id)])
-			except subprocess.CalledProcessError:
-				window_name = None
-				pass
-			if not window_name == None:
-				if not str(window_name).find('Elite - Dangerous') == -1:
-					print("Window ID: ", str(window_id), ", window name: ", window_name)
-					print("Auto-detected window id of ED Client: ", window_id)
-					self.m_config['xdowindowid'] = window_id
+		# try:
+		# 	args = shlex.split('xdotool search --name "\(CLIENT\)"')
+		# 	window_id = str(subprocess.check_output(args))
+		# 	window_id = window_id.replace('b\'', '')
+		# 	window_id = window_id.replace('\\n\'','')
+		# except subprocess.CalledProcessError:
+		# 	window_id = None
+		# 	pass
+  #
+		# if not window_id == None:
+		# 	# check if it's really the Client we want
+		# 	try:
+		# 		window_name = subprocess.check_output(['xdotool', 'getwindowname', str(window_id)])
+		# 	except subprocess.CalledProcessError:
+		# 		window_name = None
+		# 		pass
+		# 	if not window_name == None:
+		# 		if not str(window_name).find('Elite - Dangerous') == -1:
+		# 			print("Window ID: ", str(window_id), ", window name: ", window_name)
+		# 			print("Auto-detected window id of ED Client: ", window_id)
+		# 			self.m_config['xdowindowid'] = window_id
 
 
 

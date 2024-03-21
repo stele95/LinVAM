@@ -256,50 +256,123 @@ class ProfileExecutor(threading.Thread):
 
     def pressKey(self, w_key, w_type):
         if self.p_parent.m_config['noroot'] == 1:
-            # xdotool has a different key mapping. translate old existing mappings of special keys
-            # use this to find key name: xev -event keyboard
-            w_key = re.sub('left ctrl', 'Control_L', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right ctrl', 'Control_R', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('left shift', 'Shift_L', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right shift', 'Shift_R', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('left alt', 'Alt_L', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right alt', 'Alt_R', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('left windows', 'Super_L', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right windows', 'Super_R', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('tab', 'Tab', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('esc', 'Escape', w_key, flags=re.IGNORECASE)
+            # ydotool has a different key mapping.
+            # check /usr/include/linux/input-event-codes.h for key mappings
+            original_key = w_key
+            w_key = re.sub('left ctrl', '29', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('right ctrl', '97', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('left shift', '42', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('right shift', '54', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('left alt', '56', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('right alt', '100', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('left windows', '125', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('right windows', '126', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('tab', '15', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('esc', '1', w_key, flags=re.IGNORECASE)
 
-            w_key = re.sub('left', 'Left', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right', 'Right', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('up', 'Up', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('down', 'Down', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('left', '105', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('right', '106', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('up', '103', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('down', '108', w_key, flags=re.IGNORECASE)
 
-            w_key = re.sub('ins$', 'Insert', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('del$', 'Delete', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('home', 'Home', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('end', 'End', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('Page\s?up', 'Prior', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('Page\s?down', 'Next', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('return', 'Return', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('enter', 'Return', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('backspace', 'BackSpace', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('ins$', '110', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('del$', '111', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('home', '102', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('end', '107', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('Page\s?up', '104', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('Page\s?down', '109', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('return', '28', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('enter', '28', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('backspace', '14', w_key, flags=re.IGNORECASE)
 
-            w_key = w_key.replace('insert', 'Insert')
-            w_key = w_key.replace('delete', 'Delete')
+            w_key = re.sub('1', '2', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('2', '3', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('3', '4', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('4', '5', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('5', '6', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('6', '7', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('7', '8', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('8', '9', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('9', '10', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('0', '11', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('-', '12', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('=', '13', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('q', '16', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('w', '17', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('e', '18', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('r', '19', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('t', '20', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('y', '21', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('u', '22', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('i', '23', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('o', '24', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('p', '25', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('[', '26', w_key, flags=re.IGNORECASE)
+            w_key = re.sub(']', '27', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('a', '30', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('s', '31', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('d', '32', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('f', '33', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('g', '34', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('h', '35', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('j', '36', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('k', '37', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('l', '38', w_key, flags=re.IGNORECASE)
+            w_key = re.sub(';', '39', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('\'', '40', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('\\', '43', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('z', '44', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('x', '45', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('c', '46', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('v', '47', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('b', '48', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('n', '49', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('m', '50', w_key, flags=re.IGNORECASE)
+            w_key = re.sub(',', '51', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('.', '52', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('/', '53', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('space', '57', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('capslock', '58', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('f1', '59', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('f2', '60', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('f3', '61', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('f4', '62', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('f5', '63', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('f6', '64', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('f7', '65', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('f8', '66', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('f9', '67', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('f10', '68', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('f11', '87', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('f12', '88', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('scrolllock', '70', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('numlock', '69', w_key, flags=re.IGNORECASE)
+            w_key = re.sub('n7', '71', w_key, flags=re.IGNORECASE) # Num 7
+            w_key = re.sub('n8', '72', w_key, flags=re.IGNORECASE) # Num 8
+            w_key = re.sub('n9', '73', w_key, flags=re.IGNORECASE) # Num 9
+            w_key = re.sub('n-', '74', w_key, flags=re.IGNORECASE) # Num -
+            w_key = re.sub('n4', '75', w_key, flags=re.IGNORECASE) # Num 4
+            w_key = re.sub('n5', '76', w_key, flags=re.IGNORECASE) # Num 5
+            w_key = re.sub('n6', '77', w_key, flags=re.IGNORECASE) # Num 6
+            w_key = re.sub('n+', '78', w_key, flags=re.IGNORECASE) # Num +
+            w_key = re.sub('n1', '79', w_key, flags=re.IGNORECASE) # Num 1
+            w_key = re.sub('n2', '80', w_key, flags=re.IGNORECASE) # Num 2
+            w_key = re.sub('n3', '81', w_key, flags=re.IGNORECASE) # Num 3
+            w_key = re.sub('n0', '82', w_key, flags=re.IGNORECASE) # Num 0
+            w_key = re.sub('n.', '83', w_key, flags=re.IGNORECASE) # Num .
 
-            window_cmd = ""
-            if not self.p_parent.m_config['xdowindowid'] == None:
-                window_cmd = " windowactivate --sync " + str(self.p_parent.m_config['xdowindowid'])
+            w_key = w_key.replace('insert', '110')
+            w_key = w_key.replace('delete', '111')
 
             if w_type == 1:
-                os.system('xdotool ' + window_cmd + ' keydown ' + str(w_key) )
-                print("pressed key: ", w_key)
+                os.system('ydotool key ' + str(w_key) + ':1')
+                print("ydotool pressed key: ", original_key)
             elif w_type == 0:
-                os.system('xdotool' + window_cmd + ' keyup ' + str(w_key))
-                print("released key: ", w_key)
+                os.system('ydotool key ' + str(w_key) + ':0')
+                print("ydotool released key: ", original_key)
             elif w_type == 10:
-                os.system('xdotool' + window_cmd + ' key ' + str(w_key))
-                print("pressed and released key: ", w_key)
+                os.system('ydotool key ' + str(w_key) + ':1 ' + str(w_key) + ':0')
+                print("ydotool pressed and released key: ", original_key)
         else:
             if w_type == 1:
                 keyboard.press(w_key)
