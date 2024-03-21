@@ -45,8 +45,8 @@ request rocket sentry /1e-10/
 request ems sentry /1e-10/
 request orbital gatling barrage /1e-10/
 request orbital airburst strike /1e-10/
-request orbital 1 20 barrage /1e-10/
-request orbital 3 80 barrage /1e-10/
+request orbital one twenty barrage /1e-10/
+request orbital three eighty barrage /1e-10/
 request orbital walking barrage /1e-10/
 request laser /1e-10/
 request orbital laser /1e-10/
@@ -62,6 +62,6 @@ request cluster bomb /1e-10/
 request eagle napalm airstrike /1e-10/
 request eagle napalm strike /1e-10/
 request eagle smoke strike /1e-10/
-request eagle 1 10 rocket pods /1e-10/
+request eagle one ten rocket pods /1e-10/
 request eagle five k bomb /1e-10/
 request five k bomb /1e-10/
