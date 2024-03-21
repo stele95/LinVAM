@@ -21,12 +21,12 @@ class MainWnd(QWidget):
 
 		self.ui = Ui_MainWidget()
 		self.ui.setupUi(self)
-		self.handleArgs()
+		#self.handleArgs()
 		self.m_sound = SoundFiles()
 		self.m_profileExecutor = ProfileExecutor(None, self)
 
-		if not os.geteuid() == 0 and not self.m_config['noroot'] == 1:
-			print("\033[93m\nWARNING: no root privileges, unable to send key strokes to the system.\nConsider running this as root.\nFor that you might need to install some python modules for the root user. \n\033[0m")
+		#if not os.geteuid() == 0 and not self.m_config['noroot'] == 1:
+		#	print("\033[93m\nWARNING: no root privileges, unable to send key strokes to the system.\nConsider running this as root.\nFor that you might need to install some python modules for the root user. \n\033[0m")
 
 		self.ui.profileCbx.currentIndexChanged.connect(self.slotProfileChanged)
 		self.ui.addBut.clicked.connect(self.slotAddNewProfile)

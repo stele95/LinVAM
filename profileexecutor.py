@@ -255,132 +255,251 @@ class ProfileExecutor(threading.Thread):
 
 
     def pressKey(self, w_key, w_type):
-        if self.p_parent.m_config['noroot'] == 1:
+        #if self.p_parent.m_config['noroot'] == 1:
             # ydotool has a different key mapping.
             # check /usr/include/linux/input-event-codes.h for key mappings
             original_key = w_key
-            w_key = re.sub('left ctrl', '29', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right ctrl', '97', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('left shift', '42', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right shift', '54', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('left alt', '56', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right alt', '100', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('left windows', '125', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right windows', '126', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('tab', '15', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('esc', '1', w_key, flags=re.IGNORECASE)
+            keys = w_key.split('+')
+            commands = ""
 
-            w_key = re.sub('left', '105', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right', '106', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('up', '103', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('down', '108', w_key, flags=re.IGNORECASE)
+            for key in keys:
+                commands += self.createKeyEvent(key) + " "
 
-            w_key = re.sub('ins$', '110', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('del$', '111', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('home', '102', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('end', '107', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('Page\s?up', '104', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('Page\s?down', '109', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('return', '28', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('enter', '28', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('backspace', '14', w_key, flags=re.IGNORECASE)
+            os.system('ydotool key ' + commands)
+            print("original command: ", original_key)
+            print("ydotool converted command: ", commands)
 
-            w_key = re.sub('1', '2', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('2', '3', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('3', '4', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('4', '5', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('5', '6', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('6', '7', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('7', '8', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('8', '9', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('9', '10', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('0', '11', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('-', '12', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('=', '13', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('q', '16', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('w', '17', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('e', '18', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('r', '19', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('t', '20', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('y', '21', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('u', '22', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('i', '23', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('o', '24', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('p', '25', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('left bracket', '26', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('right bracket', '27', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('a', '30', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('s', '31', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('d', '32', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('f', '33', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('g', '34', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('h', '35', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('j', '36', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('k', '37', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('l', '38', w_key, flags=re.IGNORECASE)
-            w_key = re.sub(';', '39', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('\'', '40', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('backslash', '43', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('z', '44', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('x', '45', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('c', '46', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('v', '47', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('b', '48', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('n', '49', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('m', '50', w_key, flags=re.IGNORECASE)
-            w_key = re.sub(',', '51', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('.', '52', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('forwardslash', '53', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('space', '57', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('capslock', '58', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('f1', '59', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('f2', '60', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('f3', '61', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('f4', '62', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('f5', '63', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('f6', '64', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('f7', '65', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('f8', '66', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('f9', '67', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('f10', '68', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('f11', '87', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('f12', '88', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('scrolllock', '70', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('numlock', '69', w_key, flags=re.IGNORECASE)
-            w_key = re.sub('n7', '71', w_key, flags=re.IGNORECASE) # Num 7
-            w_key = re.sub('n8', '72', w_key, flags=re.IGNORECASE) # Num 8
-            w_key = re.sub('n9', '73', w_key, flags=re.IGNORECASE) # Num 9
-            w_key = re.sub('n-', '74', w_key, flags=re.IGNORECASE) # Num -
-            w_key = re.sub('n4', '75', w_key, flags=re.IGNORECASE) # Num 4
-            w_key = re.sub('n5', '76', w_key, flags=re.IGNORECASE) # Num 5
-            w_key = re.sub('n6', '77', w_key, flags=re.IGNORECASE) # Num 6
-            w_key = re.sub('n+', '78', w_key, flags=re.IGNORECASE) # Num +
-            w_key = re.sub('n1', '79', w_key, flags=re.IGNORECASE) # Num 1
-            w_key = re.sub('n2', '80', w_key, flags=re.IGNORECASE) # Num 2
-            w_key = re.sub('n3', '81', w_key, flags=re.IGNORECASE) # Num 3
-            w_key = re.sub('n0', '82', w_key, flags=re.IGNORECASE) # Num 0
-            w_key = re.sub('n.', '83', w_key, flags=re.IGNORECASE) # Num .
+            # if w_type == 1:
+            #     os.system('ydotool key ' + str(w_key) + ':1')
+            #     print("ydotool pressed key: ", original_key)
+            # elif w_type == 0:
+            #     os.system('ydotool key ' + str(w_key) + ':0')
+            #     print("ydotool released key: ", original_key)
+            # elif w_type == 10:
+            #     os.system('ydotool key ' + str(w_key) + ':1 ' + str(w_key) + ':0')
+            #     print("ydotool pressed and released key: ", original_key)
+        # else:
+        #     if w_type == 1:
+        #         keyboard.press(w_key)
+        #         print("pressed key: ", w_key)
+        #     elif w_type == 0:
+        #         keyboard.release(w_key)
+        #         print("released key: ", w_key)
+        #     elif w_type == 10:
+        #         keyboard.press(w_key)
+        #         keyboard.release(w_key)
+        #         print("pressed and released key: ", w_key)
 
-            w_key = w_key.replace('insert', '110')
-            w_key = w_key.replace('delete', '111')
-
-            if w_type == 1:
-                os.system('ydotool key ' + str(w_key) + ':1')
-                print("ydotool pressed key: ", original_key)
-            elif w_type == 0:
-                os.system('ydotool key ' + str(w_key) + ':0')
-                print("ydotool released key: ", original_key)
-            elif w_type == 10:
-                os.system('ydotool key ' + str(w_key) + ':1 ' + str(w_key) + ':0')
-                print("ydotool pressed and released key: ", original_key)
+    def createKeyEvent(self, w_key):
+        if "hold" in w_key:
+            w_key = re.sub('hold', '', w_key, flags=re.IGNORECASE)
+            w_key = self.mapKey(w_key.strip())
+            return str(w_key) + ":1"
+        elif "release" in w_key:
+            w_key = re.sub('release', '', w_key, flags=re.IGNORECASE)
+            w_key = self.mapKey(w_key.strip())
+            return str(w_key) + ":0"
         else:
-            if w_type == 1:
-                keyboard.press(w_key)
-                print("pressed key: ", w_key)
-            elif w_type == 0:
-                keyboard.release(w_key)
-                print("released key: ", w_key)
-            elif w_type == 10:
-                keyboard.press(w_key)
-                keyboard.release(w_key)
-                print("pressed and released key: ", w_key)
+            w_key = self.mapKey(w_key.strip())
+            return str(w_key) + ":1 " + str(w_key) + ":0"
+
+    def mapKey(self, w_key):
+        match w_key.casefold():
+            case 'left ctrl':
+                return '29'
+            case 'right ctrl':
+                return '97'
+            case 'left shift':
+                return '42'
+            case 'right shift':
+                return '54'
+            case 'left alt':
+                return '56'
+            case 'right alt':
+                return '100'
+            case 'left windows':
+                return '125'
+            case 'right windows':
+                return '126'
+            case 'tab':
+                return '15'
+            case 'esc':
+                return '1'
+            case 'left':
+                return '105'
+            case 'right':
+                return '106'
+            case 'up':
+                return '103'
+            case 'down':
+                return '108'
+            case 'insert':
+                return '110'
+            case 'delete':
+                return '111'
+            case 'home':
+                return '102'
+            case 'end':
+                return '107'
+            case 'pageup':
+                return '104'
+            case 'pagedown':
+                return '109'
+            case 'return':
+                return '28'
+            case 'enter':
+                return '28'
+            case 'backspace':
+                return '14'
+            case '1':
+                return '2'
+            case '2':
+                return '3'
+            case '3':
+                return '4'
+            case '4':
+                return '5'
+            case '5':
+                return '6'
+            case '6':
+                return '7'
+            case '7':
+                return '8'
+            case '8':
+                return '9'
+            case '9':
+                return '10'
+            case '0':
+                return '11'
+            case '-':
+                return '12'
+            case '=':
+                return '13'
+            case 'q':
+                return '16'
+            case 'w':
+                return '17'
+            case 'e':
+                return '18'
+            case 'r':
+                return '19'
+            case 't':
+                return '20'
+            case 'y':
+                return '21'
+            case 'u':
+                return '22'
+            case 'i':
+                return '23'
+            case 'o':
+                return '24'
+            case 'p':
+                return '25'
+            case 'left bracket':
+                return '26'
+            case 'right bracket':
+                return '27'
+            case 'a':
+                return '30'
+            case 's':
+                return '31'
+            case 'd':
+                return '32'
+            case 'f':
+                return '33'
+            case 'g':
+                return '34'
+            case 'h':
+                return '35'
+            case 'j':
+                return '36'
+            case 'k':
+                return '37'
+            case 'l':
+                return '38'
+            case ';':
+                return '39'
+            case '\'':
+                return '40'
+            case 'backslash':
+                return '43'
+            case 'z':
+                return '44'
+            case 'x':
+                return '45'
+            case 'c':
+                return '46'
+            case 'v':
+                return '47'
+            case 'b':
+                return '48'
+            case 'n':
+                return '49'
+            case 'm':
+                return '50'
+            case ',':
+                return '51'
+            case '.':
+                return '52'
+            case 'forwardslash':
+                return '53'
+            case 'space':
+                return '57'
+            case 'capslock':
+                return '58'
+            case 'f1':
+                return '59'
+            case 'f2':
+                return '60'
+            case 'f3':
+                return '61'
+            case 'f4':
+                return '62'
+            case 'f5':
+                return '63'
+            case 'f6':
+                return '64'
+            case 'f7':
+                return '65'
+            case 'f8':
+                return '66'
+            case 'f9':
+                return '67'
+            case 'f10':
+                return '68'
+            case 'f11':
+                return '87'
+            case 'f12':
+                return '88'
+            case 'scrolllock':
+                return '70'
+            case 'numlock':
+                return '69'
+            case 'n7': # Num 7
+                return '71'
+            case 'n8': # Num 8
+                return '72'
+            case 'n9': # Num 9
+                return '73'
+            case 'n-': # Num -
+                return '74'
+            case 'n4': # Num 4
+                return '75'
+            case 'n5': # Num 5
+                return '76'
+            case 'n6': # Num 6
+                return '77'
+            case 'nplus': # Num +
+                return '78'
+            case 'n1': # Num 1
+                return '79'
+            case 'n2': # Num 2
+                return '80'
+            case 'n3': # Num 3
+                return '81'
+            case 'n0': # Num 0
+                return '82'
+            case 'ndot': # Num .
+                return '83'
+            case _:
+                return w_key
