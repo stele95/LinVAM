@@ -46,19 +46,16 @@ It also works with virtual devices like ``ydotool``.
 
 To add the current ``$USER`` to a group, you can use the ``usermod`` command:
 
-    ```
     sudo usermod -aG input $USER
-    ```
+
 
 You then need to define a new udev rule that will give the ``input`` group permanent write access to the uinput device
 (this will give ``ydotool`` write access too).
 
-    ```
     echo '## Give ydotoold access to the uinput device
     ## Solution by https://github.com/ReimuNotMoe/ydotool/issues/25#issuecomment-535842993
     KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"
     ' | sudo tee /etc/udev/rules.d/80-uinput.rules > /dev/null
-    ```
 
 
 You will need to restart your computer for the change to take effect.
@@ -69,7 +66,6 @@ for performance reasons. You needs to run ``ydotoold`` before you start using ``
 To avoid running it every time you start the computer, you can add it to your startup programs.
 The steps depend on your distribution. I am running it as a ``systemd`` service. My service file ``ydotoold.service`` looks like this:
 
-    ```
     [Unit]
     Description=ydotoold service for listening for inputs from ydotool
 
@@ -80,7 +76,6 @@ The steps depend on your distribution. I am running it as a ``systemd`` service.
 
     [Install]
     WantedBy=graphical.target
-    ```
 
 Also, I've added ``YDOTOOL_SOCKET=/tmp/.ydotool_socket`` to ``/etc/environment``
 
