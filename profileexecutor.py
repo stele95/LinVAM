@@ -144,8 +144,7 @@ class ProfileExecutor(threading.Thread):
         w_actionName = p_action['name']
         if w_actionName == 'key action':
             w_key = p_action['key']
-            w_type = p_action['type']
-            self.pressKey(w_key, w_type)
+            self.pressKey(w_key)
         elif w_actionName == 'pause action':
             print("Sleep ", p_action['time'])
             time.sleep(p_action['time'])
@@ -254,41 +253,18 @@ class ProfileExecutor(threading.Thread):
         self.m_sound.play(sound_file)
 
 
-    def pressKey(self, w_key, w_type):
+    def pressKey(self, w_key):
         #if self.p_parent.m_config['noroot'] == 1:
             # ydotool has a different key mapping.
             # check /usr/include/linux/input-event-codes.h for key mappings
             original_key = w_key
             keys = w_key.split('+')
             commands = ""
-
             for key in keys:
                 commands += self.createKeyEvent(key) + " "
-
             os.system('ydotool key ' + commands)
             print("original command: ", original_key)
             print("ydotool converted command: ", commands)
-
-            # if w_type == 1:
-            #     os.system('ydotool key ' + str(w_key) + ':1')
-            #     print("ydotool pressed key: ", original_key)
-            # elif w_type == 0:
-            #     os.system('ydotool key ' + str(w_key) + ':0')
-            #     print("ydotool released key: ", original_key)
-            # elif w_type == 10:
-            #     os.system('ydotool key ' + str(w_key) + ':1 ' + str(w_key) + ':0')
-            #     print("ydotool pressed and released key: ", original_key)
-        # else:
-        #     if w_type == 1:
-        #         keyboard.press(w_key)
-        #         print("pressed key: ", w_key)
-        #     elif w_type == 0:
-        #         keyboard.release(w_key)
-        #         print("released key: ", w_key)
-        #     elif w_type == 10:
-        #         keyboard.press(w_key)
-        #         keyboard.release(w_key)
-        #         print("pressed and released key: ", w_key)
 
     def createKeyEvent(self, w_key):
         if "hold" in w_key:
