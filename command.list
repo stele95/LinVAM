@@ -51,14 +51,14 @@ request one twenty barrage /1e-10/
 request three eighty barrage /1e-10/
 request walking barrage /1e-10/
 request orbital laser /1e-10/
-request laser cannon strike /1e-10/
+request orbital cannon strike /1e-10/
 request precision strike /1e-10/
 request gas strike /1e-10/
 request ems strike /1e-10/
 request smoke strike /1e-10/
 eagle drop strafing run /1e-10/
 eagle drop airstrike /1e-10/
- eagle drop strike /1e-10/
+eagle drop strike /1e-10/
 eagle drop cluster bomb /1e-10/
 request cluster bomb /1e-10/
 eagle drop napalm /1e-10/
