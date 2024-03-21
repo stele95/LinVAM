@@ -1,46 +1,67 @@
-recall ship /1e-30/
-cargo scoop /1e-30/
-balance power levels /1e-30/
-power to weapons /1e-50/
-power to core /1e-40/
-power to shields /1e-40/
-recall fighter /1e-40/
-fighter defend me /1e-50/
-fighter attack target /1e-60/
-fighter engage at will /1e-60/
-fighter maintain formation /1e-70/
-fighter hold position /1e-60/
-victor hand brake /1e-30/
-victor headlights /1e-40/
-toggle turret mode /1e-40/
-next fire group /1e-40/
-previous fire group /1e-60/
-switch hud mode /1e-30/
-toggle night vision /1e-40/
-toggle orbital lines /1e-50/
-full speed /1e-20/
-approach speed /1e-20/
-full stop /1e-20/
-target next system /1e-50/
-target highest threat /1e-50/
-next hostile target /1e-50/
-previous hostile target /1e-70/
-cycle next target /1e-50/
-cycle previous target /1e-70/
-victor full beams /1e-40/
-select wingman alpha /1e-60/
-select wingman beta /1e-60/
-select wingman charlie /1e-60/
-select wing target /1e-50/
-target next subsystem /1e-50/
-target previous subsystem /1e-70/
-wingman nav lock /1e-35/
-engage super cruise /1e-50/
-engage jump drive /1e-40/
-toggle silent running /1e-60/
-deploy heat sink /1e-40/
-deploy shield boost /1e-40/
-deploy chaff /1e-30/
-toggle landing gear /1e-50/
-open galaxy map /1e-60/
-open system map /1e-50/
+request hellbomb /1e-10/
+request jump pack /1e-10/
+request supply pack /1e-10/
+request grenade launcher /1e-10/
+request guard dog laser /1e-10/
+request ballistic shield /1e-10/
+request shield backpack /1e-10/
+request guard dog minigun /1e-10/
+request machine gun /1e-10/
+request anti material rifle /1e-10/
+request stalwart /1e-10/
+request expendable anti tank /1e-10/
+request anti tank /1e-10/
+request recoilless rifle /1e-10/
+request flamethrower /1e-10/
+request autocannon /1e-10/
+request railgun /1e-10/
+request spear launcher /1e-10/
+request rocket launcher /1e-10/
+request laser cannon /1e-10/
+request arc thrower /1e-10/
+request reinforcement /1e-10/
+request sos beacon /1e-10/
+request resupply /1e-10/
+request supplies /1e-10/
+request ssd delivery /1e-10/
+request seismic probe /1e-10/
+request upload data /1e-10/
+request eagle rearm /1e-10/
+request illumination flare /1e-10/
+request seaf artillery /1e-10/
+request artillery /1e-10/
+request super earth flag /1e-10/
+request hmg emplacement /1e-10/
+request shield generator /1e-10/
+request tesla tower /1e-10/
+request anti personnel minefield /1e-10/
+request minefield /1e-10/
+request incendiary mines /1e-10/
+request sentry machine gun /1e-10/
+request gatling sentry /1e-10/
+request mortar sentry /1e-10/
+request sentry autocannon /1e-10/
+request rocket sentry /1e-10/
+request ems sentry /1e-10/
+request orbital gatling barrage /1e-10/
+request orbital airburst strike /1e-10/
+request orbital 1 20 barrage /1e-10/
+request orbital 3 80 barrage /1e-10/
+request orbital walking barrage /1e-10/
+request laser /1e-10/
+request orbital laser /1e-10/
+request orbital railcannon strike /1e-10/
+request orbital precision strike /1e-10/
+request orbital gas strike /1e-10/
+request orbital ems strike /1e-10/
+request orbital smoke strike /1e-10/
+request eagle strafing run /1e-10/
+request eagle airstrike /1e-10/
+request eagle cluster bomb /1e-10/
+request cluster bomb /1e-10/
+request eagle napalm airstrike /1e-10/
+request eagle napalm strike /1e-10/
+request eagle smoke strike /1e-10/
+request eagle 1 10 rocket pods /1e-10/
+request eagle five k bomb /1e-10/
+request five k bomb /1e-10/
