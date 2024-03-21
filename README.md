@@ -86,7 +86,7 @@ If using X11, this script must be run with root privilege because it must hook a
 - $ xhost +
 - $ sudo ./main.py
 
-As an alternative (works both on X11 and Wayland, but prior ydotool setup is required, read [Configuring ydotool])(https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool), you can run the script like this and it will use ydotool:
+As an alternative (works both on X11 and Wayland, but prior ydotool setup is required, read [Configuring ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)), you can run the script like this and it will use ydotool:
 - $ cd LinVAM
 - $ ./main.py -noroot
 
