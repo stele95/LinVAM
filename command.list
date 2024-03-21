@@ -2,36 +2,38 @@ request hellbomb /1e-10/
 request jump pack /1e-10/
 request supply pack /1e-10/
 request grenade launcher /1e-10/
-request guard dog laser /1e-10/
+request backpack laser /1e-10/
 request ballistic shield /1e-10/
 request shield backpack /1e-10/
-request guard dog minigun /1e-10/
+request backpack minigun /1e-10/
 request machine gun /1e-10/
-request anti material rifle /1e-10/
+request sniper rifle /1e-10/
 request stalwart /1e-10/
 request expendable anti tank /1e-10/
 request anti tank /1e-10/
-request recoilless rifle /1e-10/
-request flamethrower /1e-10/
-request autocannon /1e-10/
-request railgun /1e-10/
+request antitank /1e-10/
+request sniper rifle /1e-10/
+request flame thrower /1e-10/
+request auto cannon /1e-10/
+request rail gun /1e-10/
 request spear launcher /1e-10/
 request rocket launcher /1e-10/
 request laser cannon /1e-10/
 request arc thrower /1e-10/
 request reinforcement /1e-10/
 request sos beacon /1e-10/
+request help beacon /1e-10/
 request resupply /1e-10/
 request supplies /1e-10/
-request ssd delivery /1e-10/
+request drive delivery /1e-10/
 request seismic probe /1e-10/
 request upload data /1e-10/
-request eagle rearm /1e-10/
+send eagle to rearm /1e-10/
 request illumination flare /1e-10/
 request seaf artillery /1e-10/
 request artillery /1e-10/
 request super earth flag /1e-10/
-request hmg emplacement /1e-10/
+request contolled emplacement /1e-10/
 request shield generator /1e-10/
 request tesla tower /1e-10/
 request anti personnel minefield /1e-10/
@@ -40,28 +42,28 @@ request incendiary mines /1e-10/
 request sentry machine gun /1e-10/
 request gatling sentry /1e-10/
 request mortar sentry /1e-10/
-request sentry autocannon /1e-10/
+request sentry auto cannon /1e-10/
 request rocket sentry /1e-10/
 request ems sentry /1e-10/
-request orbital gatling barrage /1e-10/
-request orbital airburst strike /1e-10/
-request orbital one twenty barrage /1e-10/
-request orbital three eighty barrage /1e-10/
-request orbital walking barrage /1e-10/
-request laser /1e-10/
+request gatling barrage /1e-10/
+request airburst strike /1e-10/
+request one twenty barrage /1e-10/
+request three eighty barrage /1e-10/
+request walking barrage /1e-10/
 request orbital laser /1e-10/
-request orbital railcannon strike /1e-10/
-request orbital precision strike /1e-10/
-request orbital gas strike /1e-10/
-request orbital ems strike /1e-10/
-request orbital smoke strike /1e-10/
-request eagle strafing run /1e-10/
-request eagle airstrike /1e-10/
-request eagle cluster bomb /1e-10/
+request laser cannon strike /1e-10/
+request precision strike /1e-10/
+request gas strike /1e-10/
+request ems strike /1e-10/
+request smoke strike /1e-10/
+eagle drop strafing run /1e-10/
+eagle drop airstrike /1e-10/
+ eagle drop strike /1e-10/
+eagle drop cluster bomb /1e-10/
 request cluster bomb /1e-10/
-request eagle napalm airstrike /1e-10/
-request eagle napalm strike /1e-10/
-request eagle smoke strike /1e-10/
-request eagle one ten rocket pods /1e-10/
-request eagle five k bomb /1e-10/
+eagle drop napalm /1e-10/
+request napalm strike /1e-10/
+eagle drop smoke strike /1e-10/
+request one ten rocket pods /1e-10/
+eagle drop five k bomb /1e-10/
 request five k bomb /1e-10/
