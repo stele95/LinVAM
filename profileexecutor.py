@@ -262,7 +262,7 @@ class ProfileExecutor(threading.Thread):
             commands = ""
             for key in keys:
                 commands += self.createKeyEvent(key) + " "
-            os.system('ydotool key ' + commands)
+            os.system('ydotool key -d 200 ' + commands)
             print("original command: ", original_key)
             print("ydotool converted command: ", commands)
 
