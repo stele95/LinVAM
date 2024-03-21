@@ -86,7 +86,8 @@ This works on both X11 and Wayland, but prior ydotool setup is required, read [C
 - $ ./main.py -noroot
 
 ### Profiles
-Multiple profiles are supported.  To create a new profile for a specific task/game click new and the main profile editor window will be displayed
+Multiple profiles are supported.  To create a new profile for a specific task/game click new and the main profile editor window will be displayed.
+Profiles and commands are saved in ``/home/$USER/.linvam/``
 
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/gui.png)
 ### Key combinations
