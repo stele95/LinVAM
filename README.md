@@ -29,7 +29,7 @@ Known bugs and planned additions
 - install python packages: PyQt5, python3-xlib, pyaudio, pocketsphinx
 - install swig3.0
 - install ydotool (https://github.com/ReimuNotMoe/ydotool)
-- (optional) sudo apt install ffmpeg
+- (optional) install ffmpeg for playing audio files
 - sudo ln -s /usr/bin/swig3.0 /usr/bin/swig
 - git clone https://github.com/stele95/LinVAM.git
 
