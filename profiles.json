@@ -1,0 +1,691 @@
+[
+    {
+        "name": "Helldivers 2",
+        "commands": [
+            {
+                "name": "request hell bomb",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+left+down+up+right+down+up+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request jump pack",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+up+down+up+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request supply pack",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+left+down+up+up+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request grenade launcher",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+left+up+left+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request backpack laser",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+left+up+right+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request ballistic shield",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+left+down+down+up+left+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request shield backpack",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+left+right+left+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request backpack minigun",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+left+up+right+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request machine gun",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+left+down+up+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request sniper rifle",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+left+right+up+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request stalwart",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+left+down+up+up+left+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request expendable anti tank,request anti tank,request antitank",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+down+left+up+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request sniper rifle",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+left+right+right+left+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request flame thrower",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+left+up+down+up+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request auto cannon",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+left+down+up+up+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request rail gun",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+right+down+up+left+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request spear launcher,request rocket launcher",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+down+up+down+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request laser cannon",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+left+down+up+left+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request arc thrower",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+right+down+up+left+left+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request reinforcement",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+up+down+right+left+up+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request resupply,request supplies",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+down+up+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request drive delivery",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+down+down+up+up+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request seismic probe",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+up+up+left+right+down+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request upload data",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+down+up+up+up+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "send eagle to rearm",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+up+up+left+up+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request illumination flare",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+right+right+left+left+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request seaf artillery,request artillery",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+right+up+up+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request super earth flag",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+down+up+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request contolled emplacement",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+left+right+right+left+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request shield generator",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+down+left+right+left+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request tesla tower",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+right+up+left+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request anti personnel minefield,request minefield",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+left+up+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request incendiary mines",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+left+left+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request sentry machine gun",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+right+right+up+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request gatling sentry",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+right+left+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request mortar sentry",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+right+right+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request sentry auto cannon",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+right+up+left+up+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request rocket sentry",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+right+right+left+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request ems sentry",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+down+up+right+down+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request gatling barrage",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+right+down+left+up+up+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request airburst strike",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+right+right+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request one twenty barrage",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+right+right+down+left+right+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request three eighty barrage",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+right+down+up+up+left+down+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request walking barrage",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+right+down+right+down+right+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request orbital laser",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+right+down+up+right+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request cannon strike",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+right+up+down+down+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request precision strike",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+right+right+up+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request gas strike",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+right+right+down+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request ems strike",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+right+right+left+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request smoke strike",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+right+right+down+up+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "eagle drop strafing run",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+up+right+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "eagle drop airstrike,eagle drop strike",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+up+right+down+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "eagle drop cluster bomb,request cluster bomb",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+up+right+down+down+right+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "eagle drop napalm,request napalm strike",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+up+right+down+up+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "eagle drop smoke strike",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+up+right+up+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "request one ten rocket pods",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+up+right+up+left+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            },
+            {
+                "name": "eagle drop five k bomb,request five k bomb",
+                "actions": [
+                    {
+                        "name": "key action",
+                        "key": "hold left ctrl+up+right+down+down+down+release left ctrl"
+                    }
+                ],
+                "async": false,
+                "threshold": 10,
+                "repeat": 1
+            }
+        ]
+    }
+]

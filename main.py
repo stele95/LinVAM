@@ -40,7 +40,6 @@ class MainWnd(QWidget):
 		signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 		if self.loadFromDatabase() > 0 :
-		# if self.loadTestProfiles() > 0:
 			w_jsonProfile = self.ui.profileCbx.itemData(0)
 			if w_jsonProfile != None:
 				self.m_activeProfile = json.loads(w_jsonProfile)
@@ -59,20 +58,23 @@ class MainWnd(QWidget):
 			w_profile = json.loads(w_jsonProfile)
 			w_profiles.append(w_profile)
 
-		with open(self.getSettingsPath("profiles.dat"), "wb") as f:
-			pickle.dump(w_profiles, f, pickle.HIGHEST_PROTOCOL)
+		with open(self.getSettingsPath("profiles.json"), "w") as f:
+			json.dump(w_profiles, f, indent=4)
+			f.close()
 
 	def loadFromDatabase(self):
-		w_profiles = []
-		with open(self.getSettingsPath("profiles.dat"), "rb") as f:
-			w_profiles = pickle.load(f)
+		profilesCount = 0
+		with open(self.getSettingsPath("profiles.json"), "r") as f:
+			w_profiles = json.loads(f.read())
+			f.close()
+			print("No of profiles read from file: " + str(len(w_profiles)))
+			for w_profile in w_profiles:
+				self.ui.profileCbx.addItem(w_profile['name'])
+				w_jsonProfile = json.dumps(w_profile)
+				self.ui.profileCbx.setItemData(self.ui.profileCbx.count() - 1, w_jsonProfile)
+				profilesCount += 1
 
-		for w_profile in w_profiles:
-			self.ui.profileCbx.addItem(w_profile['name'])
-			w_jsonProfile = json.dumps(w_profile)
-			self.ui.profileCbx.setItemData(self.ui.profileCbx.count() - 1, w_jsonProfile)
-
-		return len(w_profiles)
+		return profilesCount
 
 	def getSettingsPath(self, setting):
 		home = os.path.expanduser("~") + '/.linvam/'
@@ -82,136 +84,6 @@ class MainWnd(QWidget):
 			shutil.copyfile(setting, home + setting)
 
 		return home + setting
-
-	def loadTestProfiles(self):
-
-		w_carProfileDict = {
-			"name": "car game",
-			"commands": [
-				{'name': 'forward',
-				 'actions': [
-					 {'name': 'key action', 'key': 'up', 'type': 1}
-				 ],
-				 'repeat': 1,
-				 'async': False,
-				 'threshold': 12
-				 },
-				{'name': 'back',
-				 'actions': [
-					 {'name': 'key action', 'key': 'down', 'type': 1}
-				 ],
-				 'repeat': 1,
-				 'async': False,
-				 'threshold': 3
-				 },
-				{'name': 'left',
-				 'actions': [{'name': 'key action', 'key': 'right', 'type': 0},
-							 {'name': 'key action', 'key': 'left', 'type': 1},
-							 ],
-				 'repeat': 1,
-				 'async': False,
-				 'threshold': 10
-				 },
-				{'name': 'right',
-				 'actions': [{'name': 'key action', 'key': 'left', 'type': 0},
-							 {'name': 'key action', 'key': 'right', 'type': 1},
-							 ],
-				 'repeat': 1,
-				 'async': False,
-				 'threshold': 3
-				 },
-				{'name': 'stop',
-				 'actions': [
-					 {'name': 'key action', 'key': 'left', 'type': 0},
-					 {'name': 'key action', 'key': 'right', 'type': 0},
-					 {'name': 'key action', 'key': 'up', 'type': 0},
-					 {'name': 'key action', 'key': 'down', 'type': 0}
-				 ],
-				 'repeat': 1,
-				 'async': False,
-				 'threshold': 8
-				 }
-			]
-		}
-
-		w_airplaneProfileDict = {
-			"name": "airplane game",
-			"commands": [
-				{'name': 'up',
-				 'actions': [
-					 {'name': 'command stop action', 'command name': 'down'},
-					 {'name': 'mouse move action', 'x': 0, 'y': -5, 'absolute': False},
-					 {'name': 'pause action', 'time': 0.01}
-				 ],
-				 'repeat': -1,
-				 'async': True,
-				 'threshold': 3
-				 },
-				{'name': 'left',
-				 'actions': [
-					 {'name': 'command stop action', 'command name': 'right'},
-					 {'name': 'mouse move action', 'x': -5, 'y': 0, 'absolute': False},
-					 {'name': 'pause action', 'time': 0.005}
-				 ],
-				 'repeat': -1,
-				 'async': True,
-				 'threshold': 3
-				 },
-				{'name': 'right',
-				 'actions': [
-					 {'name': 'command stop action', 'command name': 'left'},
-					 {'name': 'mouse move action', 'x': 5, 'y': 0, 'absolute': False},
-					 {'name': 'pause action', 'time': 0.005}
-				 ],
-				 'repeat': -1,
-				 'async': True,
-				 'threshold': 3
-				 },
-				{'name': 'down',
-				 'actions': [
-					 {'name': 'command stop action', 'command name': 'up'},
-					 {'name': 'mouse move action', 'x': 0, 'y': 5, 'absolute': False},
-					 {'name': 'pause action', 'time': 0.005}
-				 ],
-				 'repeat': -1,
-				 'async': True,
-				 'threshold': 3
-				 },
-				{'name': 'shoot',
-				 'actions': [
-					 {'name': 'mouse click action', 'button': 'left', 'type': 1},
-					 {'name': 'pause action', 'time': 0.03}
-				 ],
-				 'repeat': 1,
-				 'async': False,
-				 'threshold': 3
-				 },
-				{'name': 'stop',
-				 'actions': [
-					 {'name': 'command stop action', 'command name': 'up'},
-					 {'name': 'command stop action', 'command name': 'left'},
-					 {'name': 'command stop action', 'command name': 'right'},
-					 {'name': 'command stop action', 'command name': 'down'},
-					 {'name': 'mouse click action', 'button': 'left', 'type': 0}
-				 ],
-				 'repeat': 1,
-				 'async': False,
-				 'threshold': 3
-				 }
-			]
-		}
-		w_profiles = []
-		w_profiles.append(w_carProfileDict)
-		w_profiles.append(w_airplaneProfileDict)
-
-		i = 0
-		for w_profile in w_profiles:
-			self.ui.profileCbx.addItem(w_profile['name'])
-			w_jsonProfile = json.dumps(w_profile)
-			self.ui.profileCbx.setItemData(i, w_jsonProfile)
-			i = i + 1
-
-		return i
 
 	def slotProfileChanged(self, p_idx):
 		w_jsonProfile = self.ui.profileCbx.itemData(p_idx)
