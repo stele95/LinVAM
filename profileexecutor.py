@@ -30,16 +30,37 @@ class ProfileExecutor(threading.Thread):
 
         self.m_pyaudio = pyaudio.PyAudio()
 
+        def listenCallback(in_data, frame_count, time_info, status):
+            self.m_decoder.process_raw(in_data, False, False)
+            if self.m_decoder.hyp() != None:
+                #print([(seg.word, seg.prob, seg.start_frame, seg.end_frame) for seg in self.m_decoder.seg()])
+                #print("Detected keyword, restarting search")
+
+                # hack :)
+                for seg in self.m_decoder.seg():
+                    print("Detected: ",seg.word)
+                    break
+
+                #
+                # Here you run the code you want based on keyword
+                #
+                for w_seg in self.m_decoder.seg():
+                    self.doCommand(w_seg.word.rstrip())
+
+                self.m_decoder.end_utt()
+                self.m_decoder.start_utt()
+            return (in_data, pyaudio.paContinue)
+
         try:
-            self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, start=False)
+            self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, start=False, stream_callback=listenCallback)
         except:
             samplerate = int(self.m_pyaudio.get_device_info_by_index(0).get('defaultSampleRate'))
-            self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True, start=False)
+            self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True, start=False, stream_callback=listenCallback)
 
         # Process audio chunk by chunk. On keyword detected perform action and restart search
         self.m_decoder = Decoder(self.m_config)
 
-        self.m_thread = False
+        #self.m_thread = False
 
         self.p_parent = p_parent
         if not self.p_parent == None:
@@ -76,8 +97,9 @@ class ProfileExecutor(threading.Thread):
             # a self.m_decoder.reinit(self.config) will segfault?
             self.m_decoder = Decoder(self.m_config)
             self.m_stop = False
-            self.m_thread = threading.Thread(target=self.doListen, args=())
-            self.m_thread.start()
+            #self.m_thread = threading.Thread(target=self.doListen, args=())
+            #self.m_thread.start()
+            self.doListen()
         else:
             self.m_decoder.reinit(self.m_config)
 
@@ -86,8 +108,9 @@ class ProfileExecutor(threading.Thread):
             self.m_stream.start_stream()
             self.m_listening = p_enable
             self.m_stop = False
-            self.m_thread = threading.Thread(target=self.doListen, args=())
-            self.m_thread.start()
+            #self.m_thread = threading.Thread(target=self.doListen, args=())
+            #self.m_thread.start()
+            self.doListen()
         elif self.m_listening == True and p_enable == False:
             self.stop()
 
@@ -95,37 +118,16 @@ class ProfileExecutor(threading.Thread):
         print("Detection started")
         self.m_listening = True
         self.m_decoder.start_utt()
-        while self.m_stop != True:
-            buf = self.m_stream.read(1024)
-
-            self.m_decoder.process_raw(buf, False, False)
-
-            if self.m_decoder.hyp() != None:
-                #print([(seg.word, seg.prob, seg.start_frame, seg.end_frame) for seg in self.m_decoder.seg()])
-                #print("Detected keyword, restarting search")
-
-                # hack :)
-                for seg in self.m_decoder.seg():
-                    print("Detected: ",seg.word)
-                    break
-
-                #
-                # Here you run the code you want based on keyword
-                #
-                for w_seg in self.m_decoder.seg():
-                    self.doCommand(w_seg.word.rstrip())
-
-                self.m_decoder.end_utt()
-                self.m_decoder.start_utt()
 
    # def run(self):
 
     def stop(self):
         if self.m_listening == True:
+            print("Detection stopped")
             self.m_stop = True
             self.m_listening = False
             self.m_decoder.end_utt()
-            self.m_thread.join()
+            #self.m_thread.join()
             self.m_stream.stop_stream()
 
     def shutdown(self):
@@ -232,12 +234,10 @@ class ProfileExecutor(threading.Thread):
             w_repeat = w_command['repeat']
             if w_repeat < 1:
                 w_repeat = 1
-            while True:
+            while w_repeat > 0:
                 for w_action in w_command['actions']:
                     self.doAction(w_action)
                 w_repeat = w_repeat - 1
-                if w_repeat == 0:
-                    break
         else:
             w_cmdThread = ProfileExecutor.CommandThread(self, w_actions, w_command['repeat'])
             w_cmdThread.start()
