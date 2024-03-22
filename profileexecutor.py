@@ -254,17 +254,16 @@ class ProfileExecutor(threading.Thread):
 
 
     def pressKey(self, w_key):
-        #if self.p_parent.m_config['noroot'] == 1:
-            # ydotool has a different key mapping.
-            # check /usr/include/linux/input-event-codes.h for key mappings
-            original_key = w_key
-            keys = w_key.split('+')
-            commands = ""
-            for key in keys:
-                commands += self.createKeyEvent(key) + " "
-            os.system('ydotool key -d 75 ' + commands)
-            print("original command: ", original_key)
-            print("ydotool converted command: ", commands)
+        # ydotool has a different key mapping.
+        # check /usr/include/linux/input-event-codes.h for key mappings
+        original_key = w_key
+        keys = w_key.split('+')
+        commands = ""
+        for key in keys:
+            commands += self.createKeyEvent(key) + " "
+        os.system('ydotool key -d 75 ' + commands)
+        print("original command: ", original_key)
+        print("ydotool converted command: ", commands)
 
     def createKeyEvent(self, w_key):
         if "hold" in w_key:
