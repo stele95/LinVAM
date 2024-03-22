@@ -3,7 +3,7 @@
         "name": "Helldivers 2",
         "commands": [
             {
-                "name": "request hell bomb",
+                "name": "i need hell bomb",
                 "actions": [
                     {
                         "name": "key action",
@@ -15,7 +15,7 @@
                 "repeat": 1
             },
             {
-                "name": "request jump pack",
+                "name": "i need jump pack",
                 "actions": [
                     {
                         "name": "key action",
@@ -27,7 +27,7 @@
                 "repeat": 1
             },
             {
-                "name": "request supply pack",
+                "name": "i need supply pack",
                 "actions": [
                     {
                         "name": "key action",
@@ -39,7 +39,7 @@
                 "repeat": 1
             },
             {
-                "name": "request grenade launcher",
+                "name": "i need grenade launcher",
                 "actions": [
                     {
                         "name": "key action",
@@ -51,7 +51,7 @@
                 "repeat": 1
             },
             {
-                "name": "request backpack laser",
+                "name": "i need backpack laser",
                 "actions": [
                     {
                         "name": "key action",
@@ -63,7 +63,7 @@
                 "repeat": 1
             },
             {
-                "name": "request ballistic shield",
+                "name": "i need ballistic shield",
                 "actions": [
                     {
                         "name": "key action",
@@ -75,7 +75,7 @@
                 "repeat": 1
             },
             {
-                "name": "request shield backpack",
+                "name": "i need shield backpack",
                 "actions": [
                     {
                         "name": "key action",
@@ -87,7 +87,7 @@
                 "repeat": 1
             },
             {
-                "name": "request backpack minigun",
+                "name": "i need backpack minigun",
                 "actions": [
                     {
                         "name": "key action",
@@ -99,7 +99,7 @@
                 "repeat": 1
             },
             {
-                "name": "request machine gun",
+                "name": "i need machine gun",
                 "actions": [
                     {
                         "name": "key action",
@@ -111,7 +111,7 @@
                 "repeat": 1
             },
             {
-                "name": "request sniper rifle",
+                "name": "i need sniper rifle",
                 "actions": [
                     {
                         "name": "key action",
@@ -123,7 +123,7 @@
                 "repeat": 1
             },
             {
-                "name": "request stalwart",
+                "name": "i need stalwart",
                 "actions": [
                     {
                         "name": "key action",
@@ -135,7 +135,7 @@
                 "repeat": 1
             },
             {
-                "name": "request expendable anti tank,request anti tank,request antitank",
+                "name": "i need expendable anti tank,i need anti tank,i need antitank",
                 "actions": [
                     {
                         "name": "key action",
@@ -147,7 +147,7 @@
                 "repeat": 1
             },
             {
-                "name": "request sniper rifle",
+                "name": "i need sniper rifle",
                 "actions": [
                     {
                         "name": "key action",
@@ -159,7 +159,7 @@
                 "repeat": 1
             },
             {
-                "name": "request flame thrower",
+                "name": "i need flame thrower",
                 "actions": [
                     {
                         "name": "key action",
@@ -171,7 +171,7 @@
                 "repeat": 1
             },
             {
-                "name": "request auto cannon",
+                "name": "i need auto cannon",
                 "actions": [
                     {
                         "name": "key action",
@@ -183,7 +183,7 @@
                 "repeat": 1
             },
             {
-                "name": "request rail gun",
+                "name": "i need rail gun",
                 "actions": [
                     {
                         "name": "key action",
@@ -195,7 +195,7 @@
                 "repeat": 1
             },
             {
-                "name": "request spear launcher,request rocket launcher",
+                "name": "i need spear launcher,i need rocket launcher",
                 "actions": [
                     {
                         "name": "key action",
@@ -207,7 +207,7 @@
                 "repeat": 1
             },
             {
-                "name": "request laser cannon",
+                "name": "i need laser cannon",
                 "actions": [
                     {
                         "name": "key action",
@@ -219,7 +219,7 @@
                 "repeat": 1
             },
             {
-                "name": "request arc thrower",
+                "name": "i need arc thrower",
                 "actions": [
                     {
                         "name": "key action",
@@ -231,7 +231,7 @@
                 "repeat": 1
             },
             {
-                "name": "request reinforcement",
+                "name": "i need reinforcement",
                 "actions": [
                     {
                         "name": "key action",
@@ -243,7 +243,7 @@
                 "repeat": 1
             },
             {
-                "name": "request resupply,request supplies",
+                "name": "i need resupply,i need supplies",
                 "actions": [
                     {
                         "name": "key action",
@@ -255,7 +255,7 @@
                 "repeat": 1
             },
             {
-                "name": "request drive delivery",
+                "name": "i need drive delivery",
                 "actions": [
                     {
                         "name": "key action",
@@ -267,7 +267,7 @@
                 "repeat": 1
             },
             {
-                "name": "request seismic probe",
+                "name": "i need seismic probe",
                 "actions": [
                     {
                         "name": "key action",
@@ -279,7 +279,7 @@
                 "repeat": 1
             },
             {
-                "name": "request upload data",
+                "name": "i need upload data",
                 "actions": [
                     {
                         "name": "key action",
@@ -303,7 +303,7 @@
                 "repeat": 1
             },
             {
-                "name": "request illumination flare",
+                "name": "i need illumination flare",
                 "actions": [
                     {
                         "name": "key action",
@@ -315,7 +315,7 @@
                 "repeat": 1
             },
             {
-                "name": "request seaf artillery,request artillery",
+                "name": "i need seaf artillery,i need artillery",
                 "actions": [
                     {
                         "name": "key action",
@@ -327,7 +327,7 @@
                 "repeat": 1
             },
             {
-                "name": "request super earth flag",
+                "name": "i need super earth flag",
                 "actions": [
                     {
                         "name": "key action",
@@ -339,7 +339,7 @@
                 "repeat": 1
             },
             {
-                "name": "request contolled emplacement",
+                "name": "i need contolled emplacement",
                 "actions": [
                     {
                         "name": "key action",
@@ -351,7 +351,7 @@
                 "repeat": 1
             },
             {
-                "name": "request shield generator",
+                "name": "i need shield generator",
                 "actions": [
                     {
                         "name": "key action",
@@ -363,7 +363,7 @@
                 "repeat": 1
             },
             {
-                "name": "request tesla tower",
+                "name": "i need tesla tower",
                 "actions": [
                     {
                         "name": "key action",
@@ -375,7 +375,7 @@
                 "repeat": 1
             },
             {
-                "name": "request anti personnel minefield,request minefield",
+                "name": "i need anti personnel minefield,i need minefield",
                 "actions": [
                     {
                         "name": "key action",
@@ -387,7 +387,7 @@
                 "repeat": 1
             },
             {
-                "name": "request incendiary mines",
+                "name": "i need incendiary mines",
                 "actions": [
                     {
                         "name": "key action",
@@ -399,7 +399,7 @@
                 "repeat": 1
             },
             {
-                "name": "request sentry machine gun",
+                "name": "i need sentry machine gun",
                 "actions": [
                     {
                         "name": "key action",
@@ -411,7 +411,7 @@
                 "repeat": 1
             },
             {
-                "name": "request gatling sentry",
+                "name": "i need gatling sentry",
                 "actions": [
                     {
                         "name": "key action",
@@ -423,7 +423,7 @@
                 "repeat": 1
             },
             {
-                "name": "request mortar sentry",
+                "name": "i need mortar sentry",
                 "actions": [
                     {
                         "name": "key action",
@@ -435,7 +435,7 @@
                 "repeat": 1
             },
             {
-                "name": "request sentry auto cannon",
+                "name": "i need sentry auto cannon",
                 "actions": [
                     {
                         "name": "key action",
@@ -447,7 +447,7 @@
                 "repeat": 1
             },
             {
-                "name": "request rocket sentry",
+                "name": "i need rocket sentry",
                 "actions": [
                     {
                         "name": "key action",
@@ -459,7 +459,7 @@
                 "repeat": 1
             },
             {
-                "name": "request ems sentry",
+                "name": "i need ems sentry",
                 "actions": [
                     {
                         "name": "key action",
@@ -471,7 +471,7 @@
                 "repeat": 1
             },
             {
-                "name": "request gatling barrage",
+                "name": "i need gatling barrage",
                 "actions": [
                     {
                         "name": "key action",
@@ -483,7 +483,7 @@
                 "repeat": 1
             },
             {
-                "name": "request airburst strike",
+                "name": "i need airburst strike",
                 "actions": [
                     {
                         "name": "key action",
@@ -495,7 +495,7 @@
                 "repeat": 1
             },
             {
-                "name": "request one twenty barrage",
+                "name": "i need one twenty barrage",
                 "actions": [
                     {
                         "name": "key action",
@@ -507,7 +507,7 @@
                 "repeat": 1
             },
             {
-                "name": "request three eighty barrage",
+                "name": "i need three eighty barrage",
                 "actions": [
                     {
                         "name": "key action",
@@ -519,7 +519,7 @@
                 "repeat": 1
             },
             {
-                "name": "request walking barrage",
+                "name": "i need walking barrage",
                 "actions": [
                     {
                         "name": "key action",
@@ -531,7 +531,7 @@
                 "repeat": 1
             },
             {
-                "name": "request orbital laser",
+                "name": "i need orbital laser",
                 "actions": [
                     {
                         "name": "key action",
@@ -543,7 +543,7 @@
                 "repeat": 1
             },
             {
-                "name": "request cannon strike",
+                "name": "i need cannon strike",
                 "actions": [
                     {
                         "name": "key action",
@@ -555,7 +555,7 @@
                 "repeat": 1
             },
             {
-                "name": "request precision strike",
+                "name": "i need precision strike",
                 "actions": [
                     {
                         "name": "key action",
@@ -567,7 +567,7 @@
                 "repeat": 1
             },
             {
-                "name": "request gas strike",
+                "name": "i need gas strike",
                 "actions": [
                     {
                         "name": "key action",
@@ -579,7 +579,7 @@
                 "repeat": 1
             },
             {
-                "name": "request ems strike",
+                "name": "i need ems strike",
                 "actions": [
                     {
                         "name": "key action",
@@ -591,7 +591,7 @@
                 "repeat": 1
             },
             {
-                "name": "request smoke strike",
+                "name": "i need smoke strike",
                 "actions": [
                     {
                         "name": "key action",
@@ -627,7 +627,7 @@
                 "repeat": 1
             },
             {
-                "name": "eagle drop cluster bomb,request cluster bomb",
+                "name": "eagle drop cluster bomb,i need cluster bomb",
                 "actions": [
                     {
                         "name": "key action",
@@ -639,7 +639,7 @@
                 "repeat": 1
             },
             {
-                "name": "eagle drop napalm,request napalm strike",
+                "name": "eagle drop napalm,i need napalm strike",
                 "actions": [
                     {
                         "name": "key action",
@@ -663,7 +663,7 @@
                 "repeat": 1
             },
             {
-                "name": "request one ten rocket pods",
+                "name": "i need one ten rocket pods",
                 "actions": [
                     {
                         "name": "key action",
@@ -675,7 +675,7 @@
                 "repeat": 1
             },
             {
-                "name": "eagle drop five k bomb,request five k bomb",
+                "name": "eagle drop five k bomb,i need five k bomb",
                 "actions": [
                     {
                         "name": "key action",
