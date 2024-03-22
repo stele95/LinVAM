@@ -83,7 +83,7 @@ Also, I've added ``YDOTOOL_SOCKET=/tmp/.ydotool_socket`` to ``/etc/environment``
 ## Usage
 This works on both X11 and Wayland, but prior ydotool setup is required, read [Configuring ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool):
 - $ cd LinVAM
-- $ ./main.py -noroot
+- $ ./main.py
 
 ### Profiles
 Multiple profiles are supported.  To create a new profile for a specific task/game click new and the main profile editor window will be displayed.
