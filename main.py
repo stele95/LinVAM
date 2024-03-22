@@ -156,6 +156,10 @@ class MainWnd(QWidget):
 		self.close()
 		exit()
 
+	def closeEvent(self, event):
+		self.m_profileExecutor.shutdown()
+		event.accept()
+
 	def handleArgs(self):
 		self.m_config = {
 			'noroot' : 0,
