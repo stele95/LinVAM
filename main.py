@@ -7,7 +7,6 @@ from profileeditwnd import ProfileEditWnd
 import json
 from profileexecutor import ProfileExecutor
 import sys
-import pickle
 import signal
 import os
 import shutil
