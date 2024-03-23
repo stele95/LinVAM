@@ -1,6 +1,6 @@
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import *
+from PyQt6.QtWidgets import *
 from ui_profileeditwnd import Ui_ProfileEditDialog
 from commandeditwnd import CommandEditWnd
 import json
@@ -16,11 +16,11 @@ class ProfileEditWnd(QDialog):
         self.m_parent = p_parent
 
         self.ui.cmdTable.setHorizontalHeaderLabels(('Spoken command', 'Actions'))
-        self.ui.cmdTable.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.ui.cmdTable.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.ui.cmdTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.ui.cmdTable.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
 
-        self.ui.cmdTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.Interactive)
-        self.ui.cmdTable.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.ui.cmdTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Interactive)
+        self.ui.cmdTable.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
 
         # define actions here
         self.ui.newCmd.clicked.connect(self.slotNewCmd)
@@ -42,7 +42,7 @@ class ProfileEditWnd(QDialog):
             self.ui.cmdTable.setItem(i, 0, QTableWidgetItem(w_command['name']))
             w_text = json.dumps(w_command)
             w_item = QTableWidgetItem(w_text)
-            w_item.setData(Qt.UserRole, json.dumps(w_command))
+            w_item.setData(Qt.ItemDataRole.UserRole, json.dumps(w_command))
             self.ui.cmdTable.setItem(i, 1, w_item)
             i = i + 1
 
@@ -51,13 +51,13 @@ class ProfileEditWnd(QDialog):
     def importCommand(self, p_command, p_update):
         w_commandCnt = self.ui.cmdTable.rowCount()
         for w_i in range(w_commandCnt):
-            w_jsonCommand = self.ui.cmdTable.item(w_i, 1).data(Qt.UserRole)
+            w_jsonCommand = self.ui.cmdTable.item(w_i, 1).data(Qt.ItemDataRole.UserRole)
             w_command = json.loads(w_jsonCommand)
             if w_command['name'] == p_command['name']:
                 if p_update:
                     w_text = json.dumps(p_command)
                     w_item = QTableWidgetItem(w_text)
-                    w_item.setData(Qt.UserRole, json.dumps(p_command))
+                    w_item.setData(Qt.ItemDataRole.UserRole, json.dumps(p_command))
                     self.ui.cmdTable.setItem(w_i, 1, w_item)
                     self.ui.cmdTable.resizeRowsToContents()
                     return True
@@ -68,13 +68,13 @@ class ProfileEditWnd(QDialog):
         self.ui.cmdTable.setItem(w_rowCnt, 0, QTableWidgetItem(p_command['name']))
         w_text = json.dumps(p_command)
         w_item = QTableWidgetItem(w_text)
-        w_item.setData(Qt.UserRole, json.dumps(p_command))
+        w_item.setData(Qt.ItemDataRole.UserRole, json.dumps(p_command))
         self.ui.cmdTable.setItem(w_rowCnt, 1, w_item)
         self.ui.cmdTable.resizeRowsToContents()
 
     def slotNewCmd(self):
         w_cmdEditWnd = CommandEditWnd(None, self)
-        if w_cmdEditWnd.exec_() == QDialog.Accepted:
+        if w_cmdEditWnd.exec() == QDialog.DialogCode.Accepted:
             if self.importCommand(w_cmdEditWnd.m_command, False) == False:
                 QMessageBox.critical(None, 'Error', 'Adding a new command was failed')
                 return
@@ -86,15 +86,15 @@ class ProfileEditWnd(QDialog):
         if len(w_modelIdxs) == 0:
             return
         w_modelIdx = w_modelIdxs[0]
-        w_jsonCommand = self.ui.cmdTable.item(w_modelIdx.row(), 1).data(Qt.UserRole)
+        w_jsonCommand = self.ui.cmdTable.item(w_modelIdx.row(), 1).data(Qt.ItemDataRole.UserRole)
         w_command = json.loads(w_jsonCommand)
 
         w_cmdEditWnd = CommandEditWnd(w_command, self)
-        if w_cmdEditWnd.exec_() == QDialog.Accepted:
+        if w_cmdEditWnd.exec() == QDialog.DialogCode.Accepted:
             self.ui.cmdTable.setItem(w_modelIdx.row(), 0, QTableWidgetItem(w_cmdEditWnd.m_command['name']))
             w_text = json.dumps(w_cmdEditWnd.m_command)
             w_item = QTableWidgetItem(w_text)
-            w_item.setData(Qt.UserRole, json.dumps(w_cmdEditWnd.m_command))
+            w_item.setData(Qt.ItemDataRole.UserRole, json.dumps(w_cmdEditWnd.m_command))
             self.ui.cmdTable.setItem(w_modelIdx.row(), 1, w_item)
             self.ui.cmdTable.resizeRowsToContents()
 
@@ -113,7 +113,7 @@ class ProfileEditWnd(QDialog):
 
         w_commandCnt = self.ui.cmdTable.rowCount()
         for w_i in range(w_commandCnt):
-            w_jsonCommand = self.ui.cmdTable.item(w_i, 1).data(Qt.UserRole)
+            w_jsonCommand = self.ui.cmdTable.item(w_i, 1).data(Qt.ItemDataRole.UserRole)
             w_command = json.loads(w_jsonCommand)
             w_commands.append(w_command)
         self.m_profile['commands'] = w_commands

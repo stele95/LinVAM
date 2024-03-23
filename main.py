@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import *
+from PyQt6.QtWidgets import *
 from ui_mainwnd import Ui_MainWidget
 from profileeditwnd import ProfileEditWnd
 import json
@@ -92,7 +92,7 @@ class MainWnd(QWidget):
 
 	def slotAddNewProfile(self):
 		w_profileEditWnd = ProfileEditWnd(None, self)
-		if w_profileEditWnd.exec() == QDialog.Accepted:
+		if w_profileEditWnd.exec() == QDialog.DialogCode.Accepted:
 			w_profile = w_profileEditWnd.m_profile
 			self.m_profileExecutor.setProfile(w_profile)
 			self.ui.profileCbx.addItem(w_profile['name'])
@@ -104,7 +104,7 @@ class MainWnd(QWidget):
 		w_jsonProfile = self.ui.profileCbx.itemData(w_idx)
 		w_profile = json.loads(w_jsonProfile)
 		w_profileEditWnd = ProfileEditWnd(w_profile, self)
-		if w_profileEditWnd.exec() == QDialog.Accepted:
+		if w_profileEditWnd.exec() == QDialog.DialogCode.Accepted:
 			w_profile = w_profileEditWnd.m_profile
 			self.m_profileExecutor.setProfile(w_profile)
 			self.ui.profileCbx.setItemText(w_idx, w_profile['name'])
@@ -126,8 +126,8 @@ class MainWnd(QWidget):
 
 	def slotRemoveProfile(self):
 
-		buttonReply = QMessageBox.question(self, 'Remove Profile', "Do you really want to delete this profile?", QMessageBox.No | QMessageBox.Yes, QMessageBox.No)
-		if buttonReply == QMessageBox.No:
+		buttonReply = QMessageBox.question(self, 'Remove Profile', "Do you really want to delete this profile?", QMessageBox.StandardButton.No | QMessageBox.StandardButton.Yes, QMessageBox.StandardButton.No)
+		if buttonReply == QMessageBox.StandardButton.No:
 			return
 
 		w_curIdx = self.ui.profileCbx.currentIndex()
@@ -206,4 +206,4 @@ if __name__ == "__main__":
 	app = QApplication(sys.argv)
 	mainWnd = MainWnd()
 	mainWnd.show()
-	sys.exit(app.exec_())
+	sys.exit(app.exec())

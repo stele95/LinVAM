@@ -1,6 +1,6 @@
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import *
+from PyQt6.QtWidgets import *
 from ui_commandeditwnd import Ui_CommandEditDialog
 from keyactioneditwnd import KeyActionEditWnd
 from mouseactioneditwnd import MouseActionEditWnd
@@ -40,7 +40,7 @@ class CommandEditWnd(QDialog):
             for w_action in w_actions:
                 w_jsonAction = json.dumps(w_action)
                 w_item = QListWidgetItem(w_jsonAction)
-                w_item.setData(Qt.UserRole, w_jsonAction)
+                w_item.setData(Qt.ItemDataRole.UserRole, w_jsonAction)
                 self.ui.actionsListWidget.addItem(w_item)
             self.ui.asyncChk.setChecked(p_command['async'])
             if p_command['repeat'] == -1:
@@ -57,7 +57,7 @@ class CommandEditWnd(QDialog):
     def addAction(self, p_action):
         w_jsonAction = json.dumps(p_action)
         w_item = QListWidgetItem(w_jsonAction)
-        w_item.setData(Qt.UserRole, w_jsonAction)
+        w_item.setData(Qt.ItemDataRole.UserRole, w_jsonAction)
         self.ui.actionsListWidget.addItem(w_item)
 
     def slotStopAnotherCommand(self):
@@ -86,22 +86,22 @@ class CommandEditWnd(QDialog):
 
     def slotNewKeyEdit(self):
         w_keyEditWnd = KeyActionEditWnd(None, self)
-        if w_keyEditWnd.exec() == QDialog.Accepted:
+        if w_keyEditWnd.exec() == QDialog.DialogCode.Accepted:
             self.addAction(w_keyEditWnd.m_keyAction)
 
     def slotNewMouseEdit(self):
         w_mouseEditWnd = MouseActionEditWnd(None, self)
-        if w_mouseEditWnd.exec() == QDialog.Accepted:
+        if w_mouseEditWnd.exec() == QDialog.DialogCode.Accepted:
             self.addAction(w_mouseEditWnd.m_mouseAction)
 
     def slotNewPauseEdit(self):
         w_pauseEditWnd = PauseActionEditWnd(None, self)
-        if w_pauseEditWnd.exec() == QDialog.Accepted:
+        if w_pauseEditWnd.exec() == QDialog.DialogCode.Accepted:
             self.addAction(w_pauseEditWnd.m_pauseAction)
 
     def slotNewSoundEdit(self):
         w_soundEditWnd = SoundActionEditWnd(self.m_parent.m_parent.m_sound, None, self)
-        if w_soundEditWnd.exec() == QDialog.Accepted:
+        if w_soundEditWnd.exec() == QDialog.DialogCode.Accepted:
             self.addAction(w_soundEditWnd.m_soundAction)
 
     def slotActionUp(self):
@@ -123,23 +123,23 @@ class CommandEditWnd(QDialog):
         w_action = {}
 
         for w_item in w_listItems:
-            w_jsonAction = w_item.data(Qt.UserRole)
+            w_jsonAction = w_item.data(Qt.ItemDataRole.UserRole)
             w_action = json.loads(w_jsonAction)
             break
 
         if w_action['name'] == 'key action':
             w_keyEditWnd = KeyActionEditWnd(w_action, self)
-            if w_keyEditWnd.exec() == QDialog.Accepted:
+            if w_keyEditWnd.exec() == QDialog.DialogCode.Accepted:
                 w_jsonAction = json.dumps(w_keyEditWnd.m_keyAction)
         elif w_action['name'] == 'mouse click action' \
                 or w_action['name'] == 'mouse move action'\
                 or w_action['name'] == 'mouse scroll action':
             w_mouseEditWnd = MouseActionEditWnd(w_action, self)
-            if w_mouseEditWnd.exec() == QDialog.Accepted:
+            if w_mouseEditWnd.exec() == QDialog.DialogCode.Accepted:
                 w_jsonAction = json.dumps(w_mouseEditWnd.m_mouseAction)
         elif w_action['name'] == 'pause action':
             w_pauseEditWnd = PauseActionEditWnd(w_action, self)
-            if w_pauseEditWnd.exec() == QDialog.Accepted:
+            if w_pauseEditWnd.exec() == QDialog.DialogCode.Accepted:
                 w_jsonAction = json.dumps(w_pauseEditWnd.m_pauseAction)
         elif w_action['name'] == 'command stop action' \
             or w_action['name'] == 'command execute action':
@@ -150,11 +150,11 @@ class CommandEditWnd(QDialog):
                 w_jsonAction = json.dumps(w_action)
         elif w_action['name'] == 'play sound':
             w_soundEditWnd = SoundActionEditWnd(self.m_parent.m_parent.m_sound, w_action, self)
-            if w_soundEditWnd.exec() == QDialog.Accepted:
+            if w_soundEditWnd.exec() == QDialog.DialogCode.Accepted:
                 w_jsonAction = json.dumps(w_soundEditWnd.m_soundAction)
 
         w_item.setText(w_jsonAction)
-        w_item.setData(Qt.UserRole, w_jsonAction)
+        w_item.setData(Qt.ItemDataRole.UserRole, w_jsonAction)
 
     def slotDelete(self):
         w_listItems = self.ui.actionsListWidget.selectedItems()
@@ -167,7 +167,7 @@ class CommandEditWnd(QDialog):
         self.m_command['name'] = self.ui.say.text()
         w_actions = []
         for w_idx in range(w_actionCnt):
-            w_jsonAction = self.ui.actionsListWidget.item(w_idx).data(Qt.UserRole)
+            w_jsonAction = self.ui.actionsListWidget.item(w_idx).data(Qt.ItemDataRole.UserRole)
             w_action = json.loads(w_jsonAction)
             w_actions.append(w_action)
         self.m_command['actions'] = w_actions
