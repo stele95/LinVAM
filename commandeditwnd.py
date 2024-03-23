@@ -61,7 +61,7 @@ class CommandEditWnd(QDialog):
         self.ui.actionsListWidget.addItem(w_item)
 
     def slotStopAnotherCommand(self):
-        text, okPressed = QInputDialog.getText(self, "Get Command Name", "Another command name:", QLineEdit.Normal, "")
+        text, okPressed = QInputDialog.getText(self, "Get Command Name", "Another command name:", QLineEdit.EchoMode.Normal, "")
         if okPressed and text != '':
             w_commandStopAction = {}
             w_commandStopAction['name'] = 'command stop action'
@@ -69,7 +69,7 @@ class CommandEditWnd(QDialog):
             self.addAction(w_commandStopAction)
 
     def slotDoAnotherCommand(self):
-        text, okPressed = QInputDialog.getText(self, "Get Command Name", "Another command name:", QLineEdit.Normal, "")
+        text, okPressed = QInputDialog.getText(self, "Get Command Name", "Another command name:", QLineEdit.EchoMode.Normal, "")
         if okPressed and text != '':
             w_commandDoAction = {}
             w_commandDoAction['name'] = 'command execute action'
@@ -143,7 +143,7 @@ class CommandEditWnd(QDialog):
                 w_jsonAction = json.dumps(w_pauseEditWnd.m_pauseAction)
         elif w_action['name'] == 'command stop action' \
             or w_action['name'] == 'command execute action':
-            text, okPressed = QInputDialog.getText(self, "Get Command Name", "Another command name:", QLineEdit.Normal,
+            text, okPressed = QInputDialog.getText(self, "Get Command Name", "Another command name:", QLineEdit.EchoMode.Normal,
                                                    w_action['command name'])
             if okPressed and text != '':
                 w_action['command name'] = text

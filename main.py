@@ -112,7 +112,7 @@ class MainWnd(QWidget):
 			self.ui.profileCbx.setItemData(w_idx, w_jsonProfile)
 
 	def slotCopyProfile(self):
-		text, okPressed = QInputDialog.getText(self, "Copy profile", "Enter new profile name:", QLineEdit.Normal, "")
+		text, okPressed = QInputDialog.getText(self, "Copy profile", "Enter new profile name:", QLineEdit.EchoMode.Normal, "")
 		if okPressed and text != '':
 			# todo: check if name not already in use
 			w_idx = self.ui.profileCbx.currentIndex()
