@@ -14,7 +14,7 @@ Known bugs and planned additions
 
 ## Requirements
 - python3
-- PyQt5
+- PyQt6
 - python3-xlib
 - pyaudio
 - pocketsphinx
@@ -26,7 +26,7 @@ Known bugs and planned additions
 - HCS voicepacks
 
 ## Install
-- install python packages: PyQt5, python3-xlib, pyaudio, pocketsphinx
+- install python packages: PyQt6, python3-xlib, pyaudio, pocketsphinx
 - install swig3.0
 - install ydotool (https://github.com/ReimuNotMoe/ydotool)
 - (optional) install ffmpeg for playing audio files

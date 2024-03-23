@@ -1,6 +1,6 @@
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt6.QtCore import *
+from PyQt6.QtGui import *
+from PyQt6.QtWidgets import *
 import re
 import os
 from ui_soundactioneditwnd import Ui_SoundSelect
@@ -23,6 +23,8 @@ class SoundActionEditWnd(QDialog):
 		self.ui.buttonCancel.clicked.connect(super().reject)
 		self.ui.buttonPlaySound.clicked.connect(self.playSound)
 		self.ui.buttonStopSound.clicked.connect(self.stopSound)
+		self.ui.buttonPlaySound.setEnabled(False)
+		self.ui.buttonStopSound.setEnabled(False)
 		self.ui.buttonOkay.setEnabled(False)
 
 		# restore stuff when editing
@@ -106,7 +108,7 @@ class SoundActionEditWnd(QDialog):
 	def onFileSelect(self):
 		index = self.ui.listFiles.currentIndex()
 		itemText = index.data()
-		self.selectedFile  = itemText
+		self.selectedFile = itemText
 		self.ui.buttonOkay.setEnabled(True)
 		self.ui.buttonPlaySound.setEnabled(True)
 

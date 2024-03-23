@@ -55,7 +55,7 @@
        <property name="minimumSize">
         <size>
          <width>200</width>
-         <height>0</height>
+         <height>45</height>
         </size>
        </property>
        <property name="title">
@@ -69,8 +69,8 @@
          <rect>
           <x>10</x>
           <y>20</y>
-          <width>181</width>
-          <height>21</height>
+          <width>180</width>
+          <height>20</height>
          </rect>
         </property>
         <property name="toolTip">
