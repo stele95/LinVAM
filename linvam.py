@@ -33,8 +33,8 @@ class MainWnd(QWidget):
 		self.ui.copyBut.clicked.connect(self.slotCopyProfile)
 		self.ui.removeBut.clicked.connect(self.slotRemoveProfile)
 		self.ui.listeningChk.stateChanged.connect(self.slotListeningEnabled)
-		self.ui.ok.clicked.connect(self.slotOK)
-		self.ui.cancel.clicked.connect(self.slotCancel)
+		self.ui.save.clicked.connect(self.saveProfiles)
+		self.ui.quit.clicked.connect(self.quitWithoutSaving)
 		self.ui.sliderVolume.valueChanged.connect(lambda: self.m_sound.setVolume(self.ui.sliderVolume.value()))
 		signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -145,12 +145,12 @@ class MainWnd(QWidget):
 		else:
 			self.m_profileExecutor.setEnableListening(False)
 
-	def slotOK(self):
+	def saveProfiles(self):
 		self.saveToDatabase()
 		self.m_profileExecutor.shutdown()
 		self.close()
 
-	def slotCancel(self):
+	def quitWithoutSaving(self):
 		self.m_profileExecutor.shutdown()
 		self.close()
 		exit()
