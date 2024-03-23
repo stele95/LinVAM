@@ -128,8 +128,9 @@ class MainWnd(QWidget):
 	def slotRemoveProfile(self):
 		w_curIdx = self.ui.profileCbx.currentIndex()
 		w_jsonProfile = self.ui.profileCbx.itemData(w_curIdx)
+		profileName = json.loads(w_jsonProfile)['name']
 
-		buttonReply = QMessageBox.question(self, 'Remove Profile', "Do you really want to delete " + json.loads(w_jsonProfile)['name'] +"?", QMessageBox.StandardButton.No | QMessageBox.StandardButton.Yes, QMessageBox.StandardButton.No)
+		buttonReply = QMessageBox.question(self, 'Remove ' + profileName, "Do you really want to delete " + profileName +"?", QMessageBox.StandardButton.No | QMessageBox.StandardButton.Yes, QMessageBox.StandardButton.No)
 		if buttonReply == QMessageBox.StandardButton.No:
 			return
 
