@@ -87,7 +87,7 @@ Start LinVAM from your list of applications. This works on both X11 and Wayland,
 
 ### Profiles
 Multiple profiles are supported.  To create a new profile for a specific task/game click new and the main profile editor window will be displayed.
-Profiles and commands are saved in ``/home/$USER/.linvam/``
+Profiles and commands files are saved and loaded from ``/home/$USER/.local/share/LinVAM/`` and can be backed up from there.
 
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/gui.png)
 ### Key combinations
