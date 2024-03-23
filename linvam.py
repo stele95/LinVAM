@@ -76,12 +76,11 @@ class MainWnd(QWidget):
 		return profilesCount
 
 	def getSettingsPath(self, setting):
-		home = os.path.expanduser("~") + '/.linvam/'
-		if not os.path.exists(home):
-			os.mkdir(home)
-		if not os.path.exists(home + setting):
-			shutil.copyfile(setting, home + setting)
-
+		home = os.path.expanduser("~") + '/.local/share/LinVAM/'
+		# if not os.path.exists(home):
+		# 	os.mkdir(home)
+		# if not os.path.exists(home + setting):
+		# 	shutil.copyfile(setting, home + setting)
 		return home + setting
 
 	def slotProfileChanged(self, p_idx):
@@ -204,6 +203,7 @@ class MainWnd(QWidget):
 
 if __name__ == "__main__":
 	app = QApplication(sys.argv)
+	QApplication.setApplicationName('LinVAM')
 	mainWnd = MainWnd()
 	mainWnd.show()
 	sys.exit(app.exec())

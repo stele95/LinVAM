@@ -22,9 +22,9 @@ class ProfileExecutor(threading.Thread):
         self.m_cmdThreads = {}
 
         self.m_config = Config(
-            hmm=os.path.join('model', 'en-us/en-us'),
-            dict=os.path.join('model', 'en-us/cmudict-en-us.dict'),
-            kws='command.list',
+            hmm=os.path.join(self.getLibPath('model'), 'en-us/en-us'),
+            dict=os.path.join(self.getLibPath('model'), 'en-us/cmudict-en-us.dict'),
+            kws=self.getSettingsPath('command.list'),
             logfn='/dev/null'
         )
 
@@ -66,14 +66,16 @@ class ProfileExecutor(threading.Thread):
         if not self.p_parent == None:
             self.m_sound = self.p_parent.m_sound
 
+    def getLibPath(self, file):
+        home = os.path.expanduser("~") + '/.local/lib/LinVAM/'
+        return home + file
 
     def getSettingsPath(self, setting):
-        home = os.path.expanduser("~") + '/.linvam/'
-        if not os.path.exists(home):
-            os.mkdir(home)
-        if not os.path.exists(home + setting):
-            shutil.copyfile(setting, home + setting)
-
+        home = os.path.expanduser("~") + '/.local/share/LinVAM/'
+        # if not os.path.exists(home):
+        #     os.mkdir(home)
+        # if not os.path.exists(home + setting):
+        #     shutil.copyfile(setting, home + setting)
         return home + setting
 
     def setProfile(self, p_profile):
