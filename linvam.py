@@ -33,8 +33,8 @@ class MainWnd(QWidget):
 		self.ui.copyBut.clicked.connect(self.slotCopyProfile)
 		self.ui.removeBut.clicked.connect(self.slotRemoveProfile)
 		self.ui.listeningChk.stateChanged.connect(self.slotListeningEnabled)
-		self.ui.save.clicked.connect(self.saveProfiles)
-		self.ui.quit.clicked.connect(self.quitWithoutSaving)
+		# self.ui.save.clicked.connect(self.saveProfiles)
+		# self.ui.quit.clicked.connect(self.quitWithoutSaving)
 		self.ui.sliderVolume.valueChanged.connect(lambda: self.m_sound.setVolume(self.ui.sliderVolume.value()))
 		signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -97,6 +97,7 @@ class MainWnd(QWidget):
 			self.ui.profileCbx.addItem(w_profile['name'])
 			w_jsonProfile = json.dumps(w_profile)
 			self.ui.profileCbx.setItemData(self.ui.profileCbx.count()-1, w_jsonProfile)
+			self.saveToDatabase()
 
 	def slotEditProfile(self):
 		w_idx = self.ui.profileCbx.currentIndex()
@@ -109,6 +110,7 @@ class MainWnd(QWidget):
 			self.ui.profileCbx.setItemText(w_idx, w_profile['name'])
 			w_jsonProfile = json.dumps(w_profile)
 			self.ui.profileCbx.setItemData(w_idx, w_jsonProfile)
+			self.saveToDatabase()
 
 	def slotCopyProfile(self):
 		text, okPressed = QInputDialog.getText(self, "Copy profile", "Enter new profile name:", QLineEdit.EchoMode.Normal, "")
@@ -139,21 +141,23 @@ class MainWnd(QWidget):
 			w_profile = json.loads(w_jsonProfile)
 			self.m_profileExecutor.setProfile(w_profile)
 
+		self.saveToDatabase()
+
 	def slotListeningEnabled(self, p_enabled):
 		if p_enabled:
 			self.m_profileExecutor.setEnableListening(True)
 		else:
 			self.m_profileExecutor.setEnableListening(False)
 
-	def saveProfiles(self):
-		self.saveToDatabase()
-		self.m_profileExecutor.shutdown()
-		self.close()
+	# def saveProfiles(self):
+	# 	self.saveToDatabase()
+	# 	self.m_profileExecutor.shutdown()
+	# 	self.close()
 
-	def quitWithoutSaving(self):
-		self.m_profileExecutor.shutdown()
-		self.close()
-		exit()
+	# def quitWithoutSaving(self):
+	# 	self.m_profileExecutor.shutdown()
+	# 	self.close()
+	# 	exit()
 
 	def closeEvent(self, event):
 		self.m_profileExecutor.shutdown()
