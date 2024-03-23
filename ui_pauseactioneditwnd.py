@@ -53,7 +53,7 @@ class Ui_PauseActionEditDialog(object):
         PauseActionEditDialog.setWindowTitle(_translate("PauseActionEditDialog", "Pause Action Edit Dialog"))
         self.label.setText(_translate("PauseActionEditDialog", "Pause for "))
         self.label_2.setText(_translate("PauseActionEditDialog", "seconds"))
-        self.ok.setText(_translate("PauseActionEditDialog", "OK"))
+        self.ok.setText(_translate("PauseActionEditDialog", "Save"))
         self.cancel.setText(_translate("PauseActionEditDialog", "Cancel"))
 
 

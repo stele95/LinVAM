@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_CommandEditDialog(object):
     def setupUi(self, CommandEditDialog):
         CommandEditDialog.setObjectName("CommandEditDialog")
-        CommandEditDialog.resize(927, 419)
+        CommandEditDialog.resize(927, 445)
         font = QtGui.QFont()
         font.setPointSize(10)
         CommandEditDialog.setFont(font)
@@ -179,7 +179,7 @@ class Ui_CommandEditDialog(object):
         self.editBut.setText(_translate("CommandEditDialog", "Edit"))
         self.deleteBut.setText(_translate("CommandEditDialog", "Delete"))
         self.asyncChk.setText(_translate("CommandEditDialog", "Allow other commands to execute while this one is running"))
-        self.ok.setText(_translate("CommandEditDialog", "OK"))
+        self.ok.setText(_translate("CommandEditDialog", "Save"))
         self.cancel.setText(_translate("CommandEditDialog", "Cancel"))
 
 

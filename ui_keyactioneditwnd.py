@@ -47,7 +47,7 @@ class Ui_KeyActionEditDialog(object):
         _translate = QtCore.QCoreApplication.translate
         KeyActionEditDialog.setWindowTitle(_translate("KeyActionEditDialog", "Key Action Dialog"))
         self.label.setText(_translate("KeyActionEditDialog", "Key (Combination):"))
-        self.ok.setText(_translate("KeyActionEditDialog", "OK"))
+        self.ok.setText(_translate("KeyActionEditDialog", "Save"))
         self.cancel.setText(_translate("KeyActionEditDialog", "Cancel"))
 
 
