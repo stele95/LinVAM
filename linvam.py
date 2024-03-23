@@ -76,7 +76,7 @@ class MainWnd(QWidget):
 		return profilesCount
 
 	def getSettingsPath(self, setting):
-		home = os.path.expanduser("~/.local/share/") + '/LinVAM/'
+		home = os.path.expanduser("~") + '/.local/share/LinVAM/'
 		# if not os.path.exists(home):
 		# 	os.mkdir(home)
 		# if not os.path.exists(home + setting):
