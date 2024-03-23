@@ -13,7 +13,6 @@ class ProfileExecutor(threading.Thread):
     mouse = Controller()
 
     def __init__(self, p_profile = None, p_parent = None):
-        # threading.Thread.__init__(self)
 
         # does nothing?
         self.setProfile(p_profile)
@@ -60,8 +59,6 @@ class ProfileExecutor(threading.Thread):
         # Process audio chunk by chunk. On keyword detected perform action and restart search
         self.m_decoder = Decoder(self.m_config)
 
-        #self.m_thread = False
-
         self.p_parent = p_parent
         if not self.p_parent == None:
             self.m_sound = self.p_parent.m_sound
@@ -72,18 +69,12 @@ class ProfileExecutor(threading.Thread):
 
     def getSettingsPath(self, setting):
         home = os.path.expanduser("~") + '/.local/share/LinVAM/'
-        # if not os.path.exists(home):
-        #     os.mkdir(home)
-        # if not os.path.exists(home + setting):
-        #     shutil.copyfile(setting, home + setting)
         return home + setting
 
     def setProfile(self, p_profile):
-        #print("setProfile")
         self.m_profile = p_profile
         if self.m_profile == None:
             return
-        #print ("writing command list")
         w_commandWordFile = open(self.getSettingsPath('command.list'), 'w')
         w_commands = self.m_profile['commands']
         for w_command in w_commands:
@@ -99,8 +90,6 @@ class ProfileExecutor(threading.Thread):
             # a self.m_decoder.reinit(self.config) will segfault?
             self.m_decoder = Decoder(self.m_config)
             self.m_stop = False
-            #self.m_thread = threading.Thread(target=self.doListen, args=())
-            #self.m_thread.start()
             self.doListen()
         else:
             self.m_decoder.reinit(self.m_config)
@@ -110,8 +99,6 @@ class ProfileExecutor(threading.Thread):
             self.m_stream.start_stream()
             self.m_listening = p_enable
             self.m_stop = False
-            #self.m_thread = threading.Thread(target=self.doListen, args=())
-            #self.m_thread.start()
             self.doListen()
         elif self.m_listening == True and p_enable == False:
             self.stop()
@@ -120,8 +107,6 @@ class ProfileExecutor(threading.Thread):
         print("Detection started")
         self.m_listening = True
         self.m_decoder.start_utt()
-
-   # def run(self):
 
     def stop(self):
         if self.m_listening == True:
