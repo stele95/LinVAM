@@ -31,7 +31,9 @@ Known bugs and planned additions
 - install ydotool (https://github.com/ReimuNotMoe/ydotool)
 - (optional) install ffmpeg for playing audio files
 - sudo ln -s /usr/bin/swig3.0 /usr/bin/swig
-- git clone https://github.com/stele95/LinVAM.git
+- run the following command in terminal:
+
+        git clone https://github.com/stele95/LinVAM.git && ./LinVAM/setup.sh
 
 ## Configuring ydotool
 To simulate typing, the program needs access to your ``/dev/uinput`` device.
@@ -81,9 +83,7 @@ Also, I've added ``YDOTOOL_SOCKET=/tmp/.ydotool_socket`` to ``/etc/environment``
 
 
 ## Usage
-This works on both X11 and Wayland, but prior ydotool setup is required, read [Configuring ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool):
-- $ cd LinVAM
-- $ ./main.py
+Start LinVAM from your list of applications. This works on both X11 and Wayland, but prior ydotool setup is required, read [Configuring ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 
 ### Profiles
 Multiple profiles are supported.  To create a new profile for a specific task/game click new and the main profile editor window will be displayed.
