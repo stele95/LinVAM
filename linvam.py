@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-from PyQt6.QtCore import *
-from PyQt6.QtGui import *
-from PyQt6.QtWidgets import *
+from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessageBox, QLineEdit
 from ui_mainwnd import Ui_MainWidget
 from profileeditwnd import ProfileEditWnd
 import json
