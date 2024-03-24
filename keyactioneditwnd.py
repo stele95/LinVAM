@@ -1,7 +1,5 @@
 from PyQt6.QtWidgets import QDialog
 from ui_keyactioneditwnd import Ui_KeyActionEditDialog
-import keyboard
-import threading
 
 class KeyActionEditWnd(QDialog):
     def __init__(self, p_keyAction, p_parent = None):
@@ -13,10 +11,6 @@ class KeyActionEditWnd(QDialog):
         self.ui.cancel.clicked.connect(self.slotCancel)
 
         self.m_keyAction = {}
-
-        t = threading.Thread(target=self.keyInput)
-        t.daemon = True
-        t.start()
 
         if p_keyAction == None:
             return
@@ -41,11 +35,3 @@ class KeyActionEditWnd(QDialog):
 
     def slotCancel(self):
         return super().reject()
-
-    def keyInput(self):
-        try:
-            while True:
-                self.ui.keyEdit.setText(keyboard.read_hotkey(False))
-        except:
-            pass
-

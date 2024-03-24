@@ -1,4 +1,3 @@
-import keyboard
 import time
 import threading
 import os, pyaudio
@@ -20,8 +19,8 @@ class ProfileExecutor(threading.Thread):
         self.p_parent = p_parent
 
         self.m_config = Config(
-            hmm=os.path.join(self.getLibPath('model'), 'en-us/en-us'),
-            dict=os.path.join(self.getLibPath('model'), 'en-us/cmudict-en-us.dict'),
+            hmm=os.path.join(self.getModelPath(), 'en-us/en-us'),
+            dict=os.path.join(self.getModelPath(), 'en-us/cmudict-en-us.dict'),
             kws=self.getSettingsPath('command.list'),
             logfn='/dev/null'
         )
@@ -61,11 +60,11 @@ class ProfileExecutor(threading.Thread):
         if not self.p_parent == None:
             self.m_sound = self.p_parent.m_sound
 
-    def getLibPath(self, file):
+    def getModelPath(self):
         home = ""
         if self.p_parent.m_config['testEnv'] == 0:
-            home = os.path.expanduser("~") + '/.local/lib/LinVAM/'
-        return home + file
+            home = os.path.expanduser("~") + '/.local/share/LinVAM/'
+        return home + 'model'
 
     def getSettingsPath(self, setting):
         home = os.path.expanduser("~") + '/.local/share/LinVAM/'
