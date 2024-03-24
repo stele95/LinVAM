@@ -148,10 +148,11 @@ class ProfileExecutor(threading.Thread):
         elif w_actionName == 'command play sound' or w_actionName == 'play sound':
             self.playSound(p_action)
         elif w_actionName == 'mouse move action':
+            print("Move move action, x: " + str(p_action['x']) + " y: " + str(p_action['y']))
             if p_action['absolute']:
-                ProfileExecutor.mouse.position([p_action['x'], p_action['y']])
+                os.system('ydotool mousemove --absolute -x' + str(p_action['x']) + " -y " + str(p_action['y']))
             else:
-                ProfileExecutor.mouse.move(p_action['x'], p_action['y'])
+                os.system('ydotool mousemove -x' + str(p_action['x']) + " -y " + str(p_action['y']))
         elif w_actionName == 'mouse click action':
             w_type = p_action['type']
             w_button = p_action['button']
