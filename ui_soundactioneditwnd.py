@@ -82,7 +82,7 @@ class Ui_SoundSelect(object):
         self.labelVoicepacks.setText(_translate("SoundSelect", "VoicePacks:"))
         self.labelCategories.setText(_translate("SoundSelect", "Categories:"))
         self.labelFiles.setText(_translate("SoundSelect", "Voice files:"))
-        self.buttonOkay.setText(_translate("SoundSelect", "Ok"))
+        self.buttonOkay.setText(_translate("SoundSelect", "Save"))
         self.buttonCancel.setText(_translate("SoundSelect", "Cancel"))
         self.filterCategories.setToolTip(_translate("SoundSelect", "Filter categories"))
         self.filterCategories.setStatusTip(_translate("SoundSelect", "Filter"))

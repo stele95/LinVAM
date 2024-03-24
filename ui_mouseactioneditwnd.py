@@ -202,7 +202,7 @@ class Ui_MouseActionEditDialog(object):
         self.scrollDown.setText(_translate("MouseActionEditDialog", "Scroll down"))
         self.label_9.setText(_translate("MouseActionEditDialog", "pixels"))
         self.mouseActionTabWidget.setTabText(self.mouseActionTabWidget.indexOf(self.moveActionTab), _translate("MouseActionEditDialog", "Move"))
-        self.ok.setText(_translate("MouseActionEditDialog", "OK"))
+        self.ok.setText(_translate("MouseActionEditDialog", "Save"))
         self.cancel.setText(_translate("MouseActionEditDialog", "Cancel"))
 
 

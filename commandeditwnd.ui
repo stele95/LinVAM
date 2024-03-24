@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>927</width>
-    <height>419</height>
+    <height>445</height>
    </rect>
   </property>
   <property name="font">
@@ -384,7 +384,7 @@
         </size>
        </property>
        <property name="text">
-        <string>OK</string>
+        <string>Save</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>

@@ -7,8 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>820</width>
-    <height>166</height>
+    <height>140</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="font">
    <font>
@@ -42,10 +48,13 @@
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Minimum</enum>
+       </property>
        <property name="sizeHint" stdset="0">
         <size>
          <width>40</width>
-         <height>20</height>
+         <height>5</height>
         </size>
        </property>
       </spacer>
@@ -55,7 +64,7 @@
        <property name="minimumSize">
         <size>
          <width>200</width>
-         <height>45</height>
+         <height>0</height>
         </size>
        </property>
        <property name="title">
@@ -72,6 +81,12 @@
           <width>180</width>
           <height>20</height>
          </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
         <property name="toolTip">
          <string>Change voice volume</string>
@@ -93,39 +108,16 @@
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Expanding</enum>
+       </property>
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>20</height>
+         <height>5</height>
         </size>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="save">
-       <property name="minimumSize">
-        <size>
-         <width>130</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Save profiles</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="quit">
-       <property name="minimumSize">
-        <size>
-         <width>130</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Quit without saving</string>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>
@@ -160,6 +152,9 @@
          <width>300</width>
          <height>0</height>
         </size>
+       </property>
+       <property name="maxVisibleItems">
+        <number>100</number>
        </property>
       </widget>
      </item>

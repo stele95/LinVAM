@@ -7,8 +7,6 @@ This project is currently a work-in-progress and is minimally functional only fo
 Utilising Pocketsphinx, a lightweight voice to text engine you can specify voice commands for the tool to recognise and actions to perform.
 
 Known bugs and planned additions
-- To save and use changes click Ok on the main GUI then reload.
-- Remember last loaded profile and load on start
 - Log window showing spoken words the V2T recognises with ability to right click and assign voice command and actions to current profile
 - Support for joysticks and gaming devices
 

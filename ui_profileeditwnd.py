@@ -93,7 +93,7 @@ class Ui_ProfileEditDialog(object):
         self.newCmd.setText(_translate("ProfileEditDialog", "New"))
         self.editCmd.setText(_translate("ProfileEditDialog", "Edit"))
         self.deleteCmd.setText(_translate("ProfileEditDialog", "Delete"))
-        self.ok.setText(_translate("ProfileEditDialog", "OK"))
+        self.ok.setText(_translate("ProfileEditDialog", "Save"))
         self.cancel.setText(_translate("ProfileEditDialog", "Cancel"))
 
 

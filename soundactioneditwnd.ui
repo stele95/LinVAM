@@ -149,7 +149,7 @@
     <locale language="English" country="UnitedStates"/>
    </property>
    <property name="text">
-    <string>Ok</string>
+    <string>Save</string>
    </property>
   </widget>
   <widget class="QPushButton" name="buttonCancel">
