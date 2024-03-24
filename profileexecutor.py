@@ -70,11 +70,11 @@ class ProfileExecutor(threading.Thread):
     def getSettingsPath(self, setting):
         home = os.path.expanduser("~") + '/.local/share/LinVAM/'
         if not os.path.exists(home):
-			os.mkdir(home)
-		file = home + setting
-		if not os.path.exists(file):
-			with (open(file, "w")) as f:
-				f.close()
+            os.mkdir(home)
+        file = home + setting
+        if not os.path.exists(file):
+            with (open(file, "w")) as f:
+                f.close()
         return home + setting
 
     def setProfile(self, p_profile):
