@@ -1,10 +1,8 @@
-from PyQt6.QtCore import *
-from PyQt6.QtGui import *
-from PyQt6.QtWidgets import *
+from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QMessageBox, QAbstractItemView, QHeaderView
 from ui_profileeditwnd import Ui_ProfileEditDialog
 from commandeditwnd import CommandEditWnd
 import json
-from profileexecutor import *
 
 class ProfileEditWnd(QDialog):
     def __init__(self, p_profile, p_parent = None):

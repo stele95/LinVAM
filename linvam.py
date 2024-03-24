@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-from PyQt6.QtCore import *
-from PyQt6.QtGui import *
-from PyQt6.QtWidgets import *
+from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessageBox, QLineEdit
 from ui_mainwnd import Ui_MainWidget
 from profileeditwnd import ProfileEditWnd
 import json
@@ -20,7 +18,7 @@ class MainWnd(QWidget):
 
 		self.ui = Ui_MainWidget()
 		self.ui.setupUi(self)
-		#self.handleArgs()
+		self.handleArgs()
 		self.m_sound = SoundFiles()
 		self.m_profileExecutor = ProfileExecutor(None, self)
 
@@ -157,6 +155,8 @@ class MainWnd(QWidget):
 		if buttonReply == QMessageBox.StandardButton.No:
 			return
 
+		self.ui.listeningChk.setChecked(False)
+
 		w_curIdx = self.ui.profileCbx.currentIndex()
 		if w_curIdx >= 0:
 			self.ui.profileCbx.removeItem(w_curIdx)
@@ -182,19 +182,16 @@ class MainWnd(QWidget):
 
 	def handleArgs(self):
 		self.m_config = {
-			'noroot' : 0,
-			'xdowindowid' : None
+			'testEnv': 0,
 		}
 
 		if len(sys.argv) == 1:
 			return
 
 		for i in range(1,len(sys.argv)):
-			if sys.argv[i] == '-noroot':
-				self.m_config['noroot'] = 1
-			elif sys.argv[i] == '-xdowindowid' and (i+1 < len(sys.argv)):
-				self.m_config['xdowindowid'] = sys.argv[i+1]
-				i = i+1
+			if sys.argv[i] == '-testEnv':
+				self.m_config['testEnv'] = 1
+			i += 1
 
 if __name__ == "__main__":
 	app = QApplication(sys.argv)

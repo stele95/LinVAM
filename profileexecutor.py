@@ -5,7 +5,7 @@ import threading
 import os, pyaudio
 import shutil
 import re
-from pocketsphinx import *
+from pocketsphinx import Config, Decoder
 from soundfiles import SoundFiles
 
 
@@ -19,6 +19,7 @@ class ProfileExecutor(threading.Thread):
         self.m_stop = False
         self.m_listening = False
         self.m_cmdThreads = {}
+        self.p_parent = p_parent
 
         self.m_config = Config(
             hmm=os.path.join(self.getLibPath('model'), 'en-us/en-us'),
@@ -59,12 +60,13 @@ class ProfileExecutor(threading.Thread):
         # Process audio chunk by chunk. On keyword detected perform action and restart search
         self.m_decoder = Decoder(self.m_config)
 
-        self.p_parent = p_parent
         if not self.p_parent == None:
             self.m_sound = self.p_parent.m_sound
 
     def getLibPath(self, file):
-        home = os.path.expanduser("~") + '/.local/lib/LinVAM/'
+        home = ""
+        if self.p_parent.m_config['testEnv'] == 0:
+            home = os.path.expanduser("~") + '/.local/lib/LinVAM/'
         return home + file
 
     def getSettingsPath(self, setting):
