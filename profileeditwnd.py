@@ -3,7 +3,6 @@ from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QMessageBox, QAbstractIte
 from ui_profileeditwnd import Ui_ProfileEditDialog
 from commandeditwnd import CommandEditWnd
 import json
-from profileexecutor import *
 
 class ProfileEditWnd(QDialog):
     def __init__(self, p_profile, p_parent = None):
