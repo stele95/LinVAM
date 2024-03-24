@@ -170,7 +170,7 @@ class Ui_MouseActionEditDialog(object):
         self.gridLayout.addLayout(self.horizontalLayout, 3, 0, 1, 1)
 
         self.retranslateUi(MouseActionEditDialog)
-        self.mouseActionTabWidget.setCurrentIndex(0)
+        self.mouseActionTabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MouseActionEditDialog)
 
     def retranslateUi(self, MouseActionEditDialog):
@@ -198,9 +198,9 @@ class Ui_MouseActionEditDialog(object):
         self.label_6.setText(_translate("MouseActionEditDialog", "Y"))
         self.label_7.setText(_translate("MouseActionEditDialog", "pixels"))
         self.scrollUp.setText(_translate("MouseActionEditDialog", "Scroll up"))
-        self.label_8.setText(_translate("MouseActionEditDialog", "pixels"))
+        self.label_8.setText(_translate("MouseActionEditDialog", "wheel steps"))
         self.scrollDown.setText(_translate("MouseActionEditDialog", "Scroll down"))
-        self.label_9.setText(_translate("MouseActionEditDialog", "pixels"))
+        self.label_9.setText(_translate("MouseActionEditDialog", "wheel steps"))
         self.mouseActionTabWidget.setTabText(self.mouseActionTabWidget.indexOf(self.moveActionTab), _translate("MouseActionEditDialog", "Move"))
         self.ok.setText(_translate("MouseActionEditDialog", "Save"))
         self.cancel.setText(_translate("MouseActionEditDialog", "Cancel"))

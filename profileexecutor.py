@@ -183,8 +183,7 @@ class ProfileExecutor(threading.Thread):
             print("Mouse button command: ", clickCommand)
             os.system('ydotool click ' + args + " --next-delay 25 " + clickCommand)
         elif w_actionName == 'mouse scroll action':
-            print("Mouse scroll action detected")
-            #scroll(0, p_action['delta'])
+            os.system('ydotool mousemove --wheel -x 0 -y' + str(p_action['delta']))
 
     class CommandThread(threading.Thread):
         def __init__(self, p_ProfileExecutor, p_actions, p_repeat):
