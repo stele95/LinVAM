@@ -254,7 +254,7 @@ class ProfileExecutor(threading.Thread):
         if len(commands) < 1:
             print('Commands not recognized, skipping')
             return
-        os.system('ydotool key -d 75 ' + commands)
+        os.system('ydotool key -d 65 ' + commands)
         print("original command: ", original_key)
         print("ydotool converted command: ", commands)
 
