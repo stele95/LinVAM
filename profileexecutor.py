@@ -162,6 +162,8 @@ class ProfileExecutor(threading.Thread):
                 clickCommand += '8'
             elif w_type == 10:
                 clickCommand += 'C'
+            elif w_type == 11:
+                clickCommand += 'C'
             else:
                 clickCommand += '0'
 
@@ -174,8 +176,12 @@ class ProfileExecutor(threading.Thread):
             else:
                 clickCommand += '0'
 
+            args = ""
+            if w_type == 11:
+                args = "--repeat 2"
+
             print("Mouse button command: ", clickCommand)
-            os.system('ydotool click ' + clickCommand)
+            os.system('ydotool click ' + args + " --next-delay 25 " + clickCommand)
         elif w_actionName == 'mouse scroll action':
             ProfileExecutor.mouse.scroll(0, p_action['delta'])
 
