@@ -170,7 +170,7 @@ class Ui_MouseActionEditDialog(object):
         self.gridLayout.addLayout(self.horizontalLayout, 3, 0, 1, 1)
 
         self.retranslateUi(MouseActionEditDialog)
-        self.mouseActionTabWidget.setCurrentIndex(1)
+        self.mouseActionTabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MouseActionEditDialog)
 
     def retranslateUi(self, MouseActionEditDialog):
