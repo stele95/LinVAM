@@ -148,7 +148,6 @@ class ProfileExecutor(threading.Thread):
         elif w_actionName == 'command play sound' or w_actionName == 'play sound':
             self.playSound(p_action)
         elif w_actionName == 'mouse move action':
-            print("Move move action, x: " + str(p_action['x']) + " y: " + str(p_action['y']))
             if p_action['absolute']:
                 os.system('ydotool mousemove --absolute -x' + str(p_action['x']) + " -y " + str(p_action['y']))
             else:
@@ -156,30 +155,27 @@ class ProfileExecutor(threading.Thread):
         elif w_actionName == 'mouse click action':
             w_type = p_action['type']
             w_button = p_action['button']
+            clickCommand = '0x'
             if w_type == 1:
-                if w_button == 'left':
-                    ProfileExecutor.mouse.press(Button.left)
-                elif w_button == 'middle':
-                    ProfileExecutor.mouse.press(Button.middle)
-                elif w_button == 'right':
-                    ProfileExecutor.mouse.press(Button.right)
-                print("pressed mouse button: ", w_button)
+                clickCommand += '4'
             elif w_type == 0:
-                if w_button == 'left':
-                    ProfileExecutor.mouse.release(Button.left)
-                elif w_button == 'middle':
-                    ProfileExecutor.mouse.release(Button.middle)
-                elif w_button == 'right':
-                    ProfileExecutor.mouse.release(Button.right)
-                print("released mouse button: ", w_button)
+                clickCommand += '8'
             elif w_type == 10:
-                if w_button == 'left':
-                    ProfileExecutor.mouse.click(Button.left)
-                elif w_button == 'middle':
-                    ProfileExecutor.mouse.click(Button.middle)
-                elif w_button == 'right':
-                    ProfileExecutor.mouse.click(Button.right)
-                print("pressed and released mouse button: ", w_button)
+                clickCommand += 'C'
+            else:
+                clickCommand += '0'
+
+            if w_button == 'left':
+                clickCommand += '0'
+            elif w_button == 'middle':
+                clickCommand += '2'
+            elif w_button == 'right':
+                clickCommand += '1'
+            else:
+                clickCommand += '0'
+
+            print("Mouse button command: ", clickCommand)
+            os.system('ydotool click ' + clickCommand)
         elif w_actionName == 'mouse scroll action':
             ProfileExecutor.mouse.scroll(0, p_action['delta'])
 
@@ -255,6 +251,9 @@ class ProfileExecutor(threading.Thread):
         commands = ""
         for key in keys:
             commands += self.createKeyEvent(key) + " "
+        if len(commands) < 1:
+            print('Commands not recognized, skipping')
+            return
         os.system('ydotool key -d 75 ' + commands)
         print("original command: ", original_key)
         print("ydotool converted command: ", commands)
@@ -263,13 +262,19 @@ class ProfileExecutor(threading.Thread):
         if "hold" in w_key:
             w_key = re.sub('hold', '', w_key, flags=re.IGNORECASE)
             w_key = self.mapKey(w_key.strip())
+            if len(w_key) < 1:
+                return ''
             return str(w_key) + ":1"
         elif "release" in w_key:
             w_key = re.sub('release', '', w_key, flags=re.IGNORECASE)
             w_key = self.mapKey(w_key.strip())
+            if len(w_key) < 1:
+                return ''
             return str(w_key) + ":0"
         else:
             w_key = self.mapKey(w_key.strip())
+            if len(w_key) < 1:
+                return ''
             return str(w_key) + ":1 " + str(w_key) + ":0"
 
     def mapKey(self, w_key):
@@ -471,4 +476,4 @@ class ProfileExecutor(threading.Thread):
             case 'ndot': # Num .
                 return '83'
             case _:
-                return w_key
+                return ''
