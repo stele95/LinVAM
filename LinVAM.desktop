@@ -1,8 +1,9 @@
 [Desktop Entry]
 Name=LinVAM
-StartupWMClass=linvam.py
 Comment=Linux Voice Activated Macros
 GenericName=Linux Voice Activated Macros
 Exec=python3 ~/.local/lib/LinVAM/linvam.py
 Type=Application
 Categories=Game;Utilities;
+StartupWMClass=python3
+Terminal=false
