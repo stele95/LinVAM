@@ -7,14 +7,12 @@ This project is currently a work-in-progress and is minimally functional only fo
 Utilising Pocketsphinx, a lightweight voice to text engine you can specify voice commands for the tool to recognise and actions to perform.
 
 Known bugs and planned additions
-- Mouse inputs are a work in progress and it's possible that they don't work as expected on Wayland
 - Log window showing spoken words the V2T recognises with ability to right click and assign voice command and actions to current profile
 - Support for joysticks and gaming devices
 
 ## Requirements
 - python3
 - PyQt6
-- python3-xlib
 - pyaudio
 - pocketsphinx
 - swig3.0
@@ -25,7 +23,7 @@ Known bugs and planned additions
 - HCS voicepacks
 
 ## Install
-- install python packages: PyQt6, python3-xlib, pyaudio, pocketsphinx
+- install python packages: PyQt6, pyaudio, pocketsphinx
 - install swig3.0
 - install ydotool (https://github.com/ReimuNotMoe/ydotool)
 - (optional) install ffmpeg for playing audio files

@@ -301,7 +301,7 @@
             </size>
            </property>
            <property name="text">
-            <string>pixels</string>
+            <string>wheel steps</string>
            </property>
           </widget>
          </item>
@@ -333,7 +333,7 @@
             </size>
            </property>
            <property name="text">
-            <string>pixels</string>
+            <string>wheel steps</string>
            </property>
           </widget>
          </item>
