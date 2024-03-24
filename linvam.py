@@ -45,6 +45,8 @@ class MainWnd(QWidget):
 		self.ui.copyBut.setEnabled(enabled)
 		self.ui.removeBut.setEnabled(enabled)
 		self.ui.listeningChk.setEnabled(enabled)
+		if not enabled:
+			self.ui.listeningChk.setChecked(False)
 
 	def saveToDatabase(self):
 		w_profiles = []
