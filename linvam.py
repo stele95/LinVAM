@@ -33,11 +33,9 @@ class MainWnd(QWidget):
 		self.ui.sliderVolume.valueChanged.connect(lambda: self.m_sound.setVolume(self.ui.sliderVolume.value()))
 		signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-		if self.loadFromDatabase() > 0:
-			w_jsonProfile = self.ui.profileCbx.itemData(0)
-			if w_jsonProfile != None:
-				self.m_activeProfile = json.loads(w_jsonProfile)
-				self.m_profileExecutor.setProfile(self.m_activeProfile)
+		position = self.loadFromDatabase()
+		if position >= 0:
+			self.ui.profileCbx.setCurrentIndex(position)
 
 
 	def saveToDatabase(self):
@@ -56,28 +54,46 @@ class MainWnd(QWidget):
 			f.close()
 
 	def loadFromDatabase(self):
-		profilesCount = 0
+		selectedProfileFile = open(self.getSettingsPath('selectedProfile'), "r")
+		selectedProfile = selectedProfileFile.read()
+		selectedProfileFile.close()
+		selectedProfilePosition = 0
 		with open(self.getSettingsPath("profiles.json"), "r") as f:
 			w_profiles = json.loads(f.read())
 			f.close()
 			print("No of profiles read from file: " + str(len(w_profiles)))
-			for w_profile in w_profiles:
-				self.ui.profileCbx.addItem(w_profile['name'])
+			for position, w_profile in enumerate(w_profiles):
+				name = w_profile['name']
+				self.ui.profileCbx.addItem(name)
 				w_jsonProfile = json.dumps(w_profile)
 				self.ui.profileCbx.setItemData(self.ui.profileCbx.count() - 1, w_jsonProfile)
-				profilesCount += 1
+				if name == selectedProfile:
+					selectedProfilePosition = position
 
-		return profilesCount
+		if len(w_profiles) < 1:
+			selectedProfilePosition = -1
+
+		return selectedProfilePosition
 
 	def getSettingsPath(self, setting):
 		home = os.path.expanduser("~") + '/.local/share/LinVAM/'
-		return home + setting
+		if not os.path.exists(home):
+			os.mkdir(home)
+		file = home + setting
+		if not os.path.exists(file):
+			with (open(file, "w")) as f:
+				f.close()
+		return file
 
 	def slotProfileChanged(self, p_idx):
+		print("position " + str(p_idx))
 		w_jsonProfile = self.ui.profileCbx.itemData(p_idx)
 		if w_jsonProfile != None:
 			self.m_activeProfile = json.loads(w_jsonProfile)
 			self.m_profileExecutor.setProfile(self.m_activeProfile)
+			selectedProfileFile = open(self.getSettingsPath('selectedProfile'), "w")
+			selectedProfileFile.write(self.m_activeProfile['name'])
+			selectedProfileFile.close()
 
 	def slotAddNewProfile(self):
 		w_profileEditWnd = ProfileEditWnd(None, self)
