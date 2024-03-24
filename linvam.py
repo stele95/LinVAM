@@ -20,7 +20,7 @@ class MainWnd(QWidget):
 
 		self.ui = Ui_MainWidget()
 		self.ui.setupUi(self)
-		#self.handleArgs()
+		self.handleArgs()
 		self.m_sound = SoundFiles()
 		self.m_profileExecutor = ProfileExecutor(None, self)
 
@@ -182,19 +182,16 @@ class MainWnd(QWidget):
 
 	def handleArgs(self):
 		self.m_config = {
-			'noroot' : 0,
-			'xdowindowid' : None
+			'testEnv': 0,
 		}
 
 		if len(sys.argv) == 1:
 			return
 
 		for i in range(1,len(sys.argv)):
-			if sys.argv[i] == '-noroot':
-				self.m_config['noroot'] = 1
-			elif sys.argv[i] == '-xdowindowid' and (i+1 < len(sys.argv)):
-				self.m_config['xdowindowid'] = sys.argv[i+1]
-				i = i+1
+			if sys.argv[i] == '-testEnv':
+				self.m_config['testEnv'] = 1
+			i += 1
 
 if __name__ == "__main__":
 	app = QApplication(sys.argv)
