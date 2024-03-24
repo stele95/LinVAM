@@ -37,6 +37,14 @@ class MainWnd(QWidget):
 		if position >= 0:
 			self.ui.profileCbx.setCurrentIndex(position)
 
+		self.checkButtonsStates()
+
+	def checkButtonsStates(self):
+		enabled = self.ui.profileCbx.count() > 0
+		self.ui.editBut.setEnabled(enabled)
+		self.ui.copyBut.setEnabled(enabled)
+		self.ui.removeBut.setEnabled(enabled)
+		self.ui.listeningChk.setEnabled(enabled)
 
 	def saveToDatabase(self):
 		w_profiles = []
@@ -59,18 +67,24 @@ class MainWnd(QWidget):
 		selectedProfileFile.close()
 		selectedProfilePosition = 0
 		with open(self.getSettingsPath("profiles.json"), "r") as f:
-			w_profiles = json.loads(f.read())
+			profiles = f.read()
 			f.close()
-			print("No of profiles read from file: " + str(len(w_profiles)))
-			for position, w_profile in enumerate(w_profiles):
-				name = w_profile['name']
-				self.ui.profileCbx.addItem(name)
-				w_jsonProfile = json.dumps(w_profile)
-				self.ui.profileCbx.setItemData(self.ui.profileCbx.count() - 1, w_jsonProfile)
-				if name == selectedProfile:
-					selectedProfilePosition = position
+			noOfProfiles = 0
+			try:
+				w_profiles = json.loads(profiles)
+				noOfProfiles = len(w_profiles)
+				print("No of profiles read from file: " + str(noOfProfiles))
+				for position, w_profile in enumerate(w_profiles):
+					name = w_profile['name']
+					self.ui.profileCbx.addItem(name)
+					w_jsonProfile = json.dumps(w_profile)
+					self.ui.profileCbx.setItemData(self.ui.profileCbx.count() - 1, w_jsonProfile)
+					if name == selectedProfile:
+						selectedProfilePosition = position
+			except:
+				print("No profiles found in file")
 
-		if len(w_profiles) < 1:
+		if noOfProfiles < 1:
 			selectedProfilePosition = -1
 
 		return selectedProfilePosition
@@ -104,6 +118,7 @@ class MainWnd(QWidget):
 			w_jsonProfile = json.dumps(w_profile)
 			self.ui.profileCbx.setItemData(self.ui.profileCbx.count()-1, w_jsonProfile)
 			self.saveToDatabase()
+			self.checkButtonsStates()
 
 	def slotEditProfile(self):
 		w_idx = self.ui.profileCbx.currentIndex()
@@ -151,6 +166,7 @@ class MainWnd(QWidget):
 			self.m_profileExecutor.setProfile(w_profile)
 
 		self.saveToDatabase()
+		self.checkButtonsStates()
 
 	def slotListeningEnabled(self, p_enabled):
 		if p_enabled:
