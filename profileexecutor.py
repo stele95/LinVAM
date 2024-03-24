@@ -1,5 +1,4 @@
 import keyboard
-from pynput.mouse import Button, Controller
 import time
 import threading
 import os, pyaudio
@@ -10,7 +9,6 @@ from soundfiles import SoundFiles
 
 
 class ProfileExecutor(threading.Thread):
-    mouse = Controller()
 
     def __init__(self, p_profile = None, p_parent = None):
 
@@ -185,7 +183,8 @@ class ProfileExecutor(threading.Thread):
             print("Mouse button command: ", clickCommand)
             os.system('ydotool click ' + args + " --next-delay 25 " + clickCommand)
         elif w_actionName == 'mouse scroll action':
-            ProfileExecutor.mouse.scroll(0, p_action['delta'])
+            print("Mouse scroll action detected")
+            #scroll(0, p_action['delta'])
 
     class CommandThread(threading.Thread):
         def __init__(self, p_ProfileExecutor, p_actions, p_repeat):
