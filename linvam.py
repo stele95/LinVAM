@@ -155,6 +155,8 @@ class MainWnd(QWidget):
 		if buttonReply == QMessageBox.StandardButton.No:
 			return
 
+		self.ui.listeningChk.setChecked(False)
+
 		w_curIdx = self.ui.profileCbx.currentIndex()
 		if w_curIdx >= 0:
 			self.ui.profileCbx.removeItem(w_curIdx)
