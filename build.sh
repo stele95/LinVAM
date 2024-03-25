@@ -1,5 +1,5 @@
 #!/bin/bash
-python -m nuitka \
+python3 -m nuitka \
     --output-dir=build \
     --output-filename=linvam \
     --follow-import-to=commandeditwnd \
