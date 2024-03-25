@@ -7,7 +7,8 @@ This project is currently a work-in-progress and is minimally functional only fo
 Utilising Pocketsphinx, a lightweight voice to text engine you can specify voice commands for the tool to recognise and actions to perform.
 
 Known bugs and planned additions
-- Log window showing spoken words the V2T recognises with ability to right click and assign voice command and actions to current profile
+- Create a built versions of the app and releases for easy download
+- Log window showing spoken words the V2T recognises
 - Support for joysticks and gaming devices
 
 ## Requirements
@@ -17,15 +18,18 @@ Known bugs and planned additions
 - pocketsphinx
 - swig3.0
 - ydotool (https://github.com/ReimuNotMoe/ydotool)
+- nuitka (https://github.com/Nuitka/Nuitka)
 
 ## Optional requirements
 - ffplay (part of ffmpeg, usually already installed)
 - HCS voicepacks
 
 ## Install
+Currently, the only way to install LinVAM is to install dependencies and build the app manually by following the steps bellow:
 - install python packages: PyQt6, pyaudio, pocketsphinx
 - install swig3.0
 - install ydotool (https://github.com/ReimuNotMoe/ydotool)
+- install nuitka (https://github.com/Nuitka/Nuitka)
 - (optional) install ffmpeg for playing audio files
 - sudo ln -s /usr/bin/swig3.0 /usr/bin/swig
 - run the following command in terminal:
