@@ -16,12 +16,11 @@ Known bugs and planned additions
 - PyQt6
 - pyaudio
 - pocketsphinx
-- swig3.0
+- ffplay (part of ffmpeg, usually already installed)
 - ydotool (https://github.com/ReimuNotMoe/ydotool)
 - nuitka (https://github.com/Nuitka/Nuitka)
 
 ## Optional requirements
-- ffplay (part of ffmpeg, usually already installed)
 - HCS voicepacks
 
 ## Install
@@ -30,8 +29,7 @@ Currently, the only way to install LinVAM is to install dependencies and build t
 - install swig3.0
 - install ydotool (https://github.com/ReimuNotMoe/ydotool)
 - install nuitka (https://github.com/Nuitka/Nuitka)
-- (optional) install ffmpeg for playing audio files
-- sudo ln -s /usr/bin/swig3.0 /usr/bin/swig
+- install ffmpeg for playing audio files
 - run the following command in terminal:
 
         git clone https://github.com/stele95/LinVAM.git && ./LinVAM/setup.sh
