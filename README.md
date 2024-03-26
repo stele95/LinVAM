@@ -10,7 +10,6 @@ Known bugs and planned additions
 - Create a built versions of the app and releases for easy download
 - Log window showing spoken words the V2T recognises
 - Support for joysticks and gaming devices
-- Reorganize project structure
 
 ## Install
 ### Requirements
