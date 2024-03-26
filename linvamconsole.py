@@ -4,6 +4,8 @@ from profileexecutor import ProfileExecutor
 import sys
 import signal
 import os
+import subprocess
+import shlex
 from soundfiles import SoundFiles
 
 
@@ -46,8 +48,11 @@ class LinVAMConsole:
                     print('Unknown or unsupported argument')
 
     def signalHandler(self, signal, frame):
-        print('Shutting down')
+        self.shutDown()
+
+    def shutDown(self):
         self.m_profileExecutor.setEnableListening(False)
+        print('Shutting down')
 
     def getProfileFromDatabase(self, profileName):
         with open(self.getSettingsPath("profiles.json"), "r") as f:
@@ -93,9 +98,18 @@ if __name__ == "__main__":
                 runCommands = runCommands + arg
             i += 1
     linvamConsole.startListening(args)
-    os.system(runCommands)
-    signal.signal(signal.SIGTERM, linvamConsole.signalHandler)
-    signal.signal(signal.SIGHUP, linvamConsole.signalHandler)
-    signal.signal(signal.SIGINT, linvamConsole.signalHandler)
-    signal.pause()
-    sys.exit()
+    if len(runCommands) > 0:
+        argsForSubprocess = shlex.split(runCommands)
+        try:
+            result = subprocess.run(argsForSubprocess)
+        except subprocess.CalledProcessError as e:
+            print('Command failed with return code {e.returncode}')
+        linvamConsole.shutDown()
+        sys.exit()
+    else:
+        print('Close the app with Ctrl + C')
+        signal.signal(signal.SIGTERM, linvamConsole.signalHandler)
+        signal.signal(signal.SIGHUP, linvamConsole.signalHandler)
+        signal.signal(signal.SIGINT, linvamConsole.signalHandler)
+        signal.pause()
+        sys.exit()
