@@ -2,6 +2,7 @@ import time
 import threading
 import os, pyaudio
 import re
+import pocketsphinx
 from pocketsphinx import Config, Decoder
 from soundfiles import SoundFiles
 

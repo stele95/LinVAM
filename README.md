@@ -11,28 +11,43 @@ Known bugs and planned additions
 - Log window showing spoken words the V2T recognises
 - Support for joysticks and gaming devices
 
-## Requirements
-- python3
-- PyQt6
-- pyaudio
-- pocketsphinx
-- ffplay (part of ffmpeg, usually already installed)
+## Install
+### Requirements
+- ffmpeg
 - ydotool (https://github.com/ReimuNotMoe/ydotool)
-- nuitka (https://github.com/Nuitka/Nuitka)
 
 ## Optional requirements
 - HCS voicepacks
 
-## Install
-Currently, the only way to install LinVAM is to install dependencies and build the app manually by following the steps bellow:
-- install python packages: PyQt6, pyaudio, pocketsphinx
-- install swig3.0
-- install ydotool (https://github.com/ReimuNotMoe/ydotool)
-- install nuitka (https://github.com/Nuitka/Nuitka)
-- install ffmpeg for playing audio files
-- run the following command in terminal:
+## Install steps
+- After installing ydotool, [configure it to run without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
+- Download latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``setup-and-install.sh`` from the extracted files
 
-        git clone https://github.com/stele95/LinVAM.git && ./LinVAM/setup.sh
+## Build
+### Build dependencies
+- python3
+- PyQt6
+- pyaudio
+- nuitka (https://github.com/Nuitka/Nuitka)
+
+### Requirements for working
+- ffplay (part of ffmpeg, usually already installed)
+- ydotool (https://github.com/ReimuNotMoe/ydotool)
+
+### Steps for building and running successfully
+- install python packages: python3, PyQt6, pyaudio
+- install nuitka (https://github.com/Nuitka/Nuitka)
+- install ydotool (https://github.com/ReimuNotMoe/ydotool)
+- install ffmpeg for playing audio files
+- [Configure ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
+
+- For building without installing, run the following in terminal:
+
+        git clone https://github.com/stele95/LinVAM.git && ./LinVAM/build.sh
+
+- For building and installing properly, run the following in terminal:
+
+        git clone https://github.com/stele95/LinVAM.git && ./LinVAM/build-and-install.sh
 
 ## Configuring ydotool
 To simulate typing, the program needs access to your ``/dev/uinput`` device.
