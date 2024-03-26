@@ -23,15 +23,15 @@ class LinVAMConsole:
         self.m_profileExecutor = ProfileExecutor(None, self)
         profileName = self.m_config['profileName']
         if len(profileName) == 0:
-            print('No profile specified, not listening...')
+            print('LinVAM Console: No profile specified, not listening...')
             return
         profile = self.getProfileFromDatabase(profileName)
         if len(profile) > 0:
-            print('Listening for profile: ' + str(profile['name']))
+            print('LinVAM Console: Listening for profile: ' + str(profile['name']))
             self.m_profileExecutor.setProfile(profile)
             self.m_profileExecutor.setEnableListening(True)
         else:
-            print('Profile not found, not listening...')
+            print('LinVAM Console: Profile not found, not listening...')
 
     def handleArgs(self, args):
         if len(args) == 0:
@@ -45,14 +45,14 @@ class LinVAMConsole:
                 if arg == '-testEnv':
                     self.m_config['testEnv'] = 1
                 else:
-                    print('Unknown or unsupported argument')
+                    print('LinVAM Console: Unknown or unsupported argument')
 
     def signalHandler(self, signal, frame):
         self.shutDown()
 
     def shutDown(self):
         self.m_profileExecutor.setEnableListening(False)
-        print('Shutting down')
+        print('LinVAM Console: Shutting down')
 
     def getProfileFromDatabase(self, profileName):
         with open(self.getSettingsPath("profiles.json"), "r") as f:
@@ -61,13 +61,13 @@ class LinVAMConsole:
             try:
                 w_profiles = json.loads(profiles)
                 noOfProfiles = len(w_profiles)
-                print("No of profiles read from file: " + str(noOfProfiles))
+                print("LinVAM Console: No of profiles read from file: " + str(noOfProfiles))
                 for position, w_profile in enumerate(w_profiles):
                     name = w_profile['name']
                     if name == profileName:
                         return w_profile
             except:
-                print("No profiles found in file")
+                print("LinVAM Console: No profiles found in file")
         return ''
 
     def getSettingsPath(self, setting):
@@ -103,13 +103,12 @@ if __name__ == "__main__":
         argsForSubprocess = shlex.split(runCommands)
         try:
             result = subprocess.run(argsForSubprocess)
-            result.wait()
         except subprocess.CalledProcessError as e:
-            print('Command failed with return code {e.returncode}')
+            print('LinVAM Console: Command failed with return code {e.returncode}')
         linvamConsole.shutDown()
         sys.exit()
     else:
-        print('Close the app with Ctrl + C')
+        print('LinVAM Console: Close the app with Ctrl + C')
         signal.signal(signal.SIGTERM, linvamConsole.signalHandler)
         signal.signal(signal.SIGHUP, linvamConsole.signalHandler)
         signal.signal(signal.SIGINT, linvamConsole.signalHandler)
