@@ -88,20 +88,22 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         for i in range(1, len(sys.argv)):
             arg = sys.argv[i]
-            if arg == '--':
-                isArgs = False
-            elif isArgs:
-                args.append(arg)
+            if isArgs:
+                if arg == '--':
+                    isArgs = False
+                else:
+                    args.append(arg)
             else:
                 if len(runCommands) != 0:
                     runCommands = runCommands + ' '
-                runCommands = runCommands + arg
+                runCommands = runCommands + '\'' + arg + '\''
             i += 1
     linvamConsole.startListening(args)
     if len(runCommands) > 0:
         argsForSubprocess = shlex.split(runCommands)
         try:
             result = subprocess.run(argsForSubprocess)
+            result.wait()
         except subprocess.CalledProcessError as e:
             print('Command failed with return code {e.returncode}')
         linvamConsole.shutDown()
