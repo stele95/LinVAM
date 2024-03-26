@@ -13,12 +13,15 @@ Known bugs and planned additions
 
 ## Install
 ### Requirements
-- ffplay (part of ffmpeg, usually already installed)
+- ffmpeg
 - ydotool (https://github.com/ReimuNotMoe/ydotool)
-- [Configure ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 
 ## Optional requirements
 - HCS voicepacks
+
+## Install steps
+- After installing ydotool, [configure it to run without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
+- Download latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``setup-and-install.sh`` from the extracted files
 
 ## Build
 ### Build dependencies
@@ -32,9 +35,9 @@ Known bugs and planned additions
 - ydotool (https://github.com/ReimuNotMoe/ydotool)
 
 ### Steps for building and running successfully
-- install python packages: PyQt6, pyaudio
-- install ydotool (https://github.com/ReimuNotMoe/ydotool)
+- install python packages: python3, PyQt6, pyaudio
 - install nuitka (https://github.com/Nuitka/Nuitka)
+- install ydotool (https://github.com/ReimuNotMoe/ydotool)
 - install ffmpeg for playing audio files
 - [Configure ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 
