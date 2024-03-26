@@ -22,10 +22,10 @@
 #
 # python3 -m nuitka \
 #     --output-dir=build \
-#     --output-filename=linvamconsole \
+#     --output-filename=linvamrun \
 #     --follow-import-to=profileexecutor \
 #     --follow-import-to=soundfiles \
-#     linvamconsole.py
+#     linvamrun.py
 
 python3 -m nuitka \
     --output-dir=../build \
@@ -36,7 +36,7 @@ python3 -m nuitka \
 
 python3 -m nuitka \
     --output-dir=../build \
-    --output-filename=linvamconsole \
+    --output-filename=linvamrun \
     --standalone \
     --onefile \
-    ../src/linvamconsole.py
+    ../src/linvamrun.py
