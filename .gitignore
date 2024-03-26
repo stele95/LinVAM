@@ -3,6 +3,7 @@
 # Edit at https://www.gitignore.io/?templates=python
 
 linvam
+linvamconsole
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
