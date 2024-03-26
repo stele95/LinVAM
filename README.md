@@ -16,10 +16,10 @@ Known bugs and planned additions
 - ffmpeg
 - ydotool (https://github.com/ReimuNotMoe/ydotool)
 
-## Optional requirements
+### Optional requirements
 - HCS voicepacks
 
-## Install steps
+### Install steps
 - After installing ydotool, [configure it to run without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 - Download latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``setup-and-install.sh`` from the extracted files
 
