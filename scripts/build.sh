@@ -28,15 +28,15 @@
 #     linvamconsole.py
 
 python3 -m nuitka \
-    --output-dir=build \
+    --output-dir=../build \
     --output-filename=linvam \
     --standalone \
     --onefile \
-    linvam.py
+    ../src/linvam.py
 
 python3 -m nuitka \
-    --output-dir=build \
+    --output-dir=../build \
     --output-filename=linvamconsole \
     --standalone \
     --onefile \
-    linvamconsole.py
+    ../src/linvamconsole.py
