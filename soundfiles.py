@@ -1,7 +1,6 @@
 import time
 import threading
 import os
-import shutil
 from os import path
 import subprocess
 import shlex

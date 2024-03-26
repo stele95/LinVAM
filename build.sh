@@ -18,3 +18,10 @@ python3 -m nuitka \
     --follow-import-to=ui_profileeditwnd \
     --follow-import-to=ui_soundactioneditwnd \
     linvam.py
+
+python3 -m nuitka \
+    --output-dir=build \
+    --output-filename=linvamconsole \
+    --follow-import-to=profileexecutor \
+    --follow-import-to=soundfiles \
+    linvamconsole.py

@@ -3,6 +3,7 @@ echo "Starting LinVAM setup..."
 cd ./LinVAM
 sh ./build.sh
 sudo cp ./linvam /usr/local/bin/
+sudo cp ./linvamconsole /usr/local/bin/
 mkdir -p ~/.local/share/LinVAM
 cp -r ./model ~/.local/share/LinVAM
 cp ./LinVAM.desktop ~/.local/share/applications/
