@@ -42,13 +42,8 @@ Known bugs and planned additions
 - install ffmpeg for playing audio files
 - [Configure ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 
-- For building without installing, run the following in terminal:
-
-        git clone https://github.com/stele95/LinVAM.git && ./LinVAM/build.sh
-
-- For building and installing properly, run the following in terminal:
-
-        git clone https://github.com/stele95/LinVAM.git && ./LinVAM/build-and-install.sh
+- For building without installing, run the ``build.sh`` script
+- For building and installing properly, run the ``build-and-install.sh`` script
 
 ## Configuring ydotool
 ### TL/DR
