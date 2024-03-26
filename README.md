@@ -82,7 +82,7 @@ Also, I've added ``YDOTOOL_SOCKET=/tmp/.ydotool_socket`` to ``/etc/environment``
 
 
 ## Usage
-Start LinVAM from your list of applications or by typing ``linvam`` in terminal. This works on both X11 and Wayland, but prior ydotool setup is required, read [Configuring ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
+Start LinVAM from your list of applications or by typing ``linvam`` in the terminal. This works on both X11 and Wayland, but prior ydotool setup is required, read [Configuring ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 
 ### Usage with Steam
 After setting up profiles in the GUI app, you can add ``linvamconsole --profile='Profile name' -- %command%`` to the game launch options for starting the console app for listening when opening games.
