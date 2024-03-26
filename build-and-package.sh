@@ -1,6 +1,6 @@
  #!/bin/bash
 version=$(<VERSION)
-dir="linvam-$version"
+dir="linvam-v$version"
 mkdir $dir
 sh ./build.sh
 cp build/linvam $dir
