@@ -1,5 +1,5 @@
  #!/bin/bash
-version=$(<VERSION)
+version=$(<../VERSION)
 dir="linvam-v$version"
 mkdir $dir
 sh ./build.sh
