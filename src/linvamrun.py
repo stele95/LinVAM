@@ -9,7 +9,7 @@ import shlex
 from soundfiles import SoundFiles
 
 
-class LinVAMConsole:
+class LinVAMRun:
     def __init__(self):
         self.m_config = {
             'testEnv': 0,
@@ -23,15 +23,15 @@ class LinVAMConsole:
         self.m_profileExecutor = ProfileExecutor(None, self)
         profileName = self.m_config['profileName']
         if len(profileName) == 0:
-            print('LinVAM Console: No profile specified, not listening...')
+            print('linvamrun: No profile specified, not listening...')
             return
         profile = self.getProfileFromDatabase(profileName)
         if len(profile) > 0:
-            print('LinVAM Console: Listening for profile: ' + str(profile['name']))
+            print('linvamrun: Listening for profile: ' + str(profile['name']))
             self.m_profileExecutor.setProfile(profile)
             self.m_profileExecutor.setEnableListening(True)
         else:
-            print('LinVAM Console: Profile not found, not listening...')
+            print('linvamrun: Profile not found, not listening...')
 
     def handleArgs(self, args):
         if len(args) == 0:
@@ -45,14 +45,14 @@ class LinVAMConsole:
                 if arg == '-testEnv':
                     self.m_config['testEnv'] = 1
                 else:
-                    print('LinVAM Console: Unknown or unsupported argument')
+                    print('linvamrun: Unknown or unsupported argument')
 
     def signalHandler(self, signal, frame):
         self.shutDown()
 
     def shutDown(self):
         self.m_profileExecutor.setEnableListening(False)
-        print('LinVAM Console: Shutting down')
+        print('linvamrun: Shutting down')
 
     def getProfileFromDatabase(self, profileName):
         with open(self.getSettingsPath("profiles.json"), "r") as f:
@@ -65,7 +65,7 @@ class LinVAMConsole:
                     if name == profileName:
                         return w_profile
             except:
-                print("LinVAM Console: No profiles found in file")
+                print("linvamrun: No profiles found in file")
         return ''
 
     def getSettingsPath(self, setting):
@@ -79,7 +79,7 @@ class LinVAMConsole:
         return file
 
 if __name__ == "__main__":
-    linvamConsole = LinVAMConsole()
+    linvamrun = LinVAMRun()
     args = []
     runCommands = ''
     isArgs = True
@@ -96,19 +96,19 @@ if __name__ == "__main__":
                     runCommands = runCommands + ' '
                 runCommands = runCommands + '\'' + arg + '\''
             i += 1
-    linvamConsole.startListening(args)
+    linvamrun.startListening(args)
     if len(runCommands) > 0:
         argsForSubprocess = shlex.split(runCommands)
         try:
             result = subprocess.run(argsForSubprocess)
         except subprocess.CalledProcessError as e:
-            print('LinVAM Console: Command failed with return code {e.returncode}')
-        linvamConsole.shutDown()
+            print('linvamrun: Command failed with return code {e.returncode}')
+        linvamrun.shutDown()
         sys.exit()
     else:
-        print('LinVAM Console: Close the app with Ctrl + C')
-        signal.signal(signal.SIGTERM, linvamConsole.signalHandler)
-        signal.signal(signal.SIGHUP, linvamConsole.signalHandler)
-        signal.signal(signal.SIGINT, linvamConsole.signalHandler)
+        print('linvamrun: Close the app with Ctrl + C')
+        signal.signal(signal.SIGTERM, linvamrun.signalHandler)
+        signal.signal(signal.SIGHUP, linvamrun.signalHandler)
+        signal.signal(signal.SIGINT, linvamrun.signalHandler)
         signal.pause()
         sys.exit()
