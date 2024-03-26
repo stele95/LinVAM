@@ -11,28 +11,40 @@ Known bugs and planned additions
 - Log window showing spoken words the V2T recognises
 - Support for joysticks and gaming devices
 
-## Requirements
-- python3
-- PyQt6
-- pyaudio
-- pocketsphinx
+## Install
+### Requirements
 - ffplay (part of ffmpeg, usually already installed)
 - ydotool (https://github.com/ReimuNotMoe/ydotool)
-- nuitka (https://github.com/Nuitka/Nuitka)
+- [Configure ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 
 ## Optional requirements
 - HCS voicepacks
 
-## Install
-Currently, the only way to install LinVAM is to install dependencies and build the app manually by following the steps bellow:
-- install python packages: PyQt6, pyaudio, pocketsphinx
-- install swig3.0
+## Build
+### Build dependencies
+- python3
+- PyQt6
+- pyaudio
+- nuitka (https://github.com/Nuitka/Nuitka)
+
+### Requirements for working
+- ffplay (part of ffmpeg, usually already installed)
+- ydotool (https://github.com/ReimuNotMoe/ydotool)
+
+### Steps for building and running successfully
+- install python packages: PyQt6, pyaudio
 - install ydotool (https://github.com/ReimuNotMoe/ydotool)
 - install nuitka (https://github.com/Nuitka/Nuitka)
 - install ffmpeg for playing audio files
-- run the following command in terminal:
+- [Configure ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 
-        git clone https://github.com/stele95/LinVAM.git && ./LinVAM/setup.sh
+- For building without installing, run the following in terminal:
+
+        git clone https://github.com/stele95/LinVAM.git && ./LinVAM/build.sh
+
+- For building and installing properly, run the following in terminal:
+
+        git clone https://github.com/stele95/LinVAM.git && ./LinVAM/build-and-install.sh
 
 ## Configuring ydotool
 To simulate typing, the program needs access to your ``/dev/uinput`` device.

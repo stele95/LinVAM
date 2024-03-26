@@ -4,8 +4,7 @@ cd ./LinVAM
 sh ./build.sh
 sudo cp ./build/linvam /usr/local/bin/
 sudo cp ./build/linvamconsole /usr/local/bin/
-mkdir -p ~/.local/share/LinVAM
-cp -r ./model ~/.local/share/LinVAM
+sh ./setup.sh
 cp ./LinVAM.desktop ~/.local/share/applications/
 cd ..
 rm -rf ./LinVAM
