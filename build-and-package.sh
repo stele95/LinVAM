@@ -10,3 +10,4 @@ cp setup-and-install.sh $dir
 cp LinVAM.desktop $dir
 cp -r model $dir
 zip -r "$dir.zip" $dir
+rm -r $dir
