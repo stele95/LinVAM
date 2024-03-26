@@ -8,6 +8,7 @@ cp build/linvamconsole $dir
 cp setup.sh $dir
 cp setup-and-install.sh $dir
 cp LinVAM.desktop $dir
+cp configure-ydotoold.sh $dir
 cp -r model $dir
 zip -r "$dir.zip" $dir
 rm -r $dir
