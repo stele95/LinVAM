@@ -10,6 +10,7 @@ Known bugs and planned additions
 - Create a built versions of the app and releases for easy download
 - Log window showing spoken words the V2T recognises
 - Support for joysticks and gaming devices
+- Reorganize project structure
 
 ## Install
 ### Requirements
@@ -50,6 +51,11 @@ Known bugs and planned additions
         git clone https://github.com/stele95/LinVAM.git && ./LinVAM/build-and-install.sh
 
 ## Configuring ydotool
+### TL/DR
+If you have a system that uses systemd, you are good to go and don't need to do anything because a script is executed when running any install script. If not, read [Ydotoold daemon autostart](https://github.com/stele95/LinVAM?tab=readme-ov-file#ydotoold-daemon-autostart)
+
+### Manual configuration
+#### Udev rule for input
 To simulate typing, the program needs access to your ``/dev/uinput`` device.
 By default, this requires root privileges every time you run ``ydotool``.
 
@@ -76,11 +82,12 @@ You then need to define a new udev rule that will give the ``input`` group perma
 
 You will need to restart your computer for the change to take effect.
 
-Finally, ``ydotool`` works with a daemon that you leave running in the background, ``ydotoold``,
-for performance reasons. You needs to run ``ydotoold`` before you start using ``ydotool``.
+#### Ydotoold daemon autostart
+``ydotool`` works with a daemon that you leave running in the background, ``ydotoold``, for performance reasons.
+You needs to run ``ydotoold`` before you start using ``LinVAM`` since it relies on ``ydotool`` for executing input commands.
 
-To avoid running it every time you start the computer, you can add it to your startup programs.
-The steps depend on your distribution. I am running it as a ``systemd`` service. My service file ``ydotoold.service`` looks like this:
+To avoid running it every time you start the computer, you can add it to your startup programs. The steps depend on your distribution.
+If the install script detects that the system uses a ``systemd``, it will add a ``systemd`` service for starting ``ydotoold``. The service file ``ydotoold.service`` looks like this:
 
     [Unit]
     Description=ydotoold service for listening for inputs from ydotool
@@ -93,7 +100,7 @@ The steps depend on your distribution. I am running it as a ``systemd`` service.
     [Install]
     WantedBy=graphical.target
 
-Also, I've added ``YDOTOOL_SOCKET=/tmp/.ydotool_socket`` to ``/etc/environment``
+Also, the install script adds ``YDOTOOL_SOCKET=/tmp/.ydotool_socket`` to ``/etc/environment``
 
 
 ## Usage
