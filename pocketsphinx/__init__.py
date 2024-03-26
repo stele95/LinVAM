@@ -88,7 +88,6 @@ def get_model_path(subpath=None):
             model_path = importlib.util.find_spec(
                 "model"
             ).submodule_search_locations[0]
-    print(model_path)
     if subpath is not None:
         return os.path.join(model_path, subpath)
     else:
