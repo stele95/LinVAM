@@ -60,8 +60,6 @@ class LinVAMConsole:
             f.close()
             try:
                 w_profiles = json.loads(profiles)
-                noOfProfiles = len(w_profiles)
-                print("LinVAM Console: No of profiles read from file: " + str(noOfProfiles))
                 for position, w_profile in enumerate(w_profiles):
                     name = w_profile['name']
                     if name == profileName:
