@@ -7,9 +7,6 @@ from profileexecutor import ProfileExecutor
 import sys
 import signal
 import os
-import shutil
-import subprocess
-import shlex
 from soundfiles import SoundFiles
 
 class MainWnd(QWidget):
