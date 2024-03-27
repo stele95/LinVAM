@@ -35,18 +35,20 @@ Known bugs and planned additions
 - ydotool (https://github.com/ReimuNotMoe/ydotool)
 
 ### Steps for building and running successfully
-#### Building
+#### Building without installing
 - install python3 and pip
 - install python packages: PyQt6, pyaudio, [nuitka](https://github.com/Nuitka/Nuitka) by running the following command
 
         pip install -r requirements.txt
 
+- For building without installing, run the ``build.sh`` script
+
+#### Building and installing
+- do steps from [Building without installing](https://github.com/stele95/LinVAM?tab=readme-ov-file#building-without-installing)
 - install ydotool (https://github.com/ReimuNotMoe/ydotool)
 - install ffmpeg for playing audio files
 - [Configure ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
-
-- For building without installing, run the ``build.sh`` script
-- For building and installing properly, run the ``build-and-install.sh`` script
+- run the ``build-and-install.sh`` script
 
 ## Configuring ydotool
 ### TL/DR
