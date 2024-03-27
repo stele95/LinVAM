@@ -17,21 +17,21 @@ class CommandEditWnd(QDialog):
         self.ui.setupUi(self)
         self.m_parent = p_parent
 
-        self.ui.deleteBut.clicked.connect(self._slot_delete)
-        self.ui.ok.clicked.connect(self._slot_ok)
-        self.ui.cancel.clicked.connect(self._slot_cancel)
-        self.ui.keyBut.clicked.connect(self._slot_new_key_edit)
-        self.ui.mouseBut.clicked.connect(self._slot_new_mouse_edit)
-        self.ui.pauseBut.clicked.connect(self._slot_new_pause_edit)
-        self.ui.upBut.clicked.connect(self._slot_action_up)
-        self.ui.downBut.clicked.connect(self._slot_action_down)
-        self.ui.editBut.clicked.connect(self._slot_action_edit)
-        self.ui.actionsListWidget.doubleClicked.connect(self._slot_action_edit)
+        self.ui.deleteBut.clicked.connect(self.slot_delete)
+        self.ui.ok.clicked.connect(self.slot_ok)
+        self.ui.cancel.clicked.connect(self.slot_cancel)
+        self.ui.keyBut.clicked.connect(self.slot_new_key_edit)
+        self.ui.mouseBut.clicked.connect(self.slot_new_mouse_edit)
+        self.ui.pauseBut.clicked.connect(self.slot_new_pause_edit)
+        self.ui.upBut.clicked.connect(self.slot_action_up)
+        self.ui.downBut.clicked.connect(self.slot_action_down)
+        self.ui.editBut.clicked.connect(self.slot_action_edit)
+        self.ui.actionsListWidget.doubleClicked.connect(self.slot_action_edit)
 
         w_other_menu = QMenu()
-        w_other_menu.addAction('Stop Another Command', self._slot_stop_another_command)
-        w_other_menu.addAction('Execute Another Command', self._slot_do_another_command)
-        w_other_menu.addAction('Play Sound', self._slot_new_sound_edit)
+        w_other_menu.addAction('Stop Another Command', self.slot_stop_another_command)
+        w_other_menu.addAction('Execute Another Command', self.slot_do_another_command)
+        w_other_menu.addAction('Play Sound', self.slot_new_sound_edit)
         self.ui.otherBut.setMenu(w_other_menu)
 
         self.m_command = {}
@@ -56,66 +56,66 @@ class CommandEditWnd(QDialog):
             self.ui.asyncChk.setChecked(False)
             self.ui.oneExe.setChecked(True)
 
-    def _add_action(self, p_action):
+    def add_action(self, p_action):
         w_json_action = json.dumps(p_action)
         w_item = QListWidgetItem(w_json_action)
         w_item.setData(Qt.ItemDataRole.UserRole, w_json_action)
         self.ui.actionsListWidget.addItem(w_item)
 
-    def _slot_stop_another_command(self):
+    def slot_stop_another_command(self):
         text, ok_pressed = QInputDialog.getText(self, "Get Command Name", "Another command name:",
                                                 QLineEdit.EchoMode.Normal, "")
         if ok_pressed and text != '':
             w_command_stop_action = {'name': 'command stop action', 'command name': text}
-            self._add_action(w_command_stop_action)
+            self.add_action(w_command_stop_action)
 
-    def _slot_do_another_command(self):
+    def slot_do_another_command(self):
         text, ok_pressed = QInputDialog.getText(self, "Get Command Name", "Another command name:",
                                                 QLineEdit.EchoMode.Normal, "")
         if ok_pressed and text != '':
             w_command_do_action = {'name': 'command execute action', 'command name': text}
-            self._add_action(w_command_do_action)
+            self.add_action(w_command_do_action)
 
-    def _slot_do_play_sound(self):
+    def slot_do_play_sound(self):
         text, ok_pressed = QInputDialog.getItem(self, "Set sound to play", "Enter sound file:",
                                                 list(self.m_parent.m_parent.m_sound.m_sounds), 0, False)
         if ok_pressed and text != '':
             w_command_do_action = {'name': 'command play sound', 'command name': text}
-            self._add_action(w_command_do_action)
+            self.add_action(w_command_do_action)
 
-    def _slot_new_key_edit(self):
+    def slot_new_key_edit(self):
         w_key_edit_wnd = KeyActionEditWnd(None, self)
         if w_key_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-            self._add_action(w_key_edit_wnd.m_keyAction)
+            self.add_action(w_key_edit_wnd.m_key_action)
 
-    def _slot_new_mouse_edit(self):
+    def slot_new_mouse_edit(self):
         w_mouse_edit_wnd = MouseActionEditWnd(None, self)
         if w_mouse_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-            self._add_action(w_mouse_edit_wnd.m_mouseAction)
+            self.add_action(w_mouse_edit_wnd.m_mouseAction)
 
-    def _slot_new_pause_edit(self):
+    def slot_new_pause_edit(self):
         w_pause_edit_wnd = PauseActionEditWnd(None, self)
         if w_pause_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-            self._add_action(w_pause_edit_wnd.m_pauseAction)
+            self.add_action(w_pause_edit_wnd.m_pauseAction)
 
-    def _slot_new_sound_edit(self):
+    def slot_new_sound_edit(self):
         w_sound_edit_wnd = SoundActionEditWnd(self.m_parent.m_parent.m_sound, None, self)
         if w_sound_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-            self._add_action(w_sound_edit_wnd.m_soundAction)
+            self.add_action(w_sound_edit_wnd.m_sound_action)
 
-    def _slot_action_up(self):
+    def slot_action_up(self):
         current_index = self.ui.actionsListWidget.currentRow()
         current_item = self.ui.actionsListWidget.takeItem(current_index)
         self.ui.actionsListWidget.insertItem(current_index - 1, current_item)
         self.ui.actionsListWidget.setCurrentRow(current_index - 1)
 
-    def _slot_action_down(self):
+    def slot_action_down(self):
         current_index = self.ui.actionsListWidget.currentRow()
         current_item = self.ui.actionsListWidget.takeItem(current_index)
         self.ui.actionsListWidget.insertItem(current_index + 1, current_item)
         self.ui.actionsListWidget.setCurrentRow(current_index + 1)
 
-    def _slot_action_edit(self):
+    def slot_action_edit(self):
         w_list_items = self.ui.actionsListWidget.selectedItems()
         if len(w_list_items) < 1:
             return
@@ -127,7 +127,7 @@ class CommandEditWnd(QDialog):
         if w_action['name'] == 'key action':
             w_key_edit_wnd = KeyActionEditWnd(w_action, self)
             if w_key_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-                w_json_action = json.dumps(w_key_edit_wnd.m_keyAction)
+                w_json_action = json.dumps(w_key_edit_wnd.m_key_action)
         elif (w_action['name'] == 'mouse click action' or w_action['name'] == 'mouse move action' or w_action['name']
               == 'mouse scroll action'):
             w_mouse_edit_wnd = MouseActionEditWnd(w_action, self)
@@ -146,12 +146,12 @@ class CommandEditWnd(QDialog):
         elif w_action['name'] == 'play sound':
             w_sound_edit_wnd = SoundActionEditWnd(self.m_parent.m_parent.m_sound, w_action, self)
             if w_sound_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-                w_json_action = json.dumps(w_sound_edit_wnd.m_soundAction)
+                w_json_action = json.dumps(w_sound_edit_wnd.m_sound_action)
 
         w_item.setText(w_json_action)
         w_item.setData(Qt.ItemDataRole.UserRole, w_json_action)
 
-    def _slot_delete(self):
+    def slot_delete(self):
         w_list_items = self.ui.actionsListWidget.selectedItems()
         if not w_list_items:
             return
@@ -176,9 +176,9 @@ class CommandEditWnd(QDialog):
         elif self.ui.repeatExe.isChecked():
             self.m_command['repeat'] = self.ui.repeatCnt.value()
 
-    def _slot_ok(self):
+    def slot_ok(self):
         self.save_command()
         super().accept()
 
-    def _slot_cancel(self):
+    def slot_cancel(self):
         super().reject()
