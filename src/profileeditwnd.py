@@ -72,12 +72,13 @@ class ProfileEditWnd(QDialog):
         w_item.setData(Qt.ItemDataRole.UserRole, json.dumps(p_command))
         self.ui.cmdTable.setItem(w_row_cnt, 1, w_item)
         self.ui.cmdTable.resizeRowsToContents()
+        return True
 
     def slot_new_cmd(self):
         w_cmd_edit_wnd = CommandEditWnd(None, self)
         if w_cmd_edit_wnd.exec() == QDialog.DialogCode.Accepted:
             if not self.import_command(w_cmd_edit_wnd.m_command, False):
-                QMessageBox.critical(None, 'Error', 'Adding a new command was failed')
+                QMessageBox.critical(None, 'Error', 'Adding a new command failed')
                 return
             self.ui.cmdTable.selectRow(self.ui.cmdTable.rowCount() - 1)
             self.ui.cmdTable.setFocus()
