@@ -1,6 +1,6 @@
 #!/bin/bash
 # python3 -m nuitka \
-#     --output-dir=build \
+#     --output-dir=../build \
 #     --output-filename=linvam \
 #     --follow-import-to=pocketsphinx \
 #     --follow-import-to=commandeditwnd \
@@ -18,14 +18,14 @@
 #     --follow-import-to=ui_pauseactioneditwnd \
 #     --follow-import-to=ui_profileeditwnd \
 #     --follow-import-to=ui_soundactioneditwnd \
-#     linvam.py
+#     ../src/linvam.py
 #
 # python3 -m nuitka \
-#     --output-dir=build \
+#     --output-dir=../build \
 #     --output-filename=linvamrun \
 #     --follow-import-to=profileexecutor \
 #     --follow-import-to=soundfiles \
-#     linvamrun.py
+#     ../src/linvamrun.py
 
 python3 -m nuitka \
     --output-dir=../build \

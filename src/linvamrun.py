@@ -1,16 +1,17 @@
 #!/usr/bin/python3
 import json
-from profileexecutor import ProfileExecutor
-import sys
-import signal
-import os
-import subprocess
 import shlex
+import signal
+import subprocess
+import sys
+
+from profileexecutor import ProfileExecutor, get_settings_path
 from soundfiles import SoundFiles
 
 
 class LinVAMRun:
     def __init__(self):
+        self.m_profile_executor = None
         self.m_config = {
             'testEnv': 0,
             'profileName': ''
@@ -18,65 +19,60 @@ class LinVAMRun:
         self.m_sound = SoundFiles()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    def startListening(self, args):
-        self.handleArgs(args)
-        self.m_profileExecutor = ProfileExecutor(None, self)
-        profileName = self.m_config['profileName']
-        if len(profileName) == 0:
+    def start_listening(self, run_args):
+        self.handle_args(run_args)
+        self.m_profile_executor = ProfileExecutor(None, self)
+        profile_name = self.m_config['profileName']
+        if len(profile_name) == 0:
             print('linvamrun: No profile specified, not listening...')
             return
-        profile = self.getProfileFromDatabase(profileName)
+        profile = self._get_profile_from_database(profile_name)
         if len(profile) > 0:
             print('linvamrun: Listening for profile: ' + str(profile['name']))
-            self.m_profileExecutor.setProfile(profile)
-            self.m_profileExecutor.setEnableListening(True)
+            self.m_profile_executor.set_profile(profile)
+            self.m_profile_executor.set_enable_listening(True)
         else:
             print('linvamrun: Profile not found, not listening...')
 
-    def handleArgs(self, args):
-        if len(args) == 0:
+    def handle_args(self, run_args):
+        if len(run_args) == 0:
             return
-        for arg in args:
+        for argument in run_args:
+            # noinspection PyBroadException
             try:
-                argSplit = arg.split('=')
-                if argSplit[0] == '--profile':
-                    self.m_config['profileName'] = argSplit[1]
+                arg_split = argument.split('=')
+                if arg_split[0] == '--profile':
+                    self.m_config['profileName'] = arg_split[1]
             except:
-                if arg == '-testEnv':
+                if argument == '-testEnv':
                     self.m_config['testEnv'] = 1
                 else:
                     print('linvamrun: Unknown or unsupported argument')
 
-    def signalHandler(self, signal, frame):
-        self.shutDown()
+    # noinspection PyUnusedLocal
+    def signal_handler(self, s, f):
+        self.shut_down()
 
-    def shutDown(self):
-        self.m_profileExecutor.setEnableListening(False)
+    def shut_down(self):
+        self.m_profile_executor.set_enable_listening(False)
         print('linvamrun: Shutting down')
 
-    def getProfileFromDatabase(self, profileName):
-        with open(self.getSettingsPath("profiles.json"), "r") as f:
+    @staticmethod
+    def _get_profile_from_database(profile_name):
+        with open(get_settings_path("profiles.json"), "r") as f:
             profiles = f.read()
             f.close()
+            # noinspection PyBroadException
             try:
                 w_profiles = json.loads(profiles)
                 for position, w_profile in enumerate(w_profiles):
                     name = w_profile['name']
-                    if name == profileName:
+                    if name == profile_name:
                         return w_profile
             except:
                 print("linvamrun: No profiles found in file")
-        return ''
+        return {}
 
-    def getSettingsPath(self, setting):
-        home = os.path.expanduser("~") + '/.local/share/LinVAM/'
-        if not os.path.exists(home):
-            os.mkdir(home)
-        file = home + setting
-        if not os.path.exists(file):
-            with(open(file, "w")) as f:
-                f.close()
-        return file
 
 if __name__ == "__main__":
     linvamrun = LinVAMRun()
@@ -93,22 +89,22 @@ if __name__ == "__main__":
                     args.append(arg)
             else:
                 if len(runCommands) != 0:
-                    runCommands = runCommands + ' '
+                    runCommands += ' '
                 runCommands = runCommands + '\'' + arg + '\''
             i += 1
-    linvamrun.startListening(args)
+    linvamrun.start_listening(args)
     if len(runCommands) > 0:
         argsForSubprocess = shlex.split(runCommands)
         try:
             result = subprocess.run(argsForSubprocess)
         except subprocess.CalledProcessError as e:
-            print('linvamrun: Command failed with return code {e.returncode}')
-        linvamrun.shutDown()
+            print('linvamrun: Command failed with return code ' + str(e.returncode))
+        linvamrun.shut_down()
         sys.exit()
     else:
         print('linvamrun: Close the app with Ctrl + C')
-        signal.signal(signal.SIGTERM, linvamrun.signalHandler)
-        signal.signal(signal.SIGHUP, linvamrun.signalHandler)
-        signal.signal(signal.SIGINT, linvamrun.signalHandler)
+        signal.signal(signal.SIGTERM, linvamrun.signal_handler)
+        signal.signal(signal.SIGHUP, linvamrun.signal_handler)
+        signal.signal(signal.SIGINT, linvamrun.signal_handler)
         signal.pause()
         sys.exit()

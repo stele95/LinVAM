@@ -1,125 +1,132 @@
-import time
-import threading
-import os, pyaudio
+import os
 import re
-import pocketsphinx
+import threading
+import time
+
+import pyaudio
 from pocketsphinx import Config, Decoder
-from soundfiles import SoundFiles
+
+
+def get_settings_path(setting):
+    home = os.path.expanduser("~") + '/.local/share/LinVAM/'
+    if not os.path.exists(home):
+        os.mkdir(home)
+    file = home + setting
+    if not os.path.exists(file):
+        with (open(file, "w")) as f:
+            f.close()
+    return file
 
 
 class ProfileExecutor(threading.Thread):
 
-    def __init__(self, p_profile = None, p_parent = None):
+    def __init__(self, p_profile=None, p_parent=None):
 
+        super().__init__()
+        self.m_profile = None
         # does nothing?
-        self.setProfile(p_profile)
+        self.set_profile(p_profile)
         self.m_stop = False
         self.m_listening = False
         self.m_cmdThreads = {}
         self.p_parent = p_parent
 
         self.m_config = Config(
-            hmm=os.path.join(self.getModelPath(), 'en-us/en-us'),
-            dict=os.path.join(self.getModelPath(), 'en-us/cmudict-en-us.dict'),
-            kws=self.getSettingsPath('command.list'),
+            hmm=os.path.join(self.get_model_path(), 'en-us/en-us'),
+            dict=os.path.join(self.get_model_path(), 'en-us/cmudict-en-us.dict'),
+            kws=get_settings_path('command.list'),
             logfn='/dev/null'
         )
 
         self.m_pyaudio = pyaudio.PyAudio()
 
-        def listenCallback(in_data, frame_count, time_info, status):
+        # noinspection PyUnusedLocal
+        def listen_callback(in_data, frame_count, time_info, status):
             self.m_decoder.process_raw(in_data, False, False)
-            if self.m_decoder.hyp() != None:
-                #print([(seg.word, seg.prob, seg.start_frame, seg.end_frame) for seg in self.m_decoder.seg()])
-                #print("Detected keyword, restarting search")
+            if self.m_decoder.hyp() is not None:
+                # print([(seg.word, seg.prob, seg.start_frame, seg.end_frame) for seg in self.m_decoder.seg()])
+                # print("Detected keyword, restarting search")
 
                 # hack :)
                 for seg in self.m_decoder.seg():
-                    print("Detected: ",seg.word)
+                    print("Detected: ", seg.word)
                     break
 
                 #
                 # Here you run the code you want based on keyword
                 #
                 for w_seg in self.m_decoder.seg():
-                    self.doCommand(w_seg.word.rstrip())
+                    self.do_command(w_seg.word.rstrip())
 
                 self.m_decoder.end_utt()
                 self.m_decoder.start_utt()
-            return (in_data, pyaudio.paContinue)
+            return in_data, pyaudio.paContinue
 
+        # noinspection PyBroadException
         try:
-            self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, start=False, stream_callback=listenCallback)
+            self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, start=False,
+                                                stream_callback=listen_callback)
         except:
             samplerate = int(self.m_pyaudio.get_device_info_by_index(0).get('defaultSampleRate'))
-            self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True, start=False, stream_callback=listenCallback)
+            self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True,
+                                                start=False, stream_callback=listen_callback)
 
         # Process audio chunk by chunk. On keyword detected perform action and restart search
         self.m_decoder = Decoder(self.m_config)
 
-        if not self.p_parent == None:
+        if self.p_parent is not None:
             self.m_sound = self.p_parent.m_sound
 
-    def getModelPath(self):
+    def get_model_path(self):
         home = ""
         if self.p_parent.m_config['testEnv'] == 0:
             home = os.path.expanduser("~") + '/.local/share/LinVAM/'
         return home + 'model'
 
-    def getSettingsPath(self, setting):
-        home = os.path.expanduser("~") + '/.local/share/LinVAM/'
-        if not os.path.exists(home):
-            os.mkdir(home)
-        file = home + setting
-        if not os.path.exists(file):
-            with (open(file, "w")) as f:
-                f.close()
-        return home + setting
-
-    def setProfile(self, p_profile):
+    def set_profile(self, p_profile):
         self.m_profile = p_profile
-        if self.m_profile == None:
+        if self.m_profile is None:
             return
-        w_commandWordFile = open(self.getSettingsPath('command.list'), 'w')
+        w_command_word_file = open(get_settings_path('command.list'), 'w')
         w_commands = self.m_profile['commands']
         for w_command in w_commands:
             parts = w_command['name'].split(',')
             for part in parts:
-                w_commandWordFile.write(part.lower() + ' /1e-%d/' % w_command['threshold'] + '\n')
-        w_commandWordFile.close()
-        self.m_config.set_string('-kws', self.getSettingsPath('command.list'))
+                w_command_word_file.write(part.lower() + ' /1e-%d/' % w_command['threshold'] + '\n')
+        w_command_word_file.close()
+        self.m_config.set_string('-kws', get_settings_path('command.list'))
         # load new command list into decoder and restart it
-        if self.m_listening == True:
+        if self.m_listening:
             self.stop()
             self.m_stream.start_stream()
             # a self.m_decoder.reinit(self.config) will segfault?
             self.m_decoder = Decoder(self.m_config)
             self.m_stop = False
-            self.doListen()
+            self.do_listen()
         else:
             self.m_decoder.reinit(self.m_config)
 
-    def setEnableListening(self, p_enable):
-        if self.m_listening == False and p_enable == True:
+    def set_enable_listening(self, p_enable):
+        if not self.m_listening and p_enable:
             self.m_stream.start_stream()
             self.m_listening = p_enable
             self.m_stop = False
-            self.doListen()
-        elif self.m_listening == True and p_enable == False:
+            self.do_listen()
+        elif self.m_listening and not p_enable:
             self.stop()
 
-    def doListen(self):
+    def do_listen(self):
         print("Detection started")
         self.m_listening = True
         self.m_decoder.start_utt()
 
     def stop(self):
-        if self.m_listening == True:
+        if self.m_listening:
             print("Detection stopped")
             self.m_stop = True
             self.m_listening = False
             self.m_decoder.end_utt()
-            #self.m_thread.join()
+            # self.m_thread.join()
             self.m_stream.stop_stream()
 
     def shutdown(self):
@@ -127,135 +134,134 @@ class ProfileExecutor(threading.Thread):
         self.m_stream.close()
         self.m_pyaudio.terminate()
 
-
-    def doAction(self, p_action):
+    def do_action(self, p_action):
         # {'name': 'key action', 'key': 'left', 'type': 0}
         # {'name': 'pause action', 'time': 0.03}
         # {'name': 'command stop action', 'command name': 'down'}
         # {'name': 'mouse move action', 'x':5, 'y':0, 'absolute': False}
         # {'name': 'mouse click action', 'button': 'left', 'type': 0}
         # {'name': 'mouse wheel action', 'delta':10}
-        w_actionName = p_action['name']
-        if w_actionName == 'key action':
+        w_action_name = p_action['name']
+        if w_action_name == 'key action':
             w_key = p_action['key']
-            self.pressKey(w_key)
-        elif w_actionName == 'pause action':
+            self.press_key(w_key)
+        elif w_action_name == 'pause action':
             print("Sleep ", p_action['time'])
             time.sleep(p_action['time'])
-        elif w_actionName == 'command stop action':
-            self.stopCommand(p_action['command name'])
-        elif w_actionName == 'command play sound' or w_actionName == 'play sound':
-            self.playSound(p_action)
-        elif w_actionName == 'mouse move action':
+        elif w_action_name == 'command stop action':
+            self.stop_command(p_action['command name'])
+        elif w_action_name == 'command play sound' or w_action_name == 'play sound':
+            self.play_sound(p_action)
+        elif w_action_name == 'mouse move action':
             if p_action['absolute']:
                 os.system('ydotool mousemove --absolute -x' + str(p_action['x']) + " -y " + str(p_action['y']))
             else:
                 os.system('ydotool mousemove -x' + str(p_action['x']) + " -y " + str(p_action['y']))
-        elif w_actionName == 'mouse click action':
+        elif w_action_name == 'mouse click action':
             w_type = p_action['type']
             w_button = p_action['button']
-            clickCommand = '0x'
+            click_command = '0x'
             if w_type == 1:
-                clickCommand += '4'
+                click_command += '4'
             elif w_type == 0:
-                clickCommand += '8'
+                click_command += '8'
             elif w_type == 10:
-                clickCommand += 'C'
+                click_command += 'C'
             elif w_type == 11:
-                clickCommand += 'C'
+                click_command += 'C'
             else:
-                clickCommand += '0'
+                click_command += '0'
 
             if w_button == 'left':
-                clickCommand += '0'
+                click_command += '0'
             elif w_button == 'middle':
-                clickCommand += '2'
+                click_command += '2'
             elif w_button == 'right':
-                clickCommand += '1'
+                click_command += '1'
             else:
-                clickCommand += '0'
+                click_command += '0'
 
             args = ""
             if w_type == 11:
                 args = "--repeat 2"
 
-            print("Mouse button command: ", clickCommand)
-            os.system('ydotool click ' + args + " --next-delay 25 " + clickCommand)
-        elif w_actionName == 'mouse scroll action':
+            print("Mouse button command: ", click_command)
+            os.system('ydotool click ' + args + " --next-delay 25 " + click_command)
+        elif w_action_name == 'mouse scroll action':
             os.system('ydotool mousemove --wheel -x 0 -y' + str(p_action['delta']))
 
     class CommandThread(threading.Thread):
-        def __init__(self, p_ProfileExecutor, p_actions, p_repeat):
+        def __init__(self, p_profile_executor, p_actions, p_repeat):
             threading.Thread.__init__(self)
-            self.ProfileExecutor = p_ProfileExecutor
+            self.ProfileExecutor = p_profile_executor
             self.m_actions = p_actions
             self.m_repeat = p_repeat
             self.m_stop = False
+
         def run(self):
             w_repeat = self.m_repeat
-            while self.m_stop != True:
+            while not self.m_stop and w_repeat > 0:
                 for w_action in self.m_actions:
-                    self.ProfileExecutor.doAction(w_action)
-                w_repeat = w_repeat - 1
-                if w_repeat == 0:
-                    break
+                    self.ProfileExecutor.do_action(w_action)
+                w_repeat -= 1
 
         def stop(self):
             self.m_stop = True
             threading.Thread.join(self)
 
-    def doCommand(self, p_cmdName):
-        if self.m_profile == None:
+    def do_command(self, p_cmd_name):
+        w_command = self.get_command_for_executing(p_cmd_name)
+        if w_command is None:
             return
-
-        w_commands = self.m_profile['commands']
-        flag = False
-        for w_command in w_commands:
-            parts = w_command['name'].split(',')
-            for part in parts:
-                if part.lower() == p_cmdName:
-                    flag = True
-                    break
-            if flag == True:
-                break
-
-        if flag == False:
-            return
-
         w_actions = w_command['actions']
         w_async = w_command['async']
-
-        if w_async == False:
+        if not w_async:
             w_repeat = w_command['repeat']
             if w_repeat < 1:
                 w_repeat = 1
             while w_repeat > 0:
                 for w_action in w_command['actions']:
-                    self.doAction(w_action)
-                w_repeat = w_repeat - 1
+                    self.do_action(w_action)
+                w_repeat -= 1
         else:
-            w_cmdThread = ProfileExecutor.CommandThread(self, w_actions, w_command['repeat'])
-            w_cmdThread.start()
-            self.m_cmdThreads[p_cmdName] = w_cmdThread
+            w_cmd_thread = ProfileExecutor.CommandThread(self, w_actions, w_command['repeat'])
+            w_cmd_thread.start()
+            self.m_cmdThreads[p_cmd_name] = w_cmd_thread
 
-    def stopCommand(self, p_cmdName):
-        if p_cmdName in self.m_cmdThreads.keys():
-            self.m_cmdThreads[p_cmdName].stop()
-            del self.m_cmdThreads[p_cmdName]
+    def get_command_for_executing(self, cmd_name):
+        if self.m_profile is None:
+            return None
 
-    def playSound(self, p_cmdName):
-        sound_file = './voicepacks/' + p_cmdName['pack'] + '/' + p_cmdName['cat'] + '/' + p_cmdName['file']
+        w_commands = self.m_profile['commands']
+        command = None
+        for w_command in w_commands:
+            parts = w_command['name'].split(',')
+            for part in parts:
+                if part.lower() == cmd_name:
+                    command = w_command
+                    break
+
+            if command is not None:
+                break
+        return command
+
+    def stop_command(self, p_cmd_name):
+        if p_cmd_name in self.m_cmdThreads.keys():
+            self.m_cmdThreads[p_cmd_name].stop()
+            del self.m_cmdThreads[p_cmd_name]
+
+    def play_sound(self, p_cmd_name):
+        sound_file = './voicepacks/' + p_cmd_name['pack'] + '/' + p_cmd_name['cat'] + '/' + p_cmd_name['file']
         self.m_sound.play(sound_file)
 
-
-    def pressKey(self, w_key):
+    def press_key(self, w_key):
         # ydotool has a different key mapping.
         # check /usr/include/linux/input-event-codes.h for key mappings
         original_key = w_key
         keys = w_key.split('+')
         commands = ""
         for key in keys:
-            commands += self.createKeyEvent(key) + " "
+            commands += self.create_key_event(key) + " "
         if len(commands) < 1:
             print('Commands not recognized, skipping')
             return
@@ -263,26 +269,27 @@ class ProfileExecutor(threading.Thread):
         print("original command: ", original_key)
         print("ydotool converted command: ", commands)
 
-    def createKeyEvent(self, w_key):
+    def create_key_event(self, w_key):
         if "hold" in w_key:
             w_key = re.sub('hold', '', w_key, flags=re.IGNORECASE)
-            w_key = self.mapKey(w_key.strip())
+            w_key = self.map_key(w_key.strip())
             if len(w_key) < 1:
                 return ''
             return str(w_key) + ":1"
         elif "release" in w_key:
             w_key = re.sub('release', '', w_key, flags=re.IGNORECASE)
-            w_key = self.mapKey(w_key.strip())
+            w_key = self.map_key(w_key.strip())
             if len(w_key) < 1:
                 return ''
             return str(w_key) + ":0"
         else:
-            w_key = self.mapKey(w_key.strip())
+            w_key = self.map_key(w_key.strip())
             if len(w_key) < 1:
                 return ''
             return str(w_key) + ":1 " + str(w_key) + ":0"
 
-    def mapKey(self, w_key):
+    @staticmethod
+    def map_key(w_key):
         match w_key.casefold():
             case 'left ctrl':
                 return '29'
@@ -299,6 +306,14 @@ class ProfileExecutor(threading.Thread):
             case 'left windows':
                 return '125'
             case 'right windows':
+                return '126'
+            case 'left super':
+                return '125'
+            case 'right super':
+                return '126'
+            case 'left meta':
+                return '125'
+            case 'right meta':
                 return '126'
             case 'tab':
                 return '15'
@@ -454,31 +469,31 @@ class ProfileExecutor(threading.Thread):
                 return '70'
             case 'numlock':
                 return '69'
-            case 'n7': # Num 7
+            case 'n7':  # Num 7
                 return '71'
-            case 'n8': # Num 8
+            case 'n8':  # Num 8
                 return '72'
-            case 'n9': # Num 9
+            case 'n9':  # Num 9
                 return '73'
-            case 'n-': # Num -
+            case 'n-':  # Num -
                 return '74'
-            case 'n4': # Num 4
+            case 'n4':  # Num 4
                 return '75'
-            case 'n5': # Num 5
+            case 'n5':  # Num 5
                 return '76'
-            case 'n6': # Num 6
+            case 'n6':  # Num 6
                 return '77'
-            case 'nplus': # Num +
+            case 'nplus':  # Num +
                 return '78'
-            case 'n1': # Num 1
+            case 'n1':  # Num 1
                 return '79'
-            case 'n2': # Num 2
+            case 'n2':  # Num 2
                 return '80'
-            case 'n3': # Num 3
+            case 'n3':  # Num 3
                 return '81'
-            case 'n0': # Num 0
+            case 'n0':  # Num 0
                 return '82'
-            case 'ndot': # Num .
+            case 'ndot':  # Num .
                 return '83'
             case _:
                 return ''
