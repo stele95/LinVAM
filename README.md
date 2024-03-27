@@ -27,8 +27,8 @@ Known bugs and planned additions
 ### Build dependencies
 - python3
 - PyQt6
-- pyaudio
-- nuitka (https://github.com/Nuitka/Nuitka)
+- PyAudio
+- Nuitka (https://github.com/Nuitka/Nuitka)
 
 ### Requirements for working
 - ffplay (part of ffmpeg, usually already installed)
@@ -37,7 +37,7 @@ Known bugs and planned additions
 ### Steps for building and running successfully
 #### Building without installing
 - install python3 and pip
-- install python packages: PyQt6, pyaudio, [nuitka](https://github.com/Nuitka/Nuitka) by running the following command
+- install python packages: PyQt6, PyAudio, [Nuitka](https://github.com/Nuitka/Nuitka) by running the following command
 
         pip install -r requirements.txt
 
