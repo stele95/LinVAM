@@ -2,6 +2,7 @@
 # python3 -m nuitka \
 #     --output-dir=../build \
 #     --output-filename=linvam \
+#     --output-filename=pocketsphinx \
 #     --follow-import-to=commandeditwnd \
 #     --follow-import-to=keyactioneditwnd \
 #     --follow-import-to=mouseactioneditwnd \
