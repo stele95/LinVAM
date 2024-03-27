@@ -107,7 +107,7 @@ After setting up profiles in the GUI app, you can add ``linvamrun --profile='Pro
 
 ### Profiles
 Multiple profiles are supported.  To create a new profile for a specific task/game click new and the main profile editor window will be displayed.
-Profiles and commands files are saved and loaded from ``/home/$USER/.local/share/LinVAM/`` and can be backed up from there.
+Profiles are saved to and loaded from ``profiles.json`` file located at ``/home/$USER/.local/share/LinVAM/`` and can be backed up from there.
 
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/gui.png)
 ### Key combinations
