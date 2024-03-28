@@ -78,10 +78,12 @@ class ProfileExecutor(threading.Thread):
             self.m_sound = self.p_parent.m_sound
 
     def get_model_path(self):
-        home = ""
         if self.p_parent.m_config['testEnv'] == 0:
-            home = os.path.expanduser("~") + '/.local/share/LinVAM/'
-        return home + 'model'
+            path = os.path.expanduser("~") + '/.local/share/LinVAM/model'
+        else:
+            path = os.path.abspath(os.path.abspath('src/model'))
+        print(path)
+        return path
 
     def set_profile(self, p_profile):
         self.m_profile = p_profile

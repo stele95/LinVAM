@@ -33,26 +33,25 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import collections
-import importlib.util
 import os
 import signal
 from contextlib import contextmanager
 
 from . import _pocketsphinx as pocketsphinx  # noqa: F401
-from ._pocketsphinx import LogMath  # noqa: F401
-from ._pocketsphinx import Config  # noqa: F401
-from ._pocketsphinx import Decoder  # noqa: F401
-from ._pocketsphinx import Jsgf  # noqa: F401
-from ._pocketsphinx import JsgfRule  # noqa: F401
-from ._pocketsphinx import NGramModel  # noqa: F401
-from ._pocketsphinx import FsgModel  # noqa: F401
-from ._pocketsphinx import Segment  # noqa: F401
-from ._pocketsphinx import Hypothesis  # noqa: F401
-from ._pocketsphinx import Lattice  # noqa: F401
-from ._pocketsphinx import Vad  # noqa: F401
-from ._pocketsphinx import Endpointer  # noqa: F401
 from ._pocketsphinx import Alignment  # noqa: F401
 from ._pocketsphinx import AlignmentEntry  # noqa: F401
+from ._pocketsphinx import Config  # noqa: F401
+from ._pocketsphinx import Decoder  # noqa: F401
+from ._pocketsphinx import Endpointer  # noqa: F401
+from ._pocketsphinx import FsgModel  # noqa: F401
+from ._pocketsphinx import Hypothesis  # noqa: F401
+from ._pocketsphinx import Jsgf  # noqa: F401
+from ._pocketsphinx import JsgfRule  # noqa: F401
+from ._pocketsphinx import Lattice  # noqa: F401
+from ._pocketsphinx import LogMath  # noqa: F401
+from ._pocketsphinx import NGramModel  # noqa: F401
+from ._pocketsphinx import Segment  # noqa: F401
+from ._pocketsphinx import Vad  # noqa: F401
 from ._pocketsphinx import set_loglevel  # noqa: F401
 from .segmenter import Segmenter  # noqa: F401
 
@@ -85,13 +84,12 @@ def get_model_path(subpath=None):
         # Use importlib to find things (so editable installs work)
         model_path = os.path.expanduser("~") + '/.local/share/LinVAM/model'
         if not os.path.exists(model_path):
-            model_path = importlib.util.find_spec(
-                "model"
-            ).submodule_search_locations[0]
+            model_path = os.path.abspath('src/model')
     if subpath is not None:
         return os.path.join(model_path, subpath)
     else:
         return model_path
+
 
 class Pocketsphinx(Decoder):
     """Compatibility wrapper class.
