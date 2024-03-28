@@ -60,6 +60,8 @@ class ProfileExecutor(threading.Thread):
             result_string = result_json['text']
         print(result_string)
 
+        # todo since stream returns words as they are inputted, and repeats the same sentence a few times,
+        #  commands will execute a few times, and that is not what we need
         # for command in self.commands_list:
         #     if str(result).__contains__(command):
         #         print('Detected: ' + command)
