@@ -57,8 +57,8 @@ class ProfileExecutor(threading.Thread):
         try:
             result_string = result_json['partial']
         except KeyError:
-            result_string = result_json['text']
-        print(result_string)
+            return
+            # result_string = result_json['text']
 
         # todo since stream returns words as they are inputted, and repeats the same sentence a few times,
         #  commands will execute a few times, and that is not what we need
