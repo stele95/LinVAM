@@ -59,7 +59,7 @@ class LinVAMRun:
 
     @staticmethod
     def _get_profile_from_database(profile_name):
-        with open(get_settings_path("profiles.json"), "r") as f:
+        with open(get_settings_path("profiles.json"), "r", encoding="utf-8") as f:
             profiles = f.read()
             f.close()
             # noinspection PyBroadException
