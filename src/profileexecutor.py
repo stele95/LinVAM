@@ -228,7 +228,7 @@ class ProfileExecutor(threading.Thread):
         return command
 
     def stop_command(self, p_cmd_name):
-        if p_cmd_name in self.m_cmd_threads.keys():
+        if p_cmd_name in self.m_cmd_threads:
             self.m_cmd_threads[p_cmd_name].stop()
             del self.m_cmd_threads[p_cmd_name]
 
