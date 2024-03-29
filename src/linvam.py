@@ -133,7 +133,8 @@ class MainWnd(QWidget):
         text, ok_pressed = QInputDialog.getText(self, "Copy profile", "Enter new profile name:",
                                                 QLineEdit.EchoMode.Normal, "")
         if ok_pressed and text != '':
-            # todo: check if name not already in use
+            if self.name_exists(text):
+                return
             w_idx = self.ui.profileCbx.currentIndex()
             w_json_profile = self.ui.profileCbx.itemData(w_idx)
             w_profile = json.loads(w_json_profile)
@@ -142,6 +143,15 @@ class MainWnd(QWidget):
             self.ui.profileCbx.addItem(w_profile_copy['name'])
             w_json_profile = json.dumps(w_profile_copy)
             self.ui.profileCbx.setItemData(self.ui.profileCbx.count() - 1, w_json_profile)
+
+    def name_exists(self, text):
+        all_items = [json.loads(self.ui.profileCbx.itemData(i)) for i in range(self.ui.profileCbx.count())]
+        found = False
+        i = 0
+        while not found and i < len(all_items):
+            found = all_items[i]['name'] == text
+            i += 1
+        return found
 
     def slot_remove_profile(self):
         w_cur_idx = self.ui.profileCbx.currentIndex()
