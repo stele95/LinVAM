@@ -21,6 +21,7 @@ jobs:
         pip install pylint
         pip install black wheel
         pip install -r requirements.txt
+        pip list
     - name: Analysing the code with pylint
       run: |
         pylint --extension-pkg-whitelist=PyQt6 $(git ls-files '*.py' ':!:*ui_*.py')
