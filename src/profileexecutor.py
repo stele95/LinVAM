@@ -89,6 +89,9 @@ class ProfileExecutor(threading.Thread):
             for part in parts:
                 self.commands_list.append(part)
         print(str(self.commands_list))
+        with open(get_settings_path("command.list"), 'w') as f:
+            json.dump(self.commands_list, f, indent=4)
+            f.close()
 
     def set_enable_listening(self, p_enable):
         if not self.m_listening and p_enable:
