@@ -33,19 +33,19 @@ class ProfileExecutor(threading.Thread):
         self.m_cmdThreads = {}
         self.p_parent = p_parent
         self.samplerate = 16000
-
         # noinspection PyBroadException
         try:
             self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
                                                        blocksize=4000, callback=self.listen_callback)
-            self.recognizer = KaldiRecognizer(Model(lang='en-us'), self.samplerate)
         except:
             device_info = sounddevice.query_devices('default.device', 'input')
             # soundfile expects an int, sounddevice provides a float:
             self.samplerate = int(device_info['default_samplerate'])
             self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
                                                        blocksize=4000, callback=self.listen_callback)
-            self.recognizer = KaldiRecognizer(Model(lang='en-us'), self.samplerate)
+
+        self.model = Model(lang='en-us')
+        self.recognizer = KaldiRecognizer(self.model, self.samplerate)
 
         if self.p_parent is not None:
             self.m_sound = self.p_parent.m_sound
