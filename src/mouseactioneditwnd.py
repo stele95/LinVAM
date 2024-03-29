@@ -97,7 +97,7 @@ class MouseActionEditWnd(QDialog):
                 self.m_mouse_action['name'] = 'mouse scroll action'
                 self.m_mouse_action['delta'] = abs(int(self.ui.scrollDownEdit.text()))
 
-        if self.m_mouse_action == {}:
+        if not self.m_mouse_action:
             return
 
         super().accept()

@@ -39,6 +39,7 @@ class LinVAMRun:
             return
         for argument in run_args:
             # noinspection PyBroadException
+            # pylint: disable=bare-except
             try:
                 arg_split = argument.split('=')
                 if arg_split[0] == '--profile':
@@ -50,6 +51,7 @@ class LinVAMRun:
                     print('linvamrun: Unknown or unsupported argument')
 
     # noinspection PyUnusedLocal
+    # pylint: disable=unused-argument
     def signal_handler(self, s, f):
         self.shut_down()
 
@@ -65,38 +67,38 @@ class LinVAMRun:
             # noinspection PyBroadException
             try:
                 w_profiles = json.loads(profiles)
-                for position, w_profile in enumerate(w_profiles):
+                for w_profile in w_profiles:
                     name = w_profile['name']
                     if name == profile_name:
                         return w_profile
-            except:
-                print("linvamrun: No profiles found in file")
+            except Exception as ex:
+                print("linvamrun: failed loading profiles from file: " + str(ex))
         return {}
 
 
 if __name__ == "__main__":
     linvamrun = LinVAMRun()
     args = []
-    runCommands = ''
-    isArgs = True
+    RUN_COMMANDS = ''
+    IS_ARGS = True
     if len(sys.argv) > 1:
         for i in range(1, len(sys.argv)):
             arg = sys.argv[i]
-            if isArgs:
+            if IS_ARGS:
                 if arg == '--':
-                    isArgs = False
+                    IS_ARGS = False
                 else:
                     args.append(arg)
             else:
-                if len(runCommands) != 0:
-                    runCommands += ' '
-                runCommands = runCommands + '\'' + arg + '\''
+                if len(RUN_COMMANDS) != 0:
+                    RUN_COMMANDS += ' '
+                RUN_COMMANDS = RUN_COMMANDS + '\'' + arg + '\''
             i += 1
     linvamrun.start_listening(args)
-    if len(runCommands) > 0:
-        argsForSubprocess = shlex.split(runCommands)
+    if len(RUN_COMMANDS) > 0:
+        argsForSubprocess = shlex.split(RUN_COMMANDS)
         try:
-            result = subprocess.run(argsForSubprocess)
+            result = subprocess.run(argsForSubprocess, check=False)
         except subprocess.CalledProcessError as e:
             print('linvamrun: Command failed with return code ' + str(e.returncode))
         linvamrun.shut_down()
