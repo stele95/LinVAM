@@ -68,7 +68,7 @@ class ProfileExecutor(threading.Thread):
 
         for command in self.commands_list:
             if str(result).__contains__(command):
-                self.recognizer.FinalResult()
+                self.recognizer.Result()
                 print('Detected: ' + command)
                 self.do_command(command)
                 break
@@ -107,6 +107,7 @@ class ProfileExecutor(threading.Thread):
             self.m_stop = True
             self.m_listening = False
             self.m_stream.stop()
+            self.recognizer.FinalResult()
 
     def shutdown(self):
         self.stop()
