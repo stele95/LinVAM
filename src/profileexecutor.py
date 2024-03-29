@@ -39,7 +39,7 @@ class ProfileExecutor(threading.Thread):
         # noinspection PyBroadException
         try:
             self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
-                                                       blocksize=8000, callback=self.listen_callback)
+                                                       blocksize=4000, callback=self.listen_callback)
         except:
             print('Failed to initialise stream')
             sys.exit(1)
@@ -60,13 +60,15 @@ class ProfileExecutor(threading.Thread):
             return
             # result_string = result_json['text']
 
-        # todo since stream returns words as they are inputted, and repeats the same sentence a few times,
-        #  commands will execute a few times, and that is not what we need
-        # for command in self.commands_list:
-        #     if str(result).__contains__(command):
-        #         print('Detected: ' + command)
-        #         self.do_command(command)
-        #         break
+        if result_string == '':
+            return
+
+        for command in self.commands_list:
+            if str(result).__contains__(command):
+                self.recognizer.FinalResult()
+                print('Detected: ' + command)
+                self.do_command(command)
+                break
 
     def get_model_path(self):
         if self.p_parent.m_config['testEnv'] == 0:
@@ -86,6 +88,7 @@ class ProfileExecutor(threading.Thread):
             parts = w_command['name'].split(',')
             for part in parts:
                 self.commands_list.append(part)
+        print(str(self.commands_list))
 
     def set_enable_listening(self, p_enable):
         if not self.m_listening and p_enable:
