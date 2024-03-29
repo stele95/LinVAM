@@ -13,6 +13,7 @@ Utilising VOSK-API, a lightweight voice to text engine you can specify voice com
 ### Requirements
 - PyQt6
 - sounddevice
+- srt
 - vosk
 - ffmpeg
 - ydotool (https://github.com/ReimuNotMoe/ydotool)
@@ -22,7 +23,7 @@ Utilising VOSK-API, a lightweight voice to text engine you can specify voice com
 
 ### Install steps
 - install python3 and pip
-- install python packages: PyQt6, sounddevice and vosk by running the following command
+- install python packages: PyQt6, sounddevice, srt and vosk by running the following command
 
         pip install -r requirements.txt
 
@@ -34,6 +35,7 @@ Utilising VOSK-API, a lightweight voice to text engine you can specify voice com
 - python3
 - PyQt6
 - sounddevice
+- srt
 - vosk
 - Nuitka (https://github.com/Nuitka/Nuitka)
 
@@ -44,7 +46,7 @@ Utilising VOSK-API, a lightweight voice to text engine you can specify voice com
 ### Steps for building and running successfully
 #### Building without installing
 - install python3 and pip
-- install python packages: PyQt6, sounddevice, vosk and [Nuitka](https://github.com/Nuitka/Nuitka) by running the following command
+- install python packages: PyQt6, sounddevice, srt, vosk and [Nuitka](https://github.com/Nuitka/Nuitka) by running the following command
 
         pip install -r build-requirements.txt
 
