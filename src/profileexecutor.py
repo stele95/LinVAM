@@ -1,10 +1,11 @@
+import json
 import os
 import re
 import threading
 import time
 
-import pyaudio
-from pocketsphinx import Config, Decoder
+import sounddevice
+from vosk import Model, KaldiRecognizer
 
 
 def get_settings_path(setting):
@@ -24,93 +25,72 @@ class ProfileExecutor(threading.Thread):
 
         super().__init__()
         self.m_profile = None
+        self.commands_list = []
         # does nothing?
         self.set_profile(p_profile)
         self.m_stop = False
         self.m_listening = False
         self.m_cmdThreads = {}
         self.p_parent = p_parent
-
-        self.m_config = Config(
-            hmm=os.path.join(self.get_model_path(), 'en-us/en-us'),
-            dict=os.path.join(self.get_model_path(), 'en-us/cmudict-en-us.dict'),
-            kws=get_settings_path('command.list'),
-            logfn='/dev/null'
-        )
-
-        self.m_pyaudio = pyaudio.PyAudio()
-
-        # noinspection PyUnusedLocal
-        def listen_callback(in_data, frame_count, time_info, status):
-            self.m_decoder.process_raw(in_data, False, False)
-            if self.m_decoder.hyp() is not None:
-                # print([(seg.word, seg.prob, seg.start_frame, seg.end_frame) for seg in self.m_decoder.seg()])
-                # print("Detected keyword, restarting search")
-
-                # hack :)
-                for seg in self.m_decoder.seg():
-                    print("Detected: ", seg.word)
-                    break
-
-                #
-                # Here you run the code you want based on keyword
-                #
-                for w_seg in self.m_decoder.seg():
-                    self.do_command(w_seg.word.rstrip())
-
-                self.m_decoder.end_utt()
-                self.m_decoder.start_utt()
-            return in_data, pyaudio.paContinue
-
+        self.samplerate = 16000
         # noinspection PyBroadException
         try:
-            self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, start=False,
-                                                stream_callback=listen_callback)
+            self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
+                                                       blocksize=4000, callback=self.listen_callback)
         except:
-            samplerate = int(self.m_pyaudio.get_device_info_by_index(0).get('defaultSampleRate'))
-            self.m_stream = self.m_pyaudio.open(format=pyaudio.paInt16, channels=1, rate=samplerate, input=True,
-                                                start=False, stream_callback=listen_callback)
+            device_info = sounddevice.query_devices('default.device', 'input')
+            # soundfile expects an int, sounddevice provides a float:
+            self.samplerate = int(device_info['default_samplerate'])
+            self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
+                                                       blocksize=4000, callback=self.listen_callback)
 
-        # Process audio chunk by chunk. On keyword detected perform action and restart search
-        self.m_decoder = Decoder(self.m_config)
+        self.model = Model(lang='en-us')
+        self.recognizer = KaldiRecognizer(self.model, self.samplerate)
 
         if self.p_parent is not None:
             self.m_sound = self.p_parent.m_sound
 
-    def get_model_path(self):
-        if self.p_parent.m_config['testEnv'] == 0:
-            path = os.path.expanduser("~") + '/.local/share/LinVAM/model'
+    # noinspection PyUnusedLocal
+    def listen_callback(self, in_data, frame_count, time_info, status):
+        if self.recognizer.AcceptWaveform(bytes(in_data)):
+            result = self.recognizer.Result()
         else:
-            path = os.path.abspath(os.path.abspath('src/model'))
-        print(path)
-        return path
+            result = self.recognizer.PartialResult()
+        result_json = json.loads(result)
+        try:
+            result_string = result_json['partial']
+        except KeyError:
+            return
+            # result_string = result_json['text']
+
+        if result_string == '':
+            return
+
+        for command in self.commands_list:
+            if str(result).__contains__(command):
+                self.recognizer.Result()
+                print('Detected: ' + command)
+                self.do_command(command)
+                break
 
     def set_profile(self, p_profile):
         self.m_profile = p_profile
         if self.m_profile is None:
             return
-        w_command_word_file = open(get_settings_path('command.list'), 'w')
+        self.commands_list = []
         w_commands = self.m_profile['commands']
         for w_command in w_commands:
             parts = w_command['name'].split(',')
             for part in parts:
-                w_command_word_file.write(part.lower() + ' /1e-%d/' % w_command['threshold'] + '\n')
-        w_command_word_file.close()
-        self.m_config.set_string('-kws', get_settings_path('command.list'))
-        # load new command list into decoder and restart it
-        if self.m_listening:
-            self.stop()
-            self.m_stream.start_stream()
-            # a self.m_decoder.reinit(self.config) will segfault?
-            self.m_decoder = Decoder(self.m_config)
-            self.m_stop = False
-            self.do_listen()
-        else:
-            self.m_decoder.reinit(self.m_config)
+                self.commands_list.append(part)
+        print(str(self.commands_list))
+        with open(get_settings_path("command.list"), 'w') as f:
+            json.dump(self.commands_list, f, indent=4)
+            f.close()
 
     def set_enable_listening(self, p_enable):
         if not self.m_listening and p_enable:
-            self.m_stream.start_stream()
+            self.m_stream.start()
             self.m_listening = p_enable
             self.m_stop = False
             self.do_listen()
@@ -120,21 +100,18 @@ class ProfileExecutor(threading.Thread):
     def do_listen(self):
         print("Detection started")
         self.m_listening = True
-        self.m_decoder.start_utt()
 
     def stop(self):
         if self.m_listening:
             print("Detection stopped")
             self.m_stop = True
             self.m_listening = False
-            self.m_decoder.end_utt()
-            # self.m_thread.join()
-            self.m_stream.stop_stream()
+            self.m_stream.stop()
+            self.recognizer.FinalResult()
 
     def shutdown(self):
         self.stop()
         self.m_stream.close()
-        self.m_pyaudio.terminate()
 
     def do_action(self, p_action):
         # {'name': 'key action', 'key': 'left', 'type': 0}

@@ -1,3 +1,4 @@
 PyQt6
-PyAudio
-Nuitka
+sounddevice
+srt
+vosk

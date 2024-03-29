@@ -34,7 +34,10 @@ class MainWnd(QWidget):
 
         position = self.load_from_database()
         if position >= 0:
-            self.ui.profileCbx.setCurrentIndex(position)
+            if position == 0:
+                self.slot_profile_changed(position)
+            else:
+                self.ui.profileCbx.setCurrentIndex(position)
 
         self.check_buttons_states()
 

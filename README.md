@@ -2,17 +2,19 @@
 Linux Voice Activated Macro
 
 ## Status
-This project is currently a work-in-progress and is minimally functional only for English.
+This project is currently a work-in-progress and currently supports only English.
 
-Utilising Pocketsphinx, a lightweight voice to text engine you can specify voice commands for the tool to recognise and actions to perform.
+Utilising VOSK-API, a lightweight voice to text engine you can specify voice commands for the tool to recognise and actions to perform.
 
-Known bugs and planned additions
-- Create a built versions of the app and releases for easy download
-- Log window showing spoken words the V2T recognises
+### Planned additions
 - Support for joysticks and gaming devices
 
 ## Install
 ### Requirements
+- PyQt6
+- sounddevice
+- srt
+- vosk
 - ffmpeg
 - ydotool (https://github.com/ReimuNotMoe/ydotool)
 
@@ -20,14 +22,21 @@ Known bugs and planned additions
 - HCS voicepacks
 
 ### Install steps
+- install python3 and pip
+- install python packages: PyQt6, sounddevice, srt and vosk by running the following command
+
+        pip install -r requirements.txt
+
 - After installing ydotool, [configure it to run without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
-- Download latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``setup-and-install.sh`` from the extracted files
+- Download the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``setup-and-install.sh`` from the extracted files
 
 ## Build
 ### Build dependencies
 - python3
 - PyQt6
-- PyAudio
+- sounddevice
+- srt
+- vosk
 - Nuitka (https://github.com/Nuitka/Nuitka)
 
 ### Requirements for working
@@ -37,9 +46,9 @@ Known bugs and planned additions
 ### Steps for building and running successfully
 #### Building without installing
 - install python3 and pip
-- install python packages: PyQt6, PyAudio, [Nuitka](https://github.com/Nuitka/Nuitka) by running the following command
+- install python packages: PyQt6, sounddevice, srt, vosk and [Nuitka](https://github.com/Nuitka/Nuitka) by running the following command
 
-        pip install -r requirements.txt
+        pip install -r build-requirements.txt
 
 - For building without installing, run the ``build.sh`` script
 
@@ -125,8 +134,6 @@ It is possible to add multiple actions to a voice command for complex macros wit
 You can also assign mouse movements and system commands if you require (eg opening applications such as calculator, browser etc)
 
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/complex.png)
-### Threshold
-As a rough guide use a value of 10 for each syllable of a word then tweak it down for better accuracy.
 
 ### Output audio
 In the Command Edit Dialog, chose 'Other' and then 'Play sound'. Pick the sound you would like to play.
@@ -143,5 +150,6 @@ If you own a HCS voicepack, copy the whole voicepack folder (like 'hcspack', 'hc
 /voicepacks/hcspack/...
 
 ### Improve voice recognition accuracy
-Please see this resource on how to train the acoustic model of pocketsphinx to match your voice:
-https://cmusphinx.github.io/wiki/tutorialadapt/
+Default recognition accuracy should be good enough for most usages.
+If you want to improve voice recognition accuracy, please see this resource on how to train the acoustic model:
+https://alphacephei.com/vosk/adaptation
