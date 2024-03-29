@@ -70,14 +70,6 @@ class ProfileExecutor(threading.Thread):
                 self.do_command(command)
                 break
 
-    def get_model_path(self):
-        if self.p_parent.m_config['testEnv'] == 0:
-            path = os.path.expanduser("~") + '/.local/share/LinVAM/model'
-        else:
-            path = os.path.abspath(os.path.abspath('src/model'))
-        print(path)
-        return path
-
     def set_profile(self, p_profile):
         self.m_profile = p_profile
         if self.m_profile is None:
