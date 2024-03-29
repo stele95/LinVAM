@@ -41,8 +41,11 @@ class ProfileExecutor(threading.Thread):
             self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
                                                        blocksize=4000, callback=self.listen_callback)
         except:
-            print('Failed to initialise stream')
-            sys.exit(1)
+            device_info = sounddevice.query_devices('default.device', 'input')
+            # soundfile expects an int, sounddevice provides a float:
+            self.samplerate = int(device_info['default_samplerate'])
+            self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
+                                                       blocksize=4000, callback=self.listen_callback)
 
         if self.p_parent is not None:
             self.m_sound = self.p_parent.m_sound
