@@ -28,7 +28,7 @@ Utilising VOSK-API, a lightweight voice to text engine you can specify voice com
         pip install -r requirements.txt
 
 - After installing ydotool, [configure it to run without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
-- Download latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``setup-and-install.sh`` from the extracted files
+- Download the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``setup-and-install.sh`` from the extracted files
 
 ## Build
 ### Build dependencies
