@@ -134,8 +134,6 @@ It is possible to add multiple actions to a voice command for complex macros wit
 You can also assign mouse movements and system commands if you require (eg opening applications such as calculator, browser etc)
 
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/complex.png)
-### Threshold
-As a rough guide use a value of 10 for each syllable of a word then tweak it down for better accuracy.
 
 ### Output audio
 In the Command Edit Dialog, chose 'Other' and then 'Play sound'. Pick the sound you would like to play.

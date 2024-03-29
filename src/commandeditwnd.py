@@ -37,7 +37,6 @@ class CommandEditWnd(QDialog):
         self.m_command = {}
         if p_command is not None:
             self.ui.say.setText(p_command['name'])
-            self.ui.thresholdSpin.setValue(p_command['threshold'])
             w_actions = p_command['actions']
             for w_action in w_actions:
                 w_json_action = json.dumps(w_action)
@@ -168,7 +167,6 @@ class CommandEditWnd(QDialog):
             w_actions.append(w_action)
         self.m_command['actions'] = w_actions
         self.m_command['async'] = self.ui.asyncChk.isChecked()
-        self.m_command['threshold'] = self.ui.thresholdSpin.value()
         if self.ui.oneExe.isChecked():
             self.m_command['repeat'] = 1
         elif self.ui.continueExe.isChecked():
