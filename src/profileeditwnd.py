@@ -103,8 +103,8 @@ class ProfileEditWnd(QDialog):
     def slot_delete_cmd(self):
         w_model_indexes = self.ui.cmdTable.selectionModel().selectedRows()
         i = 0
-        for w_modelIdx in sorted(w_model_indexes):
-            self.ui.cmdTable.removeRow(w_modelIdx.row() - i)
+        for w_model_idx in sorted(w_model_indexes):
+            self.ui.cmdTable.removeRow(w_model_idx.row() - i)
             i += 1
         self.ui.cmdTable.setFocus()
 

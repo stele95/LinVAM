@@ -12,7 +12,7 @@ class PauseActionEditWnd(QDialog):
         self.ui.ok.clicked.connect(self.slot_ok)
         self.ui.cancel.clicked.connect(super().reject)
 
-        self.m_pauseAction = {}
+        self.m_pause_action = {}
 
         if p_pause_action is None:
             return
@@ -20,6 +20,6 @@ class PauseActionEditWnd(QDialog):
         self.ui.secondEdit.setText(str(p_pause_action['time']))
 
     def slot_ok(self):
-        self.m_pauseAction['name'] = 'pause action'
-        self.m_pauseAction['time'] = float(self.ui.secondEdit.text())
+        self.m_pause_action['name'] = 'pause action'
+        self.m_pause_action['time'] = float(self.ui.secondEdit.text())
         super().accept()

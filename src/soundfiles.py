@@ -29,7 +29,7 @@ class SoundFiles:
             print("No folder 'voicepacks' found. Please create one and copy all your voicepacks in there.")
             return
 
-        for root, dirs, files in os.walk("./voicepacks"):
+        for root, _, files in os.walk("./voicepacks"):
             for file in files:
                 if file.endswith(".mp3"):
                     # we expect a path like this:
@@ -64,13 +64,16 @@ class SoundFiles:
         if not os.path.isfile(sound_file):
             print("ERROR - Sound file not found: ", sound_file)
             return
-
         self.stop()
-
         # construct shell command. use shlex to split it up into valid args for Popen.
         cmd = "ffplay -nodisp -autoexit -loglevel quiet -volume " + str(self.volume) + " \"" + sound_file + "\""
         args = shlex.split(cmd)
-        self.thread_play = subprocess.Popen(args)
+        # noinspection PyBroadException
+        try:
+            with subprocess.Popen(args) as process:
+                self.thread_play = process
+        except Exception as e:
+            print('Failed to load ffplay: ' + str(e))
 
     def stop(self):
         if self.thread_play is not None:
