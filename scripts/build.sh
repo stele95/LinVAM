@@ -17,6 +17,7 @@ python3 -m nuitka \
    --follow-import-to=ui_pauseactioneditwnd \
    --follow-import-to=ui_profileeditwnd \
    --follow-import-to=ui_soundactioneditwnd \
+   --follow-import-to=util \
    ../src/linvam.py
 
 python3 -m nuitka \
@@ -24,6 +25,7 @@ python3 -m nuitka \
    --output-filename=linvamrun \
    --follow-import-to=profileexecutor \
    --follow-import-to=soundfiles \
+   --follow-import-to=util \
    ../src/linvamrun.py
 
 #python3 -m nuitka \
