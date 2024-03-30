@@ -1,0 +1,9 @@
+[MASTER]
+extension-pkg-whitelist=PyQt6
+
+[MESSAGES CONTROL]
+disable=C0116,C0115,C0114,W0718,R0902
+
+[FORMAT]
+# Maximum number of characters on a single line.
+max-line-length=120

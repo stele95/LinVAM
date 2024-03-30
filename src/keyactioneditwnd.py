@@ -22,15 +22,11 @@ class KeyActionEditWnd(QDialog):
         self.ui.keyEdit.setText(w_hot_key)
 
     def slot_ok(self):
-
         w_hot_key = self.ui.keyEdit.text()
-
         if w_hot_key == '':
             return
-
         self.m_key_action = {'name': 'key action', 'key': w_hot_key}
-
-        return super().accept()
+        super().accept()
 
     def slot_cancel(self):
-        return super().reject()
+        super().reject()

@@ -16,9 +16,9 @@ class SoundActionEditWnd(QDialog):
             return
 
         self.p_sounds = p_sounds
-        self.selected_voice_pack = False
-        self.selectedCategory = False
-        self.selectedFile = False
+        self.selected_voice_pack = None
+        self.selected_category = None
+        self.selected_file = None
         self.m_sound_action = {}
 
         self.ui.buttonOkay.clicked.connect(self.slot_ok)
@@ -32,20 +32,20 @@ class SoundActionEditWnd(QDialog):
         # restore stuff when editing
         if p_sound_action is not None:
             self.selected_voice_pack = p_sound_action['pack']
-            self.selectedCategory = p_sound_action['cat']
-            self.selectedFile = p_sound_action['file']
+            self.selected_category = p_sound_action['cat']
+            self.selected_file = p_sound_action['file']
             self.ui.buttonOkay.setEnabled(True)
 
         self.list_voice_packs_model = QStandardItemModel()
         self.ui.listVoicepacks.setModel(self.list_voice_packs_model)
         self.ui.listVoicepacks.clicked.connect(self.on_voice_pack_select)
 
-        self.listCategories_model = QStandardItemModel()
-        self.ui.listCategories.setModel(self.listCategories_model)
+        self.list_categories_model = QStandardItemModel()
+        self.ui.listCategories.setModel(self.list_categories_model)
         self.ui.listCategories.clicked.connect(self.on_category_select)
 
-        self.listFiles_model = QStandardItemModel()
-        self.ui.listFiles.setModel(self.listFiles_model)
+        self.list_files_model = QStandardItemModel()
+        self.ui.listFiles.setModel(self.list_files_model)
         self.ui.listFiles.clicked.connect(self.on_file_select)
         self.ui.listFiles.doubleClicked.connect(self.select_and_play)
 
@@ -59,29 +59,11 @@ class SoundActionEditWnd(QDialog):
 
         self.populate_categories(False)
         self.populate_files(False)
-
-        # when editing, select old entries
-        if self.selected_voice_pack:
-            item = self.list_voice_packs_model.findItems(self.selected_voice_pack)
-            if len(item) > 0:
-                index = self.list_voice_packs_model.indexFromItem(item[0])
-                self.ui.listVoicepacks.setCurrentIndex(index)
-
-        if self.selectedCategory:
-            item = self.listCategories_model.findItems(self.selectedCategory)
-            if len(item) > 0:
-                index = self.listCategories_model.indexFromItem(item[0])
-                self.ui.listCategories.setCurrentIndex(index)
-
-        if self.selectedFile:
-            item = self.listFiles_model.findItems(self.selectedFile)
-            if len(item) > 0:
-                index = self.listFiles_model.indexFromItem(item[0])
-                self.ui.listFiles.setCurrentIndex(index)
+        self.select_old_entries()
 
     def slot_ok(self):
-        self.m_sound_action = {'name': 'play sound', 'pack': self.selected_voice_pack, 'cat': self.selectedCategory,
-                               'file': self.selectedFile}
+        self.m_sound_action = {'name': 'play sound', 'pack': self.selected_voice_pack, 'cat': self.selected_category,
+                               'file': self.selected_file}
         super().accept()
 
     def slot_cancel(self):
@@ -98,7 +80,7 @@ class SoundActionEditWnd(QDialog):
     def on_category_select(self):
         index = self.ui.listCategories.currentIndex()
         item_text = index.data()
-        self.selectedCategory = item_text
+        self.selected_category = item_text
         self.populate_files()
         self.ui.buttonOkay.setEnabled(False)
         self.ui.buttonPlaySound.setEnabled(False)
@@ -106,7 +88,7 @@ class SoundActionEditWnd(QDialog):
     def on_file_select(self):
         index = self.ui.listFiles.currentIndex()
         item_text = index.data()
-        self.selectedFile = item_text
+        self.selected_file = item_text
         self.ui.buttonOkay.setEnabled(True)
         self.ui.buttonPlaySound.setEnabled(True)
 
@@ -115,14 +97,14 @@ class SoundActionEditWnd(QDialog):
         self.play_sound()
 
     def populate_categories(self, reset=True):
-        if not self.selected_voice_pack:
+        if self.selected_voice_pack is None:
             return
 
         if reset:
-            self.listCategories_model.removeRows(0, self.listCategories_model.rowCount())
-            self.listFiles_model.removeRows(0, self.listFiles_model.rowCount())
-            self.selectedCategory = False
-            self.selectedFile = False
+            self.list_categories_model.removeRows(0, self.list_categories_model.rowCount())
+            self.list_files_model.removeRows(0, self.list_files_model.rowCount())
+            self.selected_category = None
+            self.selected_file = None
 
         filter_categories = self.ui.filterCategories.toPlainText()
         if len(filter_categories) == 0:
@@ -134,31 +116,52 @@ class SoundActionEditWnd(QDialog):
                 if not re.search(filter_categories, v, re.IGNORECASE):
                     continue
             item = QStandardItem(v)
-            self.listCategories_model.appendRow(item)
+            self.list_categories_model.appendRow(item)
 
     def populate_files(self, reset=True):
-        if not self.selected_voice_pack or not self.selectedCategory:
+        if self.selected_voice_pack is None or self.selected_category is None:
             return
 
         if reset:
-            self.listFiles_model.removeRows(0, self.listFiles_model.rowCount())
-            self.selectedFile = False
+            self.list_files_model.removeRows(0, self.list_files_model.rowCount())
+            self.selected_file = None
 
         filter_files = self.ui.filterFiles.toPlainText()
         if len(filter_files) == 0:
             filter_files = None
 
-        s = sorted(self.p_sounds.m_sounds[self.selected_voice_pack][self.selectedCategory])
+        s = sorted(self.p_sounds.m_sounds[self.selected_voice_pack][self.selected_category])
         for v in s:
             if filter_files is not None:
                 if not re.search(filter_files, v, re.IGNORECASE):
                     continue
             item = QStandardItem(v)
-            self.listFiles_model.appendRow(item)
+            self.list_files_model.appendRow(item)
 
     def play_sound(self):
-        sound_file = './voicepacks/' + self.selected_voice_pack + '/' + self.selectedCategory + '/' + self.selectedFile
+        sound_file = ('./voicepacks/' + self.selected_voice_pack + '/' + self.selected_category + '/'
+                      + self.selected_file)
         self.p_sounds.play(sound_file)
 
     def stop_sound(self):
         self.p_sounds.stop()
+
+    def select_old_entries(self):
+        # when editing, select old entries
+        if self.selected_voice_pack is not None:
+            item = self.list_voice_packs_model.findItems(self.selected_voice_pack)
+            if len(item) > 0:
+                index = self.list_voice_packs_model.indexFromItem(item[0])
+                self.ui.listVoicepacks.setCurrentIndex(index)
+
+        if self.selected_category is not None:
+            item = self.list_categories_model.findItems(self.selected_category)
+            if len(item) > 0:
+                index = self.list_categories_model.indexFromItem(item[0])
+                self.ui.listCategories.setCurrentIndex(index)
+
+        if self.selected_file is not None:
+            item = self.list_files_model.findItems(self.selected_file)
+            if len(item) > 0:
+                index = self.list_files_model.indexFromItem(item[0])
+                self.ui.listFiles.setCurrentIndex(index)

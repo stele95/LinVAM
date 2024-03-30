@@ -14,26 +14,25 @@ def get_settings_path(setting):
         os.mkdir(home)
     file = home + setting
     if not os.path.exists(file):
-        with (open(file, "w")) as f:
+        with (open(file, "w", encoding="utf-8")) as f:
             f.close()
     return file
 
 
 class ProfileExecutor(threading.Thread):
 
-    def __init__(self, p_profile=None, p_parent=None):
+    def __init__(self, p_parent=None):
 
         super().__init__()
         self.m_profile = None
         self.commands_list = []
-        # does nothing?
-        self.set_profile(p_profile)
         self.m_stop = False
         self.m_listening = False
-        self.m_cmdThreads = {}
+        self.m_cmd_threads = {}
         self.p_parent = p_parent
         self.samplerate = 16000
         # noinspection PyBroadException
+        # pylint: disable=bare-except
         try:
             self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
                                                        blocksize=4000, callback=self.listen_callback)
@@ -51,6 +50,7 @@ class ProfileExecutor(threading.Thread):
             self.m_sound = self.p_parent.m_sound
 
     # noinspection PyUnusedLocal
+    # pylint: disable=unused-argument
     def listen_callback(self, in_data, frame_count, time_info, status):
         if self.recognizer.AcceptWaveform(bytes(in_data)):
             result = self.recognizer.Result()
@@ -67,7 +67,7 @@ class ProfileExecutor(threading.Thread):
             return
 
         for command in self.commands_list:
-            if str(result).__contains__(command):
+            if command in result_string:
                 self.recognizer.Result()
                 print('Detected: ' + command)
                 self.do_command(command)
@@ -75,16 +75,17 @@ class ProfileExecutor(threading.Thread):
 
     def set_profile(self, p_profile):
         self.m_profile = p_profile
-        if self.m_profile is None:
-            return
         self.commands_list = []
+        if self.m_profile is None:
+            print('Clearing profile')
+            return
         w_commands = self.m_profile['commands']
         for w_command in w_commands:
             parts = w_command['name'].split(',')
             for part in parts:
                 self.commands_list.append(part)
-        print(str(self.commands_list))
-        with open(get_settings_path("command.list"), 'w') as f:
+        print('Profile: ' + self.m_profile['name'])
+        with open(get_settings_path("command.list"), 'w', encoding="utf-8") as f:
             json.dump(self.commands_list, f, indent=4)
             f.close()
 
@@ -129,7 +130,7 @@ class ProfileExecutor(threading.Thread):
             time.sleep(p_action['time'])
         elif w_action_name == 'command stop action':
             self.stop_command(p_action['command name'])
-        elif w_action_name == 'command play sound' or w_action_name == 'play sound':
+        elif w_action_name in ['command play sound', 'play sound']:
             self.play_sound(p_action)
         elif w_action_name == 'mouse move action':
             if p_action['absolute']:
@@ -140,25 +141,27 @@ class ProfileExecutor(threading.Thread):
             w_type = p_action['type']
             w_button = p_action['button']
             click_command = '0x'
-            if w_type == 1:
-                click_command += '4'
-            elif w_type == 0:
-                click_command += '8'
-            elif w_type == 10:
-                click_command += 'C'
-            elif w_type == 11:
-                click_command += 'C'
-            else:
-                click_command += '0'
+            match w_type:
+                case 1:
+                    click_command += '4'
+                case 0:
+                    click_command += '8'
+                case 10:
+                    click_command += 'C'
+                case 11:
+                    click_command += 'C'
+                case _:
+                    click_command += '0'
 
-            if w_button == 'left':
-                click_command += '0'
-            elif w_button == 'middle':
-                click_command += '2'
-            elif w_button == 'right':
-                click_command += '1'
-            else:
-                click_command += '0'
+            match w_button:
+                case 'left':
+                    click_command += '0'
+                case 'middle':
+                    click_command += '2'
+                case 'right':
+                    click_command += '1'
+                case _:
+                    click_command += '0'
 
             args = ""
             if w_type == 11:
@@ -172,7 +175,7 @@ class ProfileExecutor(threading.Thread):
     class CommandThread(threading.Thread):
         def __init__(self, p_profile_executor, p_actions, p_repeat):
             threading.Thread.__init__(self)
-            self.ProfileExecutor = p_profile_executor
+            self.profile_executor = p_profile_executor
             self.m_actions = p_actions
             self.m_repeat = p_repeat
             self.m_stop = False
@@ -181,7 +184,7 @@ class ProfileExecutor(threading.Thread):
             w_repeat = self.m_repeat
             while not self.m_stop and w_repeat > 0:
                 for w_action in self.m_actions:
-                    self.ProfileExecutor.do_action(w_action)
+                    self.profile_executor.do_action(w_action)
                 w_repeat -= 1
 
         def stop(self):
@@ -196,8 +199,7 @@ class ProfileExecutor(threading.Thread):
         w_async = w_command['async']
         if not w_async:
             w_repeat = w_command['repeat']
-            if w_repeat < 1:
-                w_repeat = 1
+            w_repeat = max(w_repeat, 1)
             while w_repeat > 0:
                 for w_action in w_command['actions']:
                     self.do_action(w_action)
@@ -205,7 +207,7 @@ class ProfileExecutor(threading.Thread):
         else:
             w_cmd_thread = ProfileExecutor.CommandThread(self, w_actions, w_command['repeat'])
             w_cmd_thread.start()
-            self.m_cmdThreads[p_cmd_name] = w_cmd_thread
+            self.m_cmd_threads[p_cmd_name] = w_cmd_thread
 
     def get_command_for_executing(self, cmd_name):
         if self.m_profile is None:
@@ -225,9 +227,9 @@ class ProfileExecutor(threading.Thread):
         return command
 
     def stop_command(self, p_cmd_name):
-        if p_cmd_name in self.m_cmdThreads.keys():
-            self.m_cmdThreads[p_cmd_name].stop()
-            del self.m_cmdThreads[p_cmd_name]
+        if p_cmd_name in self.m_cmd_threads:
+            self.m_cmd_threads[p_cmd_name].stop()
+            del self.m_cmd_threads[p_cmd_name]
 
     def play_sound(self, p_cmd_name):
         sound_file = './voicepacks/' + p_cmd_name['pack'] + '/' + p_cmd_name['cat'] + '/' + p_cmd_name['file']
@@ -255,18 +257,20 @@ class ProfileExecutor(threading.Thread):
             if len(w_key) < 1:
                 return ''
             return str(w_key) + ":1"
-        elif "release" in w_key:
+
+        if "release" in w_key:
             w_key = re.sub('release', '', w_key, flags=re.IGNORECASE)
             w_key = self.map_key(w_key.strip())
             if len(w_key) < 1:
                 return ''
             return str(w_key) + ":0"
-        else:
-            w_key = self.map_key(w_key.strip())
-            if len(w_key) < 1:
-                return ''
-            return str(w_key) + ":1 " + str(w_key) + ":0"
 
+        w_key = self.map_key(w_key.strip())
+        if len(w_key) < 1:
+            return ''
+        return str(w_key) + ":1 " + str(w_key) + ":0"
+
+    # pylint: disable=too-many-return-statements
     @staticmethod
     def map_key(w_key):
         match w_key.casefold():
