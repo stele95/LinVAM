@@ -24,7 +24,6 @@ class MainWnd(QWidget):
         self.m_profile_executor = ProfileExecutor(self)
 
         self.ui.profileCbx.currentIndexChanged.connect(self.slot_profile_changed)
-        self.ui.languageCbx.currentIndexChanged.connect(self.language_changed)
         self.ui.addBut.clicked.connect(self.slot_add_new_profile)
         self.ui.editBut.clicked.connect(self.slot_edit_profile)
         self.ui.copyBut.clicked.connect(self.slot_copy_profile)
@@ -38,6 +37,7 @@ class MainWnd(QWidget):
             self.ui.profileCbx.setCurrentIndex(position)
 
         language_position = self.load_languages()
+        self.ui.languageCbx.currentIndexChanged.connect(self.language_changed)
         if position >= 0:
             self.ui.languageCbx.setCurrentIndex(language_position)
 
