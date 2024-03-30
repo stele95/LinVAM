@@ -26,22 +26,14 @@ class ProfileExecutor(threading.Thread):
         super().__init__()
         self.m_profile = None
         self.commands_list = []
-        self.m_stop = False
-        self.m_listening = False
         self.m_cmd_threads = {}
         self.p_parent = p_parent
-        self.samplerate = 16000
-        # noinspection PyBroadException
-        # pylint: disable=bare-except
-        try:
-            self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
-                                                       blocksize=4000, callback=self.listen_callback)
-        except:
-            device_info = sounddevice.query_devices('default.device', 'input')
-            # soundfile expects an int, sounddevice provides a float:
-            self.samplerate = int(device_info['default_samplerate'])
-            self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
-                                                       blocksize=4000, callback=self.listen_callback)
+
+        self.m_stream = None
+
+        device_info = sounddevice.query_devices(kind='input')
+        # sounddevice expects an int, sounddevice provides a float:
+        self.samplerate = int(device_info['default_samplerate'])
 
         self.model = Model(lang='en-us')
         self.recognizer = KaldiRecognizer(self.model, self.samplerate)
@@ -73,6 +65,11 @@ class ProfileExecutor(threading.Thread):
                 self.do_command(command)
                 break
 
+    def start_stream(self):
+        self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
+                                                   blocksize=4000, callback=self.listen_callback)
+        self.m_stream.start()
+
     def set_profile(self, p_profile):
         self.m_profile = p_profile
         self.commands_list = []
@@ -90,29 +87,22 @@ class ProfileExecutor(threading.Thread):
             f.close()
 
     def set_enable_listening(self, p_enable):
-        if not self.m_listening and p_enable:
-            self.m_stream.start()
-            self.m_listening = p_enable
-            self.m_stop = False
-            self.do_listen()
-        elif self.m_listening and not p_enable:
+        if self.m_stream is None and p_enable:
+            self.start_stream()
+            print("Detection started")
+        elif self.m_stream is not None and not p_enable:
             self.stop()
 
-    def do_listen(self):
-        print("Detection started")
-        self.m_listening = True
-
     def stop(self):
-        if self.m_listening:
+        if self.m_stream is not None:
             print("Detection stopped")
-            self.m_stop = True
-            self.m_listening = False
             self.m_stream.stop()
+            self.m_stream.close()
+            self.m_stream = None
             self.recognizer.FinalResult()
 
     def shutdown(self):
         self.stop()
-        self.m_stream.close()
 
     def do_action(self, p_action):
         # {'name': 'key action', 'key': 'left', 'type': 0}
