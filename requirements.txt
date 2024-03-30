@@ -1,5 +1,4 @@
 PyQt6
-PySide6
 sounddevice
 srt
 vosk

@@ -22,4 +22,4 @@ jobs:
         pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint --extension-pkg-whitelist=PyQt6 $(git ls-files '*.py' ':!:*ui_*.py')
+        pylint $(git ls-files '*.py' ':!:*ui_*.py')
