@@ -7,14 +7,15 @@ import sys
 
 from profileexecutor import ProfileExecutor, get_settings_path
 from soundfiles import SoundFiles
+from util import get_config
 
 
 class LinVAMRun:
     def __init__(self):
         self.m_profile_executor = None
         self.m_config = {
-            'testEnv': 0,
-            'profileName': ''
+            'profileName': '',
+            'language': self.get_language_from_database()
         }
         self.m_sound = SoundFiles()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -22,13 +23,13 @@ class LinVAMRun:
     def start_listening(self, run_args):
         self.handle_args(run_args)
         self.m_profile_executor = ProfileExecutor(self)
+        self.m_profile_executor.set_language(self.m_config['language'])
         profile_name = self.m_config['profileName']
         if len(profile_name) == 0:
             print('linvamrun: No profile specified, not listening...')
             return
         profile = self._get_profile_from_database(profile_name)
         if len(profile) > 0:
-            print('linvamrun: Listening for profile: ' + str(profile['name']))
             self.m_profile_executor.set_profile(profile)
             self.m_profile_executor.set_enable_listening(True)
         else:
@@ -42,13 +43,13 @@ class LinVAMRun:
             # pylint: disable=bare-except
             try:
                 arg_split = argument.split('=')
-                if arg_split[0] == '--profile':
-                    self.m_config['profileName'] = arg_split[1]
-            except:
-                if argument == '-testEnv':
-                    self.m_config['testEnv'] = 1
-                else:
-                    print('linvamrun: Unknown or unsupported argument')
+                match arg_split[0]:
+                    case '--profile':
+                        self.m_config['profileName'] = arg_split[1]
+                    case '--language':
+                        self.m_config['language'] = arg_split[1]
+            except Exception as ex:
+                print('Error parsing argument ' + str(argument) + ": " + str(ex))
 
     # noinspection PyUnusedLocal
     # pylint: disable=unused-argument
@@ -74,6 +75,14 @@ class LinVAMRun:
             except Exception as ex:
                 print("linvamrun: failed loading profiles from file: " + str(ex))
         return {}
+
+    @staticmethod
+    def get_language_from_database():
+        try:
+            return get_config('language')
+        except Exception as ex:
+            print("linvamrun: failed to load selected language file: " + str(ex))
+            return 'en'
 
 
 if __name__ == "__main__":

@@ -7,16 +7,7 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
-
-def get_settings_path(setting):
-    home = os.path.expanduser("~") + '/.local/share/LinVAM/'
-    if not os.path.exists(home):
-        os.mkdir(home)
-    file = home + setting
-    if not os.path.exists(file):
-        with (open(file, "w", encoding="utf-8")) as f:
-            f.close()
-    return file
+from util import get_language_code, get_settings_path
 
 
 class ProfileExecutor(threading.Thread):
@@ -35,8 +26,7 @@ class ProfileExecutor(threading.Thread):
         # sounddevice expects an int, sounddevice provides a float:
         self.samplerate = int(device_info['default_samplerate'])
 
-        self.model = Model(lang='en-us')
-        self.recognizer = KaldiRecognizer(self.model, self.samplerate)
+        self.recognizer = None
 
         if self.p_parent is not None:
             self.m_sound = self.p_parent.m_sound
@@ -44,6 +34,8 @@ class ProfileExecutor(threading.Thread):
     # noinspection PyUnusedLocal
     # pylint: disable=unused-argument
     def listen_callback(self, in_data, frame_count, time_info, status):
+        if self.recognizer is None:
+            return
         if self.recognizer.AcceptWaveform(bytes(in_data)):
             result = self.recognizer.Result()
         else:
@@ -65,7 +57,21 @@ class ProfileExecutor(threading.Thread):
                 self.do_command(command)
                 break
 
+    def set_language(self, language):
+        listening = self.m_stream is not None
+        self.stop()
+        language_code = get_language_code(language)
+        if language_code is None:
+            print('Unsupported language: ' + language)
+            return
+        print('Language: ' + language)
+        self.recognizer = KaldiRecognizer(Model(lang=language_code), self.samplerate)
+        if listening:
+            self.start_stream()
+
     def start_stream(self):
+        if self.recognizer is None:
+            return
         self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
                                                    blocksize=4000, callback=self.listen_callback)
         self.m_stream.start()
@@ -87,6 +93,8 @@ class ProfileExecutor(threading.Thread):
             f.close()
 
     def set_enable_listening(self, p_enable):
+        if self.recognizer is None:
+            return
         if self.m_stream is None and p_enable:
             self.start_stream()
             print("Detection started")
