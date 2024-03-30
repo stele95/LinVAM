@@ -21,7 +21,7 @@ class LinVAMRun:
 
     def start_listening(self, run_args):
         self.handle_args(run_args)
-        self.m_profile_executor = ProfileExecutor(None, self)
+        self.m_profile_executor = ProfileExecutor(self)
         profile_name = self.m_config['profileName']
         if len(profile_name) == 0:
             print('linvamrun: No profile specified, not listening...')

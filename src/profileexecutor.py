@@ -21,13 +21,11 @@ def get_settings_path(setting):
 
 class ProfileExecutor(threading.Thread):
 
-    def __init__(self, p_profile=None, p_parent=None):
+    def __init__(self, p_parent=None):
 
         super().__init__()
         self.m_profile = None
         self.commands_list = []
-        # does nothing?
-        self.set_profile(p_profile)
         self.m_stop = False
         self.m_listening = False
         self.m_cmd_threads = {}
@@ -77,15 +75,17 @@ class ProfileExecutor(threading.Thread):
 
     def set_profile(self, p_profile):
         self.m_profile = p_profile
-        if self.m_profile is None:
-            return
         self.commands_list = []
+        if self.m_profile is None:
+            print('Clearing profile')
+            return
         w_commands = self.m_profile['commands']
         for w_command in w_commands:
             parts = w_command['name'].split(',')
             for part in parts:
                 self.commands_list.append(part)
-        print(str(self.commands_list))
+        print('Profile: ' + self.m_profile['name'])
+        print('Commands: ' + str(self.commands_list))
         with open(get_settings_path("command.list"), 'w', encoding="utf-8") as f:
             json.dump(self.commands_list, f, indent=4)
             f.close()

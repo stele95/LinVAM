@@ -652,21 +652,5 @@
                 "repeat": 1
             }
         ]
-    },
-    {
-        "name": "test",
-        "commands": [
-            {
-                "name": "please scroll",
-                "actions": [
-                    {
-                        "name": "mouse scroll action",
-                        "delta": -5
-                    }
-                ],
-                "async": false,
-                "repeat": 1
-            }
-        ]
     }
 ]

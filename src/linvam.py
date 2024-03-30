@@ -21,7 +21,7 @@ class MainWnd(QWidget):
         self.ui.setupUi(self)
         self.handle_args()
         self.m_sound = SoundFiles()
-        self.m_profile_executor = ProfileExecutor(None, self)
+        self.m_profile_executor = ProfileExecutor(self)
 
         self.ui.profileCbx.currentIndexChanged.connect(self.slot_profile_changed)
         self.ui.addBut.clicked.connect(self.slot_add_new_profile)
@@ -34,10 +34,7 @@ class MainWnd(QWidget):
 
         position = self.load_from_database()
         if position >= 0:
-            if position == 0:
-                self.slot_profile_changed(position)
-            else:
-                self.ui.profileCbx.setCurrentIndex(position)
+            self.ui.profileCbx.setCurrentIndex(position)
 
         self.check_buttons_states()
 
@@ -82,9 +79,8 @@ class MainWnd(QWidget):
                 print("No of profiles read from file: " + str(no_of_profiles))
                 for position, w_profile in enumerate(w_profiles):
                     name = w_profile['name']
-                    self.ui.profileCbx.addItem(name)
                     w_json_profile = json.dumps(w_profile)
-                    self.ui.profileCbx.setItemData(self.ui.profileCbx.count() - 1, w_json_profile)
+                    self.ui.profileCbx.addItem(name, w_json_profile)
                     if name == selected_profile:
                         selected_profile_position = position
             except Exception as e:
@@ -96,7 +92,9 @@ class MainWnd(QWidget):
         return selected_profile_position
 
     def slot_profile_changed(self, p_idx):
-        print("position " + str(p_idx))
+        if p_idx < 0:
+            self.m_profile_executor.set_profile(None)
+            return
         w_json_profile = self.ui.profileCbx.itemData(p_idx)
         if w_json_profile is not None:
             self.m_active_profile = json.loads(w_json_profile)
@@ -109,10 +107,9 @@ class MainWnd(QWidget):
         w_profile_edit_wnd = ProfileEditWnd(None, self)
         if w_profile_edit_wnd.exec() == QDialog.DialogCode.Accepted:
             w_profile = w_profile_edit_wnd.m_profile
-            self.m_profile_executor.set_profile(w_profile)
-            self.ui.profileCbx.addItem(w_profile['name'])
             w_json_profile = json.dumps(w_profile)
-            self.ui.profileCbx.setItemData(self.ui.profileCbx.count() - 1, w_json_profile)
+            self.ui.profileCbx.addItem(w_profile['name'], w_json_profile)
+            self.ui.profileCbx.setCurrentIndex(self.ui.profileCbx.count() - 1)
             self.save_to_database()
             self.check_buttons_states()
 
@@ -140,9 +137,8 @@ class MainWnd(QWidget):
             w_profile = json.loads(w_json_profile)
             w_profile_copy = w_profile
             w_profile_copy['name'] = text
-            self.ui.profileCbx.addItem(w_profile_copy['name'])
             w_json_profile = json.dumps(w_profile_copy)
-            self.ui.profileCbx.setItemData(self.ui.profileCbx.count() - 1, w_json_profile)
+            self.ui.profileCbx.addItem(w_profile_copy['name'], w_json_profile)
 
     def name_exists(self, text):
         all_items = [json.loads(self.ui.profileCbx.itemData(i)) for i in range(self.ui.profileCbx.count())]
@@ -170,12 +166,6 @@ class MainWnd(QWidget):
         w_cur_idx = self.ui.profileCbx.currentIndex()
         if w_cur_idx >= 0:
             self.ui.profileCbx.removeItem(w_cur_idx)
-
-        w_cur_idx = self.ui.profileCbx.currentIndex()
-        if w_cur_idx >= 0:
-            w_json_profile = self.ui.profileCbx.itemData(w_cur_idx)
-            w_profile = json.loads(w_json_profile)
-            self.m_profile_executor.set_profile(w_profile)
 
         self.save_to_database()
         self.check_buttons_states()
