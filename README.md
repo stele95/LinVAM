@@ -132,7 +132,7 @@ If ``setup-and-install.sh`` has been executed, it will ask for setting up MangoH
 Multiple profiles are supported.  To create a new profile for a specific task/game click new and the main profile editor window will be displayed.
 Profiles are saved to and loaded from ``profiles.json`` file located at ``/home/$USER/.local/share/LinVAM/`` and can be backed up from there.
 
-![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/gui.png)
+![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/main-gui.png)
 ### Key combinations
 To assign key combinations, input the wanted sequence in the input field. Keys are separated by ```+```, use ``hold`` and ``release`` keywords for representing when a specific key should be held or released.
 
