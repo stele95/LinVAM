@@ -123,6 +123,11 @@ You can also use ``--language='languageName'`` for specifying a language. If ``-
 
 ![Steam launch options](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/steam.png)
 
+### Display LinVAM profile and language in MangoHud
+If you are using [MangoHud](https://github.com/flightlessmango/MangoHud), you can set it up for displaying selected LinVAM profile and language.
+
+If ``setup-and-install.sh`` has been executed, it will ask for setting up MangoHud. If you are building and installing by yourself, you can run ``setup-mangohud.sh`` script to set it up.
+
 ### Profiles
 Multiple profiles are supported.  To create a new profile for a specific task/game click new and the main profile editor window will be displayed.
 Profiles are saved to and loaded from ``profiles.json`` file located at ``/home/$USER/.local/share/LinVAM/`` and can be backed up from there.
