@@ -19,8 +19,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint
         pip install -r requirements.txt
-        #sudo apt install python3-pyqt6
-        sudo apt install libqt6gui6, libqt6widgets6
+        sudo apt-get install python3-pyqt6
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py' ':!:*ui_*.py')
