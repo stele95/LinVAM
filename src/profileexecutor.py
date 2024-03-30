@@ -7,43 +7,7 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
-
-def get_settings_path(setting, default_value=None):
-    home = os.path.expanduser("~") + '/.local/share/LinVAM/'
-    if not os.path.exists(home):
-        os.mkdir(home)
-    file = home + setting
-    if not os.path.exists(file):
-        with (open(file, "w", encoding="utf-8")) as f:
-            if default_value is not None:
-                f.write(default_value)
-            f.close()
-    return file
-
-
-def get_supported_languages():
-    return [
-        'English',
-        'Russian',
-        'Chinese',
-        'French',
-        'German'
-    ]
-
-
-def get_language_code(language_name):
-    if language_name in ['English', 'english', 'en']:
-        return 'en-us'
-    elif language_name in ['Russian', 'russian', 'ru', 'русский']:
-        return 'ru'
-    elif language_name in ['Chinese', 'cn']:
-        return 'cn'
-    elif language_name in ['French', 'fr']:
-        return 'fr'
-    elif language_name in ['German', 'de']:
-        return 'de'
-    else:
-        return None
+from src.util import get_language_code, get_settings_path
 
 
 class ProfileExecutor(threading.Thread):

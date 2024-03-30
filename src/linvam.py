@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessa
 from profileeditwnd import ProfileEditWnd
 from profileexecutor import ProfileExecutor, get_settings_path, get_supported_languages
 from soundfiles import SoundFiles
+from src.util import get_config, save_config
 from ui_mainwnd import Ui_MainWidget
 
 
@@ -68,9 +69,7 @@ class MainWnd(QWidget):
             f.close()
 
     def load_from_database(self):
-        with open(get_settings_path('selected_profile'), "r", encoding="utf-8") as selected_profile_file:
-            selected_profile = selected_profile_file.read()
-            selected_profile_file.close()
+        selected_profile = get_config('selected_profile')
         selected_profile_position = 0
         with open(get_settings_path("profiles.json"), "r", encoding="utf-8") as f:
             profiles = f.read()
@@ -97,9 +96,7 @@ class MainWnd(QWidget):
         return selected_profile_position
 
     def load_languages(self):
-        with open(get_settings_path('selected_language', 'English'), "r", encoding="utf-8") as selected_language_file:
-            selected_language = selected_language_file.read()
-            selected_language_file.close()
+        selected_language = get_config('selected_language')
         selected_language_position = 0
         languages = get_supported_languages()
         for position, language in enumerate(languages):
@@ -116,18 +113,14 @@ class MainWnd(QWidget):
         if w_json_profile is not None:
             self.m_active_profile = json.loads(w_json_profile)
             self.m_profile_executor.set_profile(self.m_active_profile)
-            with open(get_settings_path('selected_profile'), "w", encoding="utf-8") as selected_profile_file:
-                selected_profile_file.write(self.m_active_profile['name'])
-                selected_profile_file.close()
+            save_config('selected_profile', self.m_active_profile['name'])
 
     def language_changed(self, index):
         if index < 0:
             return
         language = self.ui.languageCbx.itemText(index)
         self.m_profile_executor.set_language(language)
-        with open(get_settings_path('selected_language'), "w", encoding="utf-8") as selected_profile_file:
-            selected_profile_file.write(language)
-            selected_profile_file.close()
+        save_config('selected_language', language)
 
     def slot_add_new_profile(self):
         w_profile_edit_wnd = ProfileEditWnd(None, self)

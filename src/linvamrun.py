@@ -7,6 +7,7 @@ import sys
 
 from profileexecutor import ProfileExecutor, get_settings_path
 from soundfiles import SoundFiles
+from src.util import get_config
 
 
 class LinVAMRun:
@@ -78,12 +79,7 @@ class LinVAMRun:
     @staticmethod
     def get_language_from_database():
         try:
-            with open(get_settings_path('selected_language'), "r", encoding="utf-8") as f:
-                config = f.read()
-                f.close()
-                # noinspection PyBroadException
-                settings = json.loads(config)
-                return settings['language']
+            return get_config('selected_language')
         except Exception as ex:
             print("linvamrun: failed to load selected language file: " + str(ex))
             return 'en'
