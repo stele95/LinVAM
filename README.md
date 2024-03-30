@@ -33,27 +33,23 @@ Utilising VOSK-API, a lightweight voice to text engine you can specify voice com
 ## Build
 ### Build dependencies
 - python3
-- PyQt6
-- sounddevice
-- srt
-- vosk
 - Nuitka (https://github.com/Nuitka/Nuitka)
-
-### Requirements for working
-- ffplay (part of ffmpeg, usually already installed)
-- ydotool (https://github.com/ReimuNotMoe/ydotool)
 
 ### Steps for building and running successfully
 #### Building without installing
 - install python3 and pip
-- install python packages: PyQt6, sounddevice, srt, vosk and [Nuitka](https://github.com/Nuitka/Nuitka) by running the following command
+- install [Nuitka](https://github.com/Nuitka/Nuitka) by running the following command
 
-        pip install -r build-requirements.txt
+        python -m pip install nuitka
 
 - For building without installing, run the ``build.sh`` script
 
 #### Building and installing
 - do steps from [Building without installing](https://github.com/stele95/LinVAM?tab=readme-ov-file#building-without-installing)
+- install run dependencies
+
+      pip install -r requirements.txt
+
 - install ydotool (https://github.com/ReimuNotMoe/ydotool)
 - install ffmpeg for playing audio files
 - [Configure ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)

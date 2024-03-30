@@ -1,5 +1,0 @@
-PyQt6
-sounddevice
-Nuitka
-srt
-vosk
