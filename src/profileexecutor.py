@@ -26,8 +26,6 @@ class ProfileExecutor(threading.Thread):
         super().__init__()
         self.m_profile = None
         self.commands_list = []
-        self.m_stop = False
-        self.m_listening = False
         self.m_cmd_threads = {}
         self.p_parent = p_parent
 
@@ -89,23 +87,15 @@ class ProfileExecutor(threading.Thread):
             f.close()
 
     def set_enable_listening(self, p_enable):
-        if not self.m_listening and p_enable:
+        if self.m_stream is None and p_enable:
             self.start_stream()
-            self.m_listening = p_enable
-            self.m_stop = False
-            self.do_listen()
-        elif self.m_listening and not p_enable:
+            print("Detection started")
+        elif self.m_stream is not None and not p_enable:
             self.stop()
 
-    def do_listen(self):
-        print("Detection started")
-        self.m_listening = True
-
     def stop(self):
-        if self.m_listening:
+        if self.m_stream is not None:
             print("Detection stopped")
-            self.m_stop = True
-            self.m_listening = False
             self.m_stream.stop()
             self.m_stream.close()
             self.m_stream = None
