@@ -85,7 +85,6 @@ class ProfileExecutor(threading.Thread):
             for part in parts:
                 self.commands_list.append(part)
         print('Profile: ' + self.m_profile['name'])
-        print('Commands: ' + str(self.commands_list))
         with open(get_settings_path("command.list"), 'w', encoding="utf-8") as f:
             json.dump(self.commands_list, f, indent=4)
             f.close()
