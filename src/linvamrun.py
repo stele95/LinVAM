@@ -79,7 +79,7 @@ class LinVAMRun:
     @staticmethod
     def get_language_from_database():
         try:
-            return get_config('selected_language')
+            return get_config('language')
         except Exception as ex:
             print("linvamrun: failed to load selected language file: " + str(ex))
             return 'en'
