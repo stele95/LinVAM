@@ -16,11 +16,10 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        lsb_release -a
         python -m pip install --upgrade pip
+        sudo apt-get -y install qt6-base-dev
         pip install pylint
         pip install -r requirements.txt
-        sudo apt-get install python3-pyqt6
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py' ':!:*ui_*.py')
