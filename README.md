@@ -2,7 +2,12 @@
 Linux Voice Activated Macro
 
 ## Status
-This project is currently a work-in-progress and currently supports only English.
+Currently supported languages (just for voice input, UI is in English):
+- English
+- Russian
+- Chinese
+- French
+- German
 
 Utilising VOSK-API, a lightweight voice to text engine you can specify voice commands for the tool to recognise and actions to perform.
 
