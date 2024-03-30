@@ -78,14 +78,14 @@ class LinVAMRun:
     @staticmethod
     def get_language_from_database():
         try:
-            with open(get_settings_path("config"), "r", encoding="utf-8") as f:
+            with open(get_settings_path('selected_language'), "r", encoding="utf-8") as f:
                 config = f.read()
                 f.close()
                 # noinspection PyBroadException
                 settings = json.loads(config)
                 return settings['language']
         except Exception as ex:
-            print("linvamrun: failed to load config file: " + str(ex))
+            print("linvamrun: failed to load selected language file: " + str(ex))
             return 'en'
 
 

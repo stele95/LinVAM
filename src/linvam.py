@@ -6,7 +6,7 @@ import sys
 from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessageBox, QLineEdit
 
 from profileeditwnd import ProfileEditWnd
-from profileexecutor import ProfileExecutor, get_settings_path
+from profileexecutor import ProfileExecutor, get_settings_path, get_supported_languages
 from soundfiles import SoundFiles
 from ui_mainwnd import Ui_MainWidget
 
@@ -24,6 +24,7 @@ class MainWnd(QWidget):
         self.m_profile_executor = ProfileExecutor(self)
 
         self.ui.profileCbx.currentIndexChanged.connect(self.slot_profile_changed)
+        self.ui.languageCbx.currentIndexChanged.connect(self.language_changed)
         self.ui.addBut.clicked.connect(self.slot_add_new_profile)
         self.ui.editBut.clicked.connect(self.slot_edit_profile)
         self.ui.copyBut.clicked.connect(self.slot_copy_profile)
@@ -35,6 +36,10 @@ class MainWnd(QWidget):
         position = self.load_from_database()
         if position >= 0:
             self.ui.profileCbx.setCurrentIndex(position)
+
+        language_position = self.load_languages()
+        if position >= 0:
+            self.ui.languageCbx.setCurrentIndex(language_position)
 
         self.check_buttons_states()
 
@@ -63,7 +68,7 @@ class MainWnd(QWidget):
             f.close()
 
     def load_from_database(self):
-        with open(get_settings_path('selectedProfile'), "r", encoding="utf-8") as selected_profile_file:
+        with open(get_settings_path('selected_profile'), "r", encoding="utf-8") as selected_profile_file:
             selected_profile = selected_profile_file.read()
             selected_profile_file.close()
         selected_profile_position = 0
@@ -91,6 +96,18 @@ class MainWnd(QWidget):
 
         return selected_profile_position
 
+    def load_languages(self):
+        with open(get_settings_path('selected_language', 'English'), "r", encoding="utf-8") as selected_language_file:
+            selected_language = selected_language_file.read()
+            selected_language_file.close()
+        selected_language_position = 0
+        languages = get_supported_languages()
+        for position, language in enumerate(languages):
+            self.ui.languageCbx.addItem(language)
+            if language == selected_language:
+                selected_language_position = position
+        return selected_language_position
+
     def slot_profile_changed(self, p_idx):
         if p_idx < 0:
             self.m_profile_executor.set_profile(None)
@@ -99,9 +116,18 @@ class MainWnd(QWidget):
         if w_json_profile is not None:
             self.m_active_profile = json.loads(w_json_profile)
             self.m_profile_executor.set_profile(self.m_active_profile)
-            with open(get_settings_path('selectedProfile'), "w", encoding="utf-8") as selected_profile_file:
+            with open(get_settings_path('selected_profile'), "w", encoding="utf-8") as selected_profile_file:
                 selected_profile_file.write(self.m_active_profile['name'])
                 selected_profile_file.close()
+
+    def language_changed(self, index):
+        if index < 0:
+            return
+        language = self.ui.languageCbx.itemText(index)
+        self.m_profile_executor.set_language(language)
+        with open(get_settings_path('selected_language'), "w", encoding="utf-8") as selected_profile_file:
+            selected_profile_file.write(language)
+            selected_profile_file.close()
 
     def slot_add_new_profile(self):
         w_profile_edit_wnd = ProfileEditWnd(None, self)
