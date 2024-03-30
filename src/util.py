@@ -23,8 +23,7 @@ def get_language_code(language_name):
         return 'fr'
     if language_name in ['German', 'de']:
         return 'de'
-    else:
-        return None
+    return None
 
 
 def get_settings_path(setting, default_value=None):

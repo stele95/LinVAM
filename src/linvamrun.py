@@ -7,7 +7,7 @@ import sys
 
 from profileexecutor import ProfileExecutor, get_settings_path
 from soundfiles import SoundFiles
-from src.util import get_config
+from util import get_config
 
 
 class LinVAMRun:

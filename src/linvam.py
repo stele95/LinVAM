@@ -7,9 +7,8 @@ from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessa
 
 from profileeditwnd import ProfileEditWnd
 from profileexecutor import ProfileExecutor, get_settings_path
-from src.util import get_supported_languages
 from soundfiles import SoundFiles
-from src.util import get_config, save_config
+from util import get_supported_languages, get_config, save_config
 from ui_mainwnd import Ui_MainWidget
 
 

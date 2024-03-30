@@ -7,7 +7,7 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
-from src.util import get_language_code, get_settings_path
+from util import get_language_code, get_settings_path
 
 
 class ProfileExecutor(threading.Thread):
