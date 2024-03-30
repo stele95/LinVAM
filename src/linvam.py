@@ -25,7 +25,6 @@ class MainWnd(QWidget):
         self.m_sound = SoundFiles()
         self.m_profile_executor = ProfileExecutor(self)
 
-        self.ui.profileCbx.currentIndexChanged.connect(self.slot_profile_changed)
         self.ui.addBut.clicked.connect(self.slot_add_new_profile)
         self.ui.editBut.clicked.connect(self.slot_edit_profile)
         self.ui.copyBut.clicked.connect(self.slot_copy_profile)
@@ -35,6 +34,7 @@ class MainWnd(QWidget):
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
         position = self.load_from_database()
+        self.ui.profileCbx.currentIndexChanged.connect(self.slot_profile_changed)
         if position >= 0:
             self.ui.profileCbx.setCurrentIndex(position)
 
