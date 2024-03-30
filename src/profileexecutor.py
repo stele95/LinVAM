@@ -230,7 +230,8 @@ class ProfileExecutor(threading.Thread):
             del self.m_cmd_threads[p_cmd_name]
 
     def play_sound(self, p_cmd_name):
-        sound_file = get_voice_packs_folder_path() + p_cmd_name['pack'] + '/' + p_cmd_name['cat'] + '/' + p_cmd_name['file']
+        sound_file = (get_voice_packs_folder_path() + p_cmd_name['pack'] + '/' + p_cmd_name['cat'] + '/'
+                      + p_cmd_name['file'])
         self.m_sound.play(sound_file)
 
     def press_key(self, w_key):

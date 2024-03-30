@@ -7,6 +7,7 @@ from ui_soundactioneditwnd import Ui_SoundSelect
 
 from util import get_voice_packs_folder_path
 
+
 class SoundActionEditWnd(QDialog):
     def __init__(self, p_sounds, p_sound_action=None, p_parent=None):
         super().__init__(p_parent)
