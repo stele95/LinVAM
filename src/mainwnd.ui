@@ -68,7 +68,7 @@
         </size>
        </property>
        <property name="title">
-        <string>Voice Volume</string>
+        <string>Playback volume</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -118,6 +118,26 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Voice language</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="editable">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

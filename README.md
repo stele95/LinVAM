@@ -114,6 +114,8 @@ Start LinVAM from your list of applications or by typing ``linvam`` in the termi
 ### Usage with Steam
 After setting up profiles in the GUI app, you can add ``linvamrun --profile='Profile name' -- %command%`` to the game launch options for starting the console app for listening when opening games.
 
+You can also use ``--language='languageName'`` for specifying a language. If ``--language`` argument is not used, app defaults to language selected in the GUI app.
+
 ![Steam launch options](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/steam.png)
 
 ### Profiles
