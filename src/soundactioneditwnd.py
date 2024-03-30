@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QDialog
 
 from ui_soundactioneditwnd import Ui_SoundSelect
 
+from util import get_voice_packs_folder_path
 
 class SoundActionEditWnd(QDialog):
     def __init__(self, p_sounds, p_sound_action=None, p_parent=None):
@@ -139,7 +140,7 @@ class SoundActionEditWnd(QDialog):
             self.list_files_model.appendRow(item)
 
     def play_sound(self):
-        sound_file = ('./voicepacks/' + self.selected_voice_pack + '/' + self.selected_category + '/'
+        sound_file = (get_voice_packs_folder_path() + self.selected_voice_pack + '/' + self.selected_category + '/'
                       + self.selected_file)
         self.p_sounds.play(sound_file)
 

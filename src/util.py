@@ -60,3 +60,7 @@ def save_config(config_name, value):
 
 def get_default_config_values():
     return json.dumps({'profile': '', 'language': 'English'}, indent=4)
+
+
+def get_voice_packs_folder_path():
+    return os.path.expanduser("~") + '/voicepacks/'

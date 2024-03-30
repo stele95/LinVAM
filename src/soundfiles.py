@@ -4,6 +4,8 @@ import signal
 import subprocess
 from os import path
 
+from util import get_voice_packs_folder_path
+
 
 # I've tried a couple of libs that are capable of playing mp3:
 # pysound - offers no way to stop sounds. can't play files with whitespace in path
@@ -25,11 +27,12 @@ class SoundFiles:
 
     def scan_sound_files(self):
         print("SoundFiles: scanning")
-        if not path.exists('./voicepacks'):
+        voicepacks = get_voice_packs_folder_path()
+        if not path.exists(voicepacks):
             print("No folder 'voicepacks' found. Please create one and copy all your voicepacks in there.")
             return
 
-        for root, _, files in os.walk("./voicepacks"):
+        for root, _, files in os.walk(voicepacks):
             for file in files:
                 if file.endswith(".mp3"):
                     # we expect a path like this:
