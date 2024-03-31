@@ -36,7 +36,7 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 ## Build
 ### Build dependencies
 - python3
-- Nuitka (https://github.com/Nuitka/Nuitka)
+- [Nuitka](https://github.com/Nuitka/Nuitka)
 
 ### Steps for building and running successfully
 #### Building without installing
