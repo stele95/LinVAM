@@ -110,6 +110,7 @@ class ProfileExecutor(threading.Thread):
             self.recognizer.FinalResult()
 
     def shutdown(self):
+        self.m_sound.stop()
         self.stop()
 
     def do_action(self, p_action):
