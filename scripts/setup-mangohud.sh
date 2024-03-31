@@ -4,7 +4,7 @@ if [ -f ~/.config/MangoHud/MangoHud.conf ]
       cp mangohud-language.sh ~/.local/share/LinVAM/
       {
         echo "custom_text=LinVAM";
-        echo "exec=sh ~/.local/share/LinVAM//mangohud-profile.sh";
+        echo "exec=sh ~/.local/share/LinVAM/mangohud-profile.sh";
         echo "exec=sh ~/.local/share/LinVAM/mangohud-language.sh";
       } >> ~/.config/MangoHud/MangoHud.conf
   else
