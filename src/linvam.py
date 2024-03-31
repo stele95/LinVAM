@@ -34,13 +34,18 @@ class MainWnd(QWidget):
 
         position = self.load_from_database()
         self.ui.profileCbx.currentIndexChanged.connect(self.slot_profile_changed)
-        if position >= 0:
+        if position > 0:
             self.ui.profileCbx.setCurrentIndex(position)
+        elif position == 0:
+            self.slot_profile_changed(position)
 
         language_position = self.load_languages()
         self.ui.languageCbx.currentIndexChanged.connect(self.language_changed)
-        if position >= 0:
+        print(str(language_position))
+        if language_position > 0:
             self.ui.languageCbx.setCurrentIndex(language_position)
+        elif language_position == 0:
+            self.language_changed(language_position)
 
         self.check_buttons_states()
 
