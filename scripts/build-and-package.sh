@@ -10,6 +10,7 @@ cp mangohud-profile.sh $dir
 cp mangohud-language.sh $dir
 cp setup-mangohud.sh $dir
 cp ../src/LinVAM.desktop $dir
+cp ../requirements.txt $dir
 cp configure-ydotoold.sh $dir
 zip -r "$dir.zip" $dir
 rm -r $dir

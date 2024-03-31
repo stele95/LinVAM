@@ -10,3 +10,5 @@ if [ "$MANGOHUD" == "y" ] || [ "$MANGOHUD" == "Y" ]
         echo "Setting up MangoHud"
         sh mangohud-setup.sh
 fi
+echo "Installing python requirements with pip..."
+pip install -r requirements.txt
