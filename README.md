@@ -29,12 +29,8 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 
 ### Install steps
 - install python3 and pip
-- install python packages: PyQt6, sounddevice, srt and vosk by running the following command
-
-        pip install -r requirements.txt
-
-- After installing ydotool, [configure it to run without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 - Download the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``setup-and-install.sh`` from the extracted files
+- After installing ydotool, [configure it to run without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 
 ## Build
 ### Build dependencies
@@ -46,7 +42,7 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 - install python3 and pip
 - install [Nuitka](https://github.com/Nuitka/Nuitka) by running the following command
 
-        python -m pip install nuitka
+        pip install nuitka
 
 - For building without installing, run the ``build.sh`` script
 
