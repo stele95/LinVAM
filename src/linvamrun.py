@@ -7,7 +7,7 @@ import sys
 
 from profileexecutor import ProfileExecutor, get_settings_path
 from soundfiles import SoundFiles
-from util import get_config
+from util import get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file
 
 
 class LinVAMRun:
@@ -23,7 +23,10 @@ class LinVAMRun:
     def start_listening(self, run_args):
         self.handle_args(run_args)
         self.m_profile_executor = ProfileExecutor(self)
-        self.m_profile_executor.set_language(self.m_config['language'])
+        language = self.m_config['language']
+        self.m_profile_executor.set_language(language)
+        language_name = get_language_name(language)
+        save_linvamrun_run_config('language', language_name)
         profile_name = self.m_config['profileName']
         if len(profile_name) == 0:
             print('linvamrun: No profile specified, not listening...')
@@ -31,6 +34,7 @@ class LinVAMRun:
         profile = self._get_profile_from_database(profile_name)
         if len(profile) > 0:
             self.m_profile_executor.set_profile(profile)
+            save_linvamrun_run_config('profile', profile['name'])
             self.m_profile_executor.set_enable_listening(True)
         else:
             print('linvamrun: Profile not found, not listening...')
@@ -58,6 +62,7 @@ class LinVAMRun:
 
     def shut_down(self):
         self.m_profile_executor.shutdown()
+        delete_linvamrun_run_file()
         print('linvamrun: Shutting down')
 
     @staticmethod

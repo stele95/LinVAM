@@ -8,8 +8,8 @@ from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessa
 from profileeditwnd import ProfileEditWnd
 from profileexecutor import ProfileExecutor, get_settings_path
 from soundfiles import SoundFiles
-from util import get_supported_languages, get_config, save_config
 from ui_mainwnd import Ui_MainWidget
+from util import get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file
 
 
 class MainWnd(QWidget):
@@ -117,7 +117,9 @@ class MainWnd(QWidget):
         if w_json_profile is not None:
             self.m_active_profile = json.loads(w_json_profile)
             self.m_profile_executor.set_profile(self.m_active_profile)
-            save_config('profile', self.m_active_profile['name'])
+            profile_name = self.m_active_profile['name']
+            save_config('profile', profile_name)
+            save_linvam_run_config('profile', profile_name)
 
     def language_changed(self, index):
         if index < 0:
@@ -125,6 +127,7 @@ class MainWnd(QWidget):
         language = self.ui.languageCbx.itemText(index)
         self.m_profile_executor.set_language(language)
         save_config('language', language)
+        save_linvam_run_config('language', language)
 
     def slot_add_new_profile(self):
         w_profile_edit_wnd = ProfileEditWnd(None, self)
@@ -203,6 +206,7 @@ class MainWnd(QWidget):
     # pylint: disable=invalid-name
     def closeEvent(self, event):
         self.m_profile_executor.shutdown()
+        delete_linvam_run_file()
         event.accept()
 
     def handle_args(self):

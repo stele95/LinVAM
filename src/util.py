@@ -53,6 +53,54 @@ def get_settings_path(setting, default_value=None):
     return file
 
 
+def get_linvam_run_file_path():
+    return get_settings_path('.linvam', get_default_run_config_values())
+
+
+def delete_linvam_run_file():
+    file = get_linvam_run_file_path()
+    os.remove(file)
+
+
+def save_linvam_run_config(config_name, value):
+    configs = get_linvam_run_configs()
+    configs[config_name] = value
+    with open(get_linvam_run_file_path(), "w", encoding="utf-8") as f:
+        json.dump(configs, f, indent=4)
+        f.close()
+
+
+def get_linvam_run_configs():
+    with open(get_linvam_run_file_path(), "r", encoding="utf-8") as f:
+        config_text = f.read()
+        f.close()
+    return json.loads(config_text)
+
+
+def delete_linvamrun_run_file():
+    file = get_linvamrun_run_file_path()
+    os.remove(file)
+
+
+def get_linvamrun_run_file_path():
+    return get_settings_path('.linvamrun', get_default_run_config_values())
+
+
+def save_linvamrun_run_config(config_name, value):
+    configs = get_linvamrun_run_configs()
+    configs[config_name] = value
+    with open(get_linvamrun_run_file_path(), "w", encoding="utf-8") as f:
+        json.dump(configs, f, indent=4)
+        f.close()
+
+
+def get_linvamrun_run_configs():
+    with open(get_linvamrun_run_file_path(), "r", encoding="utf-8") as f:
+        config_text = f.read()
+        f.close()
+    return json.loads(config_text)
+
+
 def get_configs():
     with open(get_settings_path('config', get_default_config_values()), "r", encoding="utf-8") as f:
         config_text = f.read()
@@ -74,6 +122,10 @@ def save_config(config_name, value):
 
 def get_default_config_values():
     return json.dumps({'profile': '', 'language': 'English'}, indent=4)
+
+
+def get_default_run_config_values():
+    return json.dumps({'profile': '', 'language': ''}, indent=4)
 
 
 def get_voice_packs_folder_path():

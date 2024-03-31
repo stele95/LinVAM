@@ -64,9 +64,7 @@ class ProfileExecutor(threading.Thread):
         if language_code is None:
             print('Unsupported language: ' + language)
             return
-        language_name = get_language_name(language)
-        print('Language: ' + language_name)
-        save_config('current_language', language_name)
+        print('Language: ' + get_language_name(language))
         self.recognizer = KaldiRecognizer(Model(lang=language_code), self.samplerate)
         if listening:
             self.start_stream()
