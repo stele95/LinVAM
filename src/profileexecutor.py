@@ -131,6 +131,8 @@ class ProfileExecutor(threading.Thread):
             self.stop_command(p_action['command name'])
         elif w_action_name in ['command play sound', 'play sound']:
             self.play_sound(p_action)
+        elif w_action_name == 'stop sound':
+            self.m_sound.stop()
         elif w_action_name == 'mouse move action':
             if p_action['absolute']:
                 os.system('ydotool mousemove --absolute -x' + str(p_action['x']) + " -y " + str(p_action['y']))
