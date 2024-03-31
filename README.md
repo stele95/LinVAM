@@ -9,7 +9,7 @@ Currently supported languages (just for voice input, UI is in English):
 - French
 - German
 
-Utilising VOSK-API, a lightweight voice to text engine you can specify voice commands for the tool to recognise and actions to perform.
+Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice to text engine you can specify voice commands for the tool to recognise and actions to perform.
 
 ### Planned additions
 - Add location selection for output sounds instead of a hardcoded location
