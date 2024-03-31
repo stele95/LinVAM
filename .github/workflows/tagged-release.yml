@@ -33,12 +33,12 @@ jobs:
 
     - name: Build and package
       run: |
-        sh ./scripts/build-and-package.sh
+        cd ./scripts
+        sh ./build-and-package.sh
 
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         prerelease: false
-        automatic_release_tag: latest
         files: |
           linvam-v*.zip
