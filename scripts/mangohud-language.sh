@@ -7,8 +7,6 @@ then
   then
     language=$(cat ~/.local/share/LinVAM/.linvamrun | grep "language" | sed "s/\"language\"://g;s/^[ \t]*//;s/[\",]//g;s/[ \t]*$//")
     echo "$language"
-  else
-    echo "ON"
   fi
 elif [ -n "$linvam" ] || [ -f ~/.local/share/LinVAM/.linvam ]
 then
@@ -16,9 +14,5 @@ then
     then
       language=$(cat ~/.local/share/LinVAM/.linvam | grep "language" | sed "s/\"language\"://g;s/^[ \t]*//;s/[\",]//g;s/[ \t]*$//")
       echo "$language"
-    else
-      echo "ON"
   fi
-else
-  echo "OFF"
 fi
