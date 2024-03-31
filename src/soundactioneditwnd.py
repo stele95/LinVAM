@@ -144,6 +144,7 @@ class SoundActionEditWnd(QDialog):
         sound_file = (get_voice_packs_folder_path() + self.selected_voice_pack + '/' + self.selected_category + '/'
                       + self.selected_file)
         self.p_sounds.play(sound_file)
+        self.ui.buttonStopSound.setEnabled(True)
 
     def stop_sound(self):
         self.p_sounds.stop()
@@ -167,3 +168,4 @@ class SoundActionEditWnd(QDialog):
             if len(item) > 0:
                 index = self.list_files_model.indexFromItem(item[0])
                 self.ui.listFiles.setCurrentIndex(index)
+                self.ui.buttonPlaySound.setEnabled(True)
