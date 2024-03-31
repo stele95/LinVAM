@@ -1,7 +1,7 @@
 import json
 import os
 
-CONST_VERSION = '0.4.5'
+CONST_VERSION = '0.4.6'
 
 
 def get_supported_languages():
