@@ -1,5 +1,5 @@
 #!/bin/bash
-version=$(<../VERSION)
+version=$(cat ../src/util.py | grep "CONST_VERSION = " | sed "s/CONST_VERSION = //g;s/[\"']//g")
 dir="linvam-v$version"
 mkdir $dir
 sh ./build.sh
