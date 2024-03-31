@@ -7,7 +7,7 @@ import sys
 
 from profileexecutor import ProfileExecutor, get_settings_path
 from soundfiles import SoundFiles
-from util import get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file
+from util import get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file, CONST_VERSION
 
 
 class LinVAMRun:
@@ -91,6 +91,9 @@ class LinVAMRun:
 
 
 if __name__ == "__main__":
+    if len(sys.argv) == 2 and sys.argv[1] == '--version':
+        print("Version: " + str(CONST_VERSION))
+        sys.exit()
     linvamrun = LinVAMRun()
     args = []
     RUN_COMMANDS = ''

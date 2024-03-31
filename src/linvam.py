@@ -9,7 +9,8 @@ from profileeditwnd import ProfileEditWnd
 from profileexecutor import ProfileExecutor, get_settings_path
 from soundfiles import SoundFiles
 from ui_mainwnd import Ui_MainWidget
-from util import get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file
+from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
+                  CONST_VERSION)
 
 
 class MainWnd(QWidget):
@@ -224,6 +225,9 @@ class MainWnd(QWidget):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) == 2 and sys.argv[1] == '--version':
+        print("Version: " + str(CONST_VERSION))
+        sys.exit()
     app = QApplication(sys.argv)
     QApplication.setApplicationName('LinVAM')
     mainWnd = MainWnd()
