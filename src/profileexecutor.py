@@ -7,7 +7,7 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
-from util import get_language_code, get_settings_path
+from util import get_language_code, get_settings_path, get_voice_packs_folder_path
 
 
 class ProfileExecutor(threading.Thread):
@@ -110,6 +110,7 @@ class ProfileExecutor(threading.Thread):
             self.recognizer.FinalResult()
 
     def shutdown(self):
+        self.m_sound.stop()
         self.stop()
 
     def do_action(self, p_action):
@@ -130,6 +131,8 @@ class ProfileExecutor(threading.Thread):
             self.stop_command(p_action['command name'])
         elif w_action_name in ['command play sound', 'play sound']:
             self.play_sound(p_action)
+        elif w_action_name == 'stop sound':
+            self.m_sound.stop()
         elif w_action_name == 'mouse move action':
             if p_action['absolute']:
                 os.system('ydotool mousemove --absolute -x' + str(p_action['x']) + " -y " + str(p_action['y']))
@@ -230,7 +233,8 @@ class ProfileExecutor(threading.Thread):
             del self.m_cmd_threads[p_cmd_name]
 
     def play_sound(self, p_cmd_name):
-        sound_file = './voicepacks/' + p_cmd_name['pack'] + '/' + p_cmd_name['cat'] + '/' + p_cmd_name['file']
+        sound_file = (get_voice_packs_folder_path() + p_cmd_name['pack'] + '/' + p_cmd_name['cat'] + '/'
+                      + p_cmd_name['file'])
         self.m_sound.play(sound_file)
 
     def press_key(self, w_key):

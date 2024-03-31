@@ -12,6 +12,7 @@ Currently supported languages (just for voice input, UI is in English):
 Utilising VOSK-API, a lightweight voice to text engine you can specify voice commands for the tool to recognise and actions to perform.
 
 ### Planned additions
+- Add location selection for output sounds instead of a hardcoded location
 - Support for joysticks and gaming devices
 
 ## Install
@@ -145,17 +146,18 @@ You can also assign mouse movements and system commands if you require (eg openi
 
 ### Output audio
 In the Command Edit Dialog, chose 'Other' and then 'Play sound'. Pick the sound you would like to play.
-For this to work you need to copy any audio file you would like to use to the folder 'voicepacks'.
-You are required to create a subfolder to hold all your audio files (voicepack folder), then within that subfolder, create as many folders as you like to group your audio files (category folders).
+
+For this to work you need to create a folder ``voicepacks`` inside your home directory (e.g. by executing ``mkdir ~/voicepacks`` in the terminal) and copy any audio file you would like to use to that folder.
+Within ``voicepacks`` folder you can create as many folders as you like to group your audio files (category folders).
 Place the audio file into these category folders or in any subfolder within a category folder.
 In theory any audio file should work, but tested only with MP3 files.
 
 Example:
-/voicepacks/my voicepack/custom commands/hello.mp3
-/voicepacks/my voicepack/other/thank you.mp3
+~/voicepacks/my voicepack/custom commands/hello.mp3
+~/voicepacks/my voicepack/other/thank you.mp3
 
-If you own a HCS voicepack, copy the whole voicepack folder (like 'hcspack', 'hcspack-eden', ...) to the 'voicepacks' folder, so it reads like this:
-/voicepacks/hcspack/...
+If you own a HCS voicepack, copy the whole voicepack folder (like 'hcspack', 'hcspack-eden', ...) to the ``voicepacks`` folder, so it reads like this:
+``~/voicepacks/hcspack/...``
 
 ### Improve voice recognition accuracy
 Default recognition accuracy should be good enough for most usages.

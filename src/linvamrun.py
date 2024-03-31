@@ -57,7 +57,7 @@ class LinVAMRun:
         self.shut_down()
 
     def shut_down(self):
-        self.m_profile_executor.set_enable_listening(False)
+        self.m_profile_executor.shutdown()
         print('linvamrun: Shutting down')
 
     @staticmethod

@@ -4,6 +4,8 @@ import signal
 import subprocess
 from os import path
 
+from util import get_voice_packs_folder_path
+
 
 # I've tried a couple of libs that are capable of playing mp3:
 # pysound - offers no way to stop sounds. can't play files with whitespace in path
@@ -25,53 +27,62 @@ class SoundFiles:
 
     def scan_sound_files(self):
         print("SoundFiles: scanning")
-        if not path.exists('./voicepacks'):
+        voicepacks = get_voice_packs_folder_path()
+        if not path.exists(voicepacks):
             print("No folder 'voicepacks' found. Please create one and copy all your voicepacks in there.")
             return
 
-        for root, _, files in os.walk("./voicepacks"):
+        for root, _, files in os.walk(voicepacks):
+            # expecting following paths
+            # /home/{user}/voicepacks/file.mp3
+            # /home/{user}/voicepacks/subfolder/file.mp3
+            # /home/{user}/voicepacks/subfolder/subfolder/file.mp3
             for file in files:
                 if file.endswith(".mp3"):
-                    # we expect a path like this:
-                    # voicepacks/VOICEPACKNAME/COMMANDGROUP/(FURTHER_OPTIONAL_FOLDERS/)FILE
                     path_parts = root.split('/')
 
-                    if len(path_parts) < 4:
+                    if len(path_parts) < 5 or path_parts[4] == '':
                         continue
 
-                    if not path_parts[2] in self.m_sounds:
-                        self.m_sounds[path_parts[2]] = {}
+                    voicepack = path_parts[4]
 
-                    category = path_parts[3]
-                    # there might be subfolders, so we have more than just 4 split results...
-                    # for the ease of my mind, we concat the voicepack subfolders to 1 category name
+                    if not voicepack in self.m_sounds:
+                        self.m_sounds[voicepack] = {}
+
+                    if len(path_parts) > 5:
+                        category = path_parts[5]
+                    else:
+                        category = 'default'
+                    # there might be subfolders, so we have more than 6 split results...
+                    # for the ease of mind, we concat the voicepack subfolders to 1 category name
                     # like voicepacks/hcspack/Characters/Astra/blah.mp3 will become:
                     #
                     # voicepack = hcspack
                     # category  = Characters/Astra
                     # file      = blah.mp4
 
-                    if len(path_parts) > 4:
-                        for i in range(4, len(path_parts)):
+                    if len(path_parts) > 6:
+                        for i in range(6, len(path_parts)):
                             category = category + '/' + path_parts[i]
 
-                    if category not in self.m_sounds[path_parts[2]]:
-                        self.m_sounds[path_parts[2]][category] = []
+                    if category not in self.m_sounds[voicepack]:
+                        self.m_sounds[voicepack][category] = []
 
-                    self.m_sounds[path_parts[2]][category].append(file)
+                    self.m_sounds[voicepack][category].append(file)
 
     def play(self, sound_file):
+        # replace /default/ because it's not a subdirectory
+        sound_file = str(sound_file).replace("/default/", "/")
         if not os.path.isfile(sound_file):
             print("ERROR - Sound file not found: ", sound_file)
             return
         self.stop()
-        # construct shell command. use shlex to split it up into valid args for Popen.
         cmd = "ffplay -nodisp -autoexit -loglevel quiet -volume " + str(self.volume) + " \"" + sound_file + "\""
         args = shlex.split(cmd)
         # noinspection PyBroadException
         try:
-            with subprocess.Popen(args) as process:
-                self.thread_play = process
+            # pylint: disable=consider-using-with
+            self.thread_play = subprocess.Popen(args)
         except Exception as e:
             print('Failed to load ffplay: ' + str(e))
 
@@ -81,6 +92,7 @@ class SoundFiles:
             # self.thread_play.terminate() or kill() should do the trick, but it won't
             try:
                 os.kill(self.thread_play.pid, signal.SIGKILL)
+                self.thread_play = None
             except OSError:
                 pass
 

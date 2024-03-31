@@ -29,9 +29,10 @@ class CommandEditWnd(QDialog):
         self.ui.actionsListWidget.doubleClicked.connect(self.slot_action_edit)
 
         w_other_menu = QMenu()
-        w_other_menu.addAction('Stop Another Command', self.slot_stop_another_command)
-        w_other_menu.addAction('Execute Another Command', self.slot_do_another_command)
-        w_other_menu.addAction('Play Sound', self.slot_new_sound_edit)
+        w_other_menu.addAction('Execute another command', self.slot_do_another_command)
+        w_other_menu.addAction('Stop another command', self.slot_stop_another_command)
+        w_other_menu.addAction('Play sound', self.slot_new_sound_edit)
+        w_other_menu.addAction('Stop sound', self.slot_stop_sound)
         self.ui.otherBut.setMenu(w_other_menu)
 
         self.m_command = {}
@@ -101,6 +102,9 @@ class CommandEditWnd(QDialog):
         w_sound_edit_wnd = SoundActionEditWnd(self.m_parent.m_parent.m_sound, None, self)
         if w_sound_edit_wnd.exec() == QDialog.DialogCode.Accepted:
             self.add_action(w_sound_edit_wnd.m_sound_action)
+
+    def slot_stop_sound(self):
+        self.add_action({'name': 'stop sound'})
 
     def slot_action_up(self):
         current_index = self.ui.actionsListWidget.currentRow()
