@@ -8,7 +8,7 @@ read MANGOHUD
 if [ "$MANGOHUD" == "y" ] || [ "$MANGOHUD" == "Y" ]
     then
         echo "Setting up MangoHud"
-        sh mangohud-setup.sh
+        sh setup-mangohud.sh
 fi
 echo "Installing python requirements with pip..."
 pip install -r requirements.txt
