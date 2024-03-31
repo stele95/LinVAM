@@ -229,7 +229,7 @@ if __name__ == "__main__":
         print("Version: " + str(CONST_VERSION))
         sys.exit()
     app = QApplication(sys.argv)
-    QApplication.setApplicationName('LinVAM')
     mainWnd = MainWnd()
+    mainWnd.setWindowTitle("LinVAM v" + CONST_VERSION)
     mainWnd.show()
     sys.exit(app.exec())
