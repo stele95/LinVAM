@@ -81,6 +81,7 @@ class SoundFiles:
         args = shlex.split(cmd)
         # noinspection PyBroadException
         try:
+            # pylint: disable=consider-using-with
             self.thread_play = subprocess.Popen(args)
         except Exception as e:
             print('Failed to load ffplay: ' + str(e))
