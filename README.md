@@ -20,6 +20,8 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 - PyQt6
 - sounddevice
 - srt
+- requests
+- tqdm
 - vosk
 - ffmpeg
 - [ydotool](https://github.com/ReimuNotMoe/ydotool)
