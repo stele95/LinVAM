@@ -22,7 +22,7 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 - srt
 - vosk
 - ffmpeg
-- ydotool (https://github.com/ReimuNotMoe/ydotool)
+- [ydotool](https://github.com/ReimuNotMoe/ydotool)
 
 ### Optional requirements
 - HCS voicepacks
@@ -30,7 +30,8 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 ### Install steps
 - install python3 and pip
 - Download the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``setup-and-install.sh`` from the extracted files
-- After installing ydotool, [configure it to run without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
+- install [ydotool](https://github.com/ReimuNotMoe/ydotool) and ffmpeg
+- After installing [ydotool](https://github.com/ReimuNotMoe/ydotool), [configure it to run without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 
 ## Build
 ### Build dependencies
@@ -52,7 +53,7 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 
       pip install -r requirements.txt
 
-- install ydotool (https://github.com/ReimuNotMoe/ydotool)
+- install [ydotool](https://github.com/ReimuNotMoe/ydotool)
 - install ffmpeg for playing audio files
 - [Configure ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 - run the ``build-and-install.sh`` script
