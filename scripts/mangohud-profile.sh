@@ -5,7 +5,8 @@ if [ -n "$linvamrun" ] || [ -f ~/.local/share/LinVAM/.linvamrun ]
 then
   if [ -f ~/.local/share/LinVAM/.linvamrun ]
   then
-    cat ~/.local/share/LinVAM/.linvamrun | jq '.profile' | sed "s/\"//g"
+    profile=$(cat ~/.local/share/LinVAM/.linvamrun | grep "profile" | sed "s/\"profile\"://g;s/^[ \t]*//;s/[\",]//g;s/[ \t]*$//")
+    echo "$profile"
   else
     echo "ON"
   fi
@@ -13,7 +14,8 @@ elif [ -n "$linvam" ] || [ -f ~/.local/share/LinVAM/.linvam ]
 then
   if [ -f ~/.local/share/LinVAM/.linvam ]
     then
-      cat ~/.local/share/LinVAM/.linvam | jq '.profile' | sed "s/\"//g"
+      profile=$(cat ~/.local/share/LinVAM/.linvam | grep "profile" | sed "s/\"profile\"://g;s/^[ \t]*//;s/[\",]//g;s/[ \t]*$//")
+      echo "$profile"
     else
       echo "ON"
   fi
