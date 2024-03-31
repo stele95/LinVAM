@@ -1,4 +1,6 @@
 PyQt6
-sounddevice
 srt
+requests
+tqdm
+sounddevice
 vosk
