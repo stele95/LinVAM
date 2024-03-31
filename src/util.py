@@ -26,6 +26,20 @@ def get_language_code(language_name):
     return None
 
 
+def get_language_name(language_name):
+    if language_name in ['English', 'english', 'en']:
+        return 'English'
+    if language_name in ['Russian', 'russian', 'ru', 'русский']:
+        return 'Russian'
+    if language_name in ['Chinese', 'cn']:
+        return 'Chinese'
+    if language_name in ['French', 'fr']:
+        return 'French'
+    if language_name in ['German', 'de']:
+        return 'German'
+    return None
+
+
 def get_settings_path(setting, default_value=None):
     home = os.path.expanduser("~") + '/.local/share/LinVAM/'
     if not os.path.exists(home):

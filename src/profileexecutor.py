@@ -7,7 +7,7 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
-from util import get_language_code, get_settings_path, get_voice_packs_folder_path
+from util import get_language_code, get_settings_path, get_voice_packs_folder_path, save_config, get_language_name
 
 
 class ProfileExecutor(threading.Thread):
@@ -64,7 +64,9 @@ class ProfileExecutor(threading.Thread):
         if language_code is None:
             print('Unsupported language: ' + language)
             return
-        print('Language: ' + language)
+        language_name = get_language_name(language)
+        print('Language: ' + language_name)
+        save_config('current_language', language_name)
         self.recognizer = KaldiRecognizer(Model(lang=language_code), self.samplerate)
         if listening:
             self.start_stream()
