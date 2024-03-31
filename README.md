@@ -126,7 +126,7 @@ If you are using [MangoHud](https://github.com/flightlessmango/MangoHud), you ca
 
 If ``setup-and-install.sh`` has been executed, it will ask for setting up MangoHud. If you are building and installing by yourself, you can run ``setup-mangohud.sh`` script to set it up.
 
-For this to work, you will need to install ``sed`` and ``jq`` with your package managers.
+For this to work, you will need ``sed`` and ``grep`` which are probably already installed, if not install them with your package managers.
 
 ### Profiles
 Multiple profiles are supported.  To create a new profile for a specific task/game click new and the main profile editor window will be displayed.
