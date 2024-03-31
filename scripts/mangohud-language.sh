@@ -14,8 +14,8 @@ elif [ -n "$linvam" ] || [ -f ~/.local/share/LinVAM/.linvam ]
 then
   if [ -f ~/.local/share/LinVAM/.linvam ]
     then
-      profile=$(cat ~/.local/share/LinVAM/.linvam | grep "language" | sed "s/\"language\"://g;s/^[ \t]*//;s/[\",]//g;s/[ \t]*$//")
-      echo "$profile"
+      language=$(cat ~/.local/share/LinVAM/.linvam | grep "language" | sed "s/\"language\"://g;s/^[ \t]*//;s/[\",]//g;s/[ \t]*$//")
+      echo "$language"
     else
       echo "ON"
   fi
