@@ -34,6 +34,7 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 - Download the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``setup-and-install.sh`` from the extracted files
 - install [ydotool](https://github.com/ReimuNotMoe/ydotool) and ffmpeg
 - After installing [ydotool](https://github.com/ReimuNotMoe/ydotool), [configure it to run without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
+- Don't forget to restart your device after finishing installation steps
 
 ## Build
 ### Build dependencies
@@ -59,6 +60,7 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 - install ffmpeg for playing audio files
 - [Configure ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 - run the ``build-and-install.sh`` script
+- Don't forget to restart your device after finishing installation steps
 
 ## Configuring ydotool
 ### TL/DR
