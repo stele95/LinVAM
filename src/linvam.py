@@ -41,7 +41,6 @@ class MainWnd(QWidget):
 
         language_position = self.load_languages()
         self.ui.languageCbx.currentIndexChanged.connect(self.language_changed)
-        print(str(language_position))
         if language_position > 0:
             self.ui.languageCbx.setCurrentIndex(language_position)
         elif language_position == 0:
