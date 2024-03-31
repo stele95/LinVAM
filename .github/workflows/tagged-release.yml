@@ -36,12 +36,15 @@ jobs:
         cd ./scripts
         sh ./build-and-package.sh
 
-    - name: Create release
-#      uses: "marvinpinto/action-automatic-releases@latest"
-#      with:
-#        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-#        prerelease: false
-#        files: |
-#          ./scripts/linvam-v*.zip
+    - name: Test if built files can be run
       run: |
         ./scripts/linvamrun --version
+        ./scripts/linvam --version
+
+    - name: Create release
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: false
+        files: |
+          ./scripts/linvam-v*.zip
