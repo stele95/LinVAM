@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        sudo apt-get -y install qt6-base-dev zip portaudio19-dev
+        sudo apt-get -y install qt6-base-dev portaudio19-dev
         pip install pylint
         pip install -r requirements.txt
         pip install nuitka
@@ -31,20 +31,15 @@ jobs:
       run: |
         pylint $(git ls-files '*.py' ':!:*ui_*.py')
 
-    - name: Build and package
+    - name: Build and test if running
       run: |
         cd ./scripts
-        sh ./build-and-package.sh
-
-    - name: Test if built files can be run
-      run: |
-        ./scripts/linvamrun --version
-        ./scripts/linvam --version
+        sh ./build.sh
+        ./linvamrun --version
+        ./linvam --version
 
     - name: Create release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         prerelease: false
-        files: |
-          ./scripts/linvam-v*.zip
