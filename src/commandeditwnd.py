@@ -55,12 +55,17 @@ class CommandEditWnd(QDialog):
         else:
             self.ui.asyncChk.setChecked(False)
             self.ui.oneExe.setChecked(True)
+        self.check_save_button_enabled_state()
+
+    def check_save_button_enabled_state(self):
+        self.ui.ok.setEnabled(self.ui.actionsListWidget.count() > 0)
 
     def add_action(self, p_action):
         w_json_action = json.dumps(p_action)
         w_item = QListWidgetItem(w_json_action)
         w_item.setData(Qt.ItemDataRole.UserRole, w_json_action)
         self.ui.actionsListWidget.addItem(w_item)
+        self.check_save_button_enabled_state()
 
     def slot_stop_another_command(self):
         text, ok_pressed = QInputDialog.getText(self, "Get Command Name", "Another command name:",
@@ -160,6 +165,7 @@ class CommandEditWnd(QDialog):
             return
         for w_item in w_list_items:
             self.ui.actionsListWidget.takeItem(self.ui.actionsListWidget.row(w_item))
+        self.check_save_button_enabled_state()
 
     def save_command(self):
         w_action_cnt = self.ui.actionsListWidget.count()
@@ -179,6 +185,8 @@ class CommandEditWnd(QDialog):
             self.m_command['repeat'] = self.ui.repeatCnt.value()
 
     def slot_ok(self):
+        if not len(self.ui.say.text()) > 0:
+            return
         self.save_command()
         super().accept()
 
