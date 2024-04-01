@@ -3,7 +3,8 @@ import os
 import subprocess
 
 CONST_VERSION = '0.4.6'
-LINVAM_SETTINGS_FOLDER = os.path.expanduser("~") + '/.local/share/LinVAM/'
+HOME_DIR = os.path.expanduser('~')
+LINVAM_SETTINGS_FOLDER = HOME_DIR + '/.local/share/LinVAM/'
 YDOTOOLD_SOCKET_PATH = LINVAM_SETTINGS_FOLDER + '.ydotoold_socket'
 
 
@@ -136,15 +137,15 @@ def get_default_run_config_values():
 
 
 def get_voice_packs_folder_path():
-    return os.path.expanduser("~") + '/voicepacks/'
+    return HOME_DIR + '/voicepacks/'
+
+
+MANGOHUD_CONF_DIR = HOME_DIR + '/.config/MangoHud/'
+MANGOHUD_CONF_FILE = MANGOHUD_CONF_DIR + 'MangoHud.conf'
 
 
 def does_mangohud_conf_file_exist():
-    return os.path.exists('~/.config/MangoHud/MangoHud.conf')
-
-
-MANGOHUD_CONF_DIR = '~/.config/MangoHud/'
-MANGOHUD_CONF_FILE = MANGOHUD_CONF_DIR + 'MangoHud.conf'
+    return os.path.exists(MANGOHUD_CONF_FILE)
 
 
 def is_mangohud_set_up():
@@ -154,7 +155,7 @@ def is_mangohud_set_up():
     output = ps.stdout.read()
     ps.stdout.close()
     ps.wait()
-    return len(str(output)) > 0
+    return 'custom_text=LinVAM' in str(output)
 
 
 def setup_mangohud():
@@ -167,69 +168,79 @@ def setup_mangohud():
         write_to_mangohud_language_script_file()
         write_to_mangohud_profile_script_file()
         with (open(MANGOHUD_CONF_FILE, "a", encoding="utf-8")) as f:
-            f.writelines([
-                'custom_text=LinVAM',
-                'exec=sh ~/.local/share/LinVAM/mangohud-profile.sh',
-                'exec=sh ~/.local/share/LinVAM/mangohud-language.sh'
-            ])
+            f.writelines(line + '\n' for line in MANGOHUD_CONF_FILE_APPEND_COMMANDS)
             f.close()
+        print('Setup finished.')
 
 
 def write_to_mangohud_language_script_file():
-    with (open(LINVAM_SETTINGS_FOLDER + 'mangohud-profile.sh', "w", encoding="utf-8")) as f:
-        f.writelines([
-            '#!/bin/bash'
-            'linvam=$(ps --no-headers -C linvam -o args,state)'
-            'linvamrun=$(ps --no-headers -C linvamrun -o args,state)'
-            'if [ -n "$linvamrun" ] || [ -f ~/.local/share/LinVAM/.linvamrun ]'
-            'then'
-            '  if [ -f ~/.local/share/LinVAM/.linvamrun ]'
-            '  then'
-            # pylint: disable=line-too-long
-            '    language=$(cat ~/.local/share/LinVAM/.linvamrun | grep "language" | sed "s/\"language\"://g;s/^[ \t]*//;s/[\",]//g;s/[ \t]*$//")'
-            '    echo "$language"'
-            '  fi'
-            'elif [ -n "$linvam" ] || [ -f ~/.local/share/LinVAM/.linvam ]'
-            'then'
-            '  if [ -f ~/.local/share/LinVAM/.linvam ]'
-            '    then'
-            # pylint: disable=line-too-long
-            '      language=$(cat ~/.local/share/LinVAM/.linvam | grep "language" | sed "s/\"language\"://g;s/^[ \t]*//;s/[\",]//g;s/[ \t]*$//")'
-            '      echo "$language"'
-            '  fi'
-            'fi'
-        ])
+    with (open(LINVAM_SETTINGS_FOLDER + 'mangohud-language.sh', "w", encoding="utf-8")) as f:
+        f.writelines(line + '\n' for line in MANGOHUD_LANGUAGE_SCRIPT)
         f.close()
 
 
 def write_to_mangohud_profile_script_file():
     with (open(LINVAM_SETTINGS_FOLDER + 'mangohud-profile.sh', "w", encoding="utf-8")) as f:
-        f.writelines([
-            '#!/bin/bash'
-            'linvam=$(ps --no-headers -C linvam -o args,state)'
-            'linvamrun=$(ps --no-headers -C linvamrun -o args,state)'
-            'if [ -n "$linvamrun" ] || [ -f ~/.local/share/LinVAM/.linvamrun ]'
-            'then'
-            '  if [ -f ~/.local/share/LinVAM/.linvamrun ]'
-            '  then'
-            # pylint: disable=line-too-long
-            '    profile=$(cat ~/.local/share/LinVAM/.linvamrun | grep "profile" | sed "s/\"profile\"://g;s/^[ \t]*//;s/[\",]//g;s/[ \t]*$//")'
-            '    echo "$profile"'
-            '  else'
-            '    echo "ON"'
-            '  fi'
-            'elif [ -n "$linvam" ] || [ -f ~/.local/share/LinVAM/.linvam ]'
-            'then'
-            '  if [ -f ~/.local/share/LinVAM/.linvam ]'
-            '    then'
-            # pylint: disable=line-too-long
-            '      profile=$(cat ~/.local/share/LinVAM/.linvam | grep "profile" | sed "s/\"profile\"://g;s/^[ \t]*//;s/[\",]//g;s/[ \t]*$//")'
-            '      echo "$profile"'
-            '  else'
-            '    echo "ON"'
-            '  fi'
-            'else'
-            '  echo "OFF"'
-            'fi'
-        ])
+        f.writelines(line + '\n' for line in MANGOHUD_PROFILE_SCRIPT)
         f.close()
+
+
+MANGOHUD_CONF_FILE_APPEND_COMMANDS = [
+                'custom_text=LinVAM',
+                'exec=sh ~/.local/share/LinVAM/mangohud-profile.sh',
+                'exec=sh ~/.local/share/LinVAM/mangohud-language.sh'
+            ]
+
+
+MANGOHUD_LANGUAGE_SCRIPT = [
+    '#!/bin/bash',
+    'linvam=$(ps --no-headers -C linvam -o args,state)',
+    'linvamrun=$(ps --no-headers -C linvamrun -o args,state)',
+    'if [ -n "$linvamrun" ] || [ -f ~/.local/share/LinVAM/.linvamrun ]',
+    'then',
+    '  if [ -f ~/.local/share/LinVAM/.linvamrun ]',
+    '  then',
+    # pylint: disable=line-too-long
+    '    language=$(cat ~/.local/share/LinVAM/.linvamrun | grep "language" | sed "s/\\"language\\"://g;s/^[ \\t]*//;s/[\\",]//g;s/[ \\t]*$//")',
+    '    echo "$language"',
+    '  fi',
+    'elif [ -n "$linvam" ] || [ -f ~/.local/share/LinVAM/.linvam ]',
+    'then',
+    '  if [ -f ~/.local/share/LinVAM/.linvam ]',
+    '    then',
+    # pylint: disable=line-too-long
+    '      language=$(cat ~/.local/share/LinVAM/.linvam | grep "language" | sed "s/\\"language\\"://g;s/^[ \\t]*//;s/[\\",]//g;s/[ \\t]*$//")',
+    '      echo "$language"',
+    '  fi',
+    'fi'
+]
+
+
+MANGOHUD_PROFILE_SCRIPT = [
+            '#!/bin/bash',
+            'linvam=$(ps --no-headers -C linvam -o args,state)',
+            'linvamrun=$(ps --no-headers -C linvamrun -o args,state)',
+            'if [ -n "$linvamrun" ] || [ -f ~/.local/share/LinVAM/.linvamrun ]',
+            'then',
+            '  if [ -f ~/.local/share/LinVAM/.linvamrun ]',
+            '  then',
+            # pylint: disable=line-too-long
+            '    profile=$(cat ~/.local/share/LinVAM/.linvamrun | grep "profile" | sed "s/\\"profile\\"://g;s/^[ \\t]*//;s/[\\",]//g;s/[ \\t]*$//")',
+            '    echo "$profile"',
+            '  else',
+            '    echo "ON"',
+            '  fi',
+            'elif [ -n "$linvam" ] || [ -f ~/.local/share/LinVAM/.linvam ]',
+            'then',
+            '  if [ -f ~/.local/share/LinVAM/.linvam ]',
+            '    then',
+            # pylint: disable=line-too-long
+            '      profile=$(cat ~/.local/share/LinVAM/.linvam | grep "profile" | sed "s/\\"profile\\"://g;s/^[ \\t]*//;s/[\\",]//g;s/[ \\t]*$//")',
+            '      echo "$profile"',
+            '  else',
+            '    echo "ON"',
+            '  fi',
+            'else',
+            '  echo "OFF"',
+            'fi'
+        ]
