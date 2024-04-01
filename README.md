@@ -47,7 +47,6 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 ## Configuring ydotool
 ### TL/DR
 - Run ``configure-ydotoold.sh``, this will set up [Udev rule for input](https://github.com/stele95/LinVAM?tab=readme-ov-file#udev-rule-for-input)
-- If you have a system that uses systemd, run ``setup-ydotoold-startup-systemd.sh``. If not, read [Ydotoold daemon autostart](https://github.com/stele95/LinVAM?tab=readme-ov-file#ydotoold-daemon-autostart)
 
 ### Manual configuration
 #### Udev rule for input
@@ -57,7 +56,7 @@ By default, this requires root privileges every time you run ``ydotool``.
 To avoid that, you can give the program permanent access to the input device by adding your username to the ``input``
 user group on your system and giving the group write access to the ``uinput`` device.
 
-To do that, we use a udev rule.
+To do that, we use an udev rule.
 Udev is the Linux system that detects and reacts to devices getting plugged or unplugged on your computer.
 It also works with virtual devices like ``ydotool``.
 
@@ -67,7 +66,7 @@ To add the current ``$USER`` to a group, you can use the ``usermod`` command:
 
 
 You then need to define a new udev rule that will give the ``input`` group permanent write access to the uinput device
-(this will give ``ydotool`` write access too).
+(this will give ``ydotoold`` write access too).
 
     echo '## Give ydotoold access to the uinput device
     ## Solution by https://github.com/ReimuNotMoe/ydotool/issues/25#issuecomment-535842993
@@ -76,32 +75,6 @@ You then need to define a new udev rule that will give the ``input`` group perma
 
 
 You will need to restart your computer for the change to take effect.
-
-#### Ydotoold daemon autostart
-``ydotool`` works with a daemon that you leave running in the background, ``ydotoold``, for performance reasons.
-You needs to run ``ydotoold`` before you start using ``LinVAM`` since it relies on ``ydotool`` for executing input commands.
-
-To avoid running it every time you start the computer, you can add it to your startup programs. The steps depend on your distribution.
-
-If you have a system that uses a systemd, you can run the ``setup-ydotoold-startup-systemd.sh`` script to set up the service. The service file ``ydotoold.service`` looks like this:
-
-    [Unit]
-    Description=ydotoold service for listening for inputs from ydotool
-
-    [Service]
-    ExecStart=ydotoold -p /tmp/.ydotool_socket -P 0666
-    RestartSec=5
-    Restart=on-failure
-
-    [Install]
-    WantedBy=graphical.target
-
-If your system doesn't use systemd, look in your system's documentation how to add a program to startup programs.
-
-It's important that you specify the same location for a socket file for ``ydotool`` and ``ydotoold``:
-- start a ``ydotoold`` like this: ``ydotoold -p /tmp/.ydotool_socket -P 0666``
-- add ``YDOTOOL_SOCKET=/tmp/.ydotool_socket`` to ``/etc/environment``
-
 
 ## Usage
 Start LinVAM from your list of applications or by typing ``linvam`` in the terminal. This works on both X11 and Wayland, but prior ydotool setup is required, read [Configuring ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
