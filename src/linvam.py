@@ -10,7 +10,7 @@ from profileexecutor import ProfileExecutor, get_settings_path
 from soundfiles import SoundFiles
 from ui_mainwnd import Ui_MainWidget
 from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
-                  CONST_VERSION)
+                  CONST_VERSION, init_config_folder)
 
 
 class MainWnd(QWidget):
@@ -22,6 +22,7 @@ class MainWnd(QWidget):
         self.ui = Ui_MainWidget()
         self.ui.setupUi(self)
         self.handle_args()
+        init_config_folder()
         self.m_sound = SoundFiles()
         self.m_profile_executor = ProfileExecutor(self)
 

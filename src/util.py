@@ -44,9 +44,12 @@ def get_language_name(language_name):
     return None
 
 
-def get_settings_path(setting, default_value=None):
+def init_config_folder():
     if not os.path.exists(LINVAM_SETTINGS_FOLDER):
         os.mkdir(LINVAM_SETTINGS_FOLDER)
+
+
+def get_settings_path(setting, default_value=None):
     file = LINVAM_SETTINGS_FOLDER + setting
     if not os.path.exists(file):
         with (open(file, "w", encoding="utf-8")) as f:
