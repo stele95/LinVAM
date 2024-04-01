@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+echo "Installing python requirements with pip..."
 pip install -r requirements.txt
 sh ./build.sh
 sudo cp linvam /usr/local/bin/
@@ -12,4 +13,3 @@ if [ "$MANGOHUD" == "y" ] || [ "$MANGOHUD" == "Y" ]
         echo "Setting up MangoHud"
         sh setup-mangohud.sh
 fi
-echo "Installing python requirements with pip..."
