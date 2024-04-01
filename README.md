@@ -31,40 +31,23 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 
 ### Install steps
 - install python3 and pip
-- Download the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``setup-and-install.sh`` from the extracted files
+- Download the source code zip file from the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``build-and-install.sh`` from the ``scripts`` folder in the extracted files
 - install [ydotool](https://github.com/ReimuNotMoe/ydotool) and ffmpeg
 - After installing [ydotool](https://github.com/ReimuNotMoe/ydotool), [configure it to run without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
 - Don't forget to restart your device after finishing installation steps
 
 ## Build
-### Build dependencies
-- python3
-- [Nuitka](https://github.com/Nuitka/Nuitka)
-
-### Steps for building and running successfully
-#### Building without installing
 - install python3 and pip
 - install [Nuitka](https://github.com/Nuitka/Nuitka) by running the following command
 
         pip install nuitka
 
-- For building without installing, run the ``build.sh`` script
-
-#### Building and installing
-- do steps from [Building without installing](https://github.com/stele95/LinVAM?tab=readme-ov-file#building-without-installing)
-- install run dependencies
-
-      pip install -r requirements.txt
-
-- install [ydotool](https://github.com/ReimuNotMoe/ydotool)
-- install ffmpeg for playing audio files
-- [Configure ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
-- run the ``build-and-install.sh`` script
-- Don't forget to restart your device after finishing installation steps
+- Run the ``build.sh`` script
 
 ## Configuring ydotool
 ### TL/DR
-If you have a system that uses systemd, you are good to go and don't need to do anything because a script is executed when running any install script. If not, read [Ydotoold daemon autostart](https://github.com/stele95/LinVAM?tab=readme-ov-file#ydotoold-daemon-autostart)
+- Run ``configure-ydotoold.sh``, this will set up [Udev rule for input](https://github.com/stele95/LinVAM?tab=readme-ov-file#udev-rule-for-input)
+- If you have a system that uses systemd, run ``setup-ydotoold-startup-systemd.sh``. If not, read [Ydotoold daemon autostart](https://github.com/stele95/LinVAM?tab=readme-ov-file#ydotoold-daemon-autostart)
 
 ### Manual configuration
 #### Udev rule for input
@@ -99,7 +82,8 @@ You will need to restart your computer for the change to take effect.
 You needs to run ``ydotoold`` before you start using ``LinVAM`` since it relies on ``ydotool`` for executing input commands.
 
 To avoid running it every time you start the computer, you can add it to your startup programs. The steps depend on your distribution.
-If the install script detects that the system uses a ``systemd``, it will add a ``systemd`` service for starting ``ydotoold``. The service file ``ydotoold.service`` looks like this:
+
+If you have a system that uses a systemd, you can run the ``setup-ydotoold-startup-systemd.sh`` script to set up the service. The service file ``ydotoold.service`` looks like this:
 
     [Unit]
     Description=ydotoold service for listening for inputs from ydotool
@@ -112,7 +96,11 @@ If the install script detects that the system uses a ``systemd``, it will add a 
     [Install]
     WantedBy=graphical.target
 
-Also, the install script adds ``YDOTOOL_SOCKET=/tmp/.ydotool_socket`` to ``/etc/environment``
+If your system doesn't use systemd, look in your system's documentation how to add a program to startup programs.
+
+It's important that you specify the same location for a socket file for ``ydotool`` and ``ydotoold``:
+- start a ``ydotoold`` like this: ``ydotoold -p /tmp/.ydotool_socket -P 0666``
+- add ``YDOTOOL_SOCKET=/tmp/.ydotool_socket`` to ``/etc/environment``
 
 
 ## Usage
@@ -128,7 +116,7 @@ You can also use ``--language='languageName'`` for specifying a language. If ``-
 ### Display LinVAM profile and language in MangoHud
 If you are using [MangoHud](https://github.com/flightlessmango/MangoHud), you can set it up for displaying selected LinVAM profile and language.
 
-If ``setup-and-install.sh`` has been executed, it will ask for setting up MangoHud. If you are building and installing by yourself, you can run ``setup-mangohud.sh`` script to set it up.
+If ``build-and-install.sh`` has been executed, it will ask for setting up MangoHud. If you are building and installing by yourself, you can run ``setup-mangohud.sh`` script to set it up.
 
 For this to work, you will need ``sed`` and ``grep`` which are probably already installed, if not install them with your package managers.
 

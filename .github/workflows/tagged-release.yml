@@ -1,0 +1,45 @@
+name: "tagged-release"
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  tagged-release:
+    name: "Tagged Release"
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        sudo apt-get -y install qt6-base-dev portaudio19-dev
+        pip install pylint
+        pip install -r requirements.txt
+        pip install nuitka
+
+    - name: Analysing the code with pylint
+      run: |
+        pylint $(git ls-files '*.py' ':!:*ui_*.py')
+
+    - name: Build and test if running
+      run: |
+        cd ./scripts
+        sh ./build.sh
+        ./linvamrun --version
+        ./linvam --version
+
+    - name: Create release
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: false
