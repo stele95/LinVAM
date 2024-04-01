@@ -197,9 +197,11 @@ class ProfileExecutor(threading.Thread):
             command = 'mousemove --wheel -x 0 -y' + str(p_action['delta'])
             self.execute_ydotool_command(command)
 
-    @staticmethod
-    def execute_ydotool_command(command):
-        os.system('env YDOTOOL_SOCKET=' + YDOTOOLD_SOCKET_PATH + ' ydotool ' + command)
+    def execute_ydotool_command(self, command):
+        if self.ydotoold is not None:
+            os.system('env YDOTOOL_SOCKET=' + YDOTOOLD_SOCKET_PATH + ' ydotool ' + command)
+        else:
+            print('ydotoold daemon not running')
 
     class CommandThread(threading.Thread):
         def __init__(self, p_profile_executor, p_actions, p_repeat):
