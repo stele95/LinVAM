@@ -7,7 +7,8 @@ import sys
 
 from profileexecutor import ProfileExecutor, get_settings_path
 from soundfiles import SoundFiles
-from util import get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file, CONST_VERSION
+from util import (get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file, CONST_VERSION,
+                  init_config_folder)
 
 
 class LinVAMRun:
@@ -17,6 +18,7 @@ class LinVAMRun:
             'profileName': '',
             'language': self.get_language_from_database()
         }
+        init_config_folder()
         self.m_sound = SoundFiles()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 

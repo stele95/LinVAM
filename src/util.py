@@ -2,6 +2,8 @@ import json
 import os
 
 CONST_VERSION = '0.4.6'
+LINVAM_SETTINGS_FOLDER = os.path.expanduser("~") + '/.local/share/LinVAM/'
+YDOTOOLD_SOCKET_PATH = LINVAM_SETTINGS_FOLDER + '.ydotoold_socket'
 
 
 def get_supported_languages():
@@ -42,11 +44,13 @@ def get_language_name(language_name):
     return None
 
 
+def init_config_folder():
+    if not os.path.exists(LINVAM_SETTINGS_FOLDER):
+        os.mkdir(LINVAM_SETTINGS_FOLDER)
+
+
 def get_settings_path(setting, default_value=None):
-    home = os.path.expanduser("~") + '/.local/share/LinVAM/'
-    if not os.path.exists(home):
-        os.mkdir(home)
-    file = home + setting
+    file = LINVAM_SETTINGS_FOLDER + setting
     if not os.path.exists(file):
         with (open(file, "w", encoding="utf-8")) as f:
             if default_value is not None:

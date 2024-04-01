@@ -1,13 +1,17 @@
 import json
 import os
 import re
+import shlex
+import signal
+import subprocess
 import threading
 import time
 
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
-from util import get_language_code, get_settings_path, get_voice_packs_folder_path, get_language_name
+from util import (get_language_code, get_settings_path, get_voice_packs_folder_path, get_language_name,
+                  YDOTOOLD_SOCKET_PATH)
 
 
 class ProfileExecutor(threading.Thread):
@@ -19,6 +23,8 @@ class ProfileExecutor(threading.Thread):
         self.commands_list = []
         self.m_cmd_threads = {}
         self.p_parent = p_parent
+        self.ydotoold = None
+        self.start_ydotoold()
 
         self.m_stream = None
 
@@ -30,6 +36,16 @@ class ProfileExecutor(threading.Thread):
 
         if self.p_parent is not None:
             self.m_sound = self.p_parent.m_sound
+
+    def start_ydotoold(self):
+        command = 'ydotoold -p ' + YDOTOOLD_SOCKET_PATH + ' -P 0666'
+        args = shlex.split(command)
+        # noinspection PyBroadException
+        try:
+            # pylint: disable=consider-using-with
+            self.ydotoold = subprocess.Popen(args)
+        except Exception as e:
+            print('Failed to start ydotoold: ' + str(e))
 
     # noinspection PyUnusedLocal
     # pylint: disable=unused-argument
@@ -112,6 +128,12 @@ class ProfileExecutor(threading.Thread):
     def shutdown(self):
         self.m_sound.stop()
         self.stop()
+        if self.ydotoold is not None:
+            try:
+                os.kill(self.ydotoold.pid, signal.SIGKILL)
+                self.ydotoold = None
+            except OSError:
+                pass
 
     def do_action(self, p_action):
         # {'name': 'key action', 'key': 'left', 'type': 0}
@@ -135,9 +157,10 @@ class ProfileExecutor(threading.Thread):
             self.m_sound.stop()
         elif w_action_name == 'mouse move action':
             if p_action['absolute']:
-                os.system('ydotool mousemove --absolute -x' + str(p_action['x']) + " -y " + str(p_action['y']))
+                command = 'mousemove --absolute -x' + str(p_action['x']) + " -y " + str(p_action['y'])
             else:
-                os.system('ydotool mousemove -x' + str(p_action['x']) + " -y " + str(p_action['y']))
+                command = 'mousemove -x' + str(p_action['x']) + " -y " + str(p_action['y'])
+            self.execute_ydotool_command(command)
         elif w_action_name == 'mouse click action':
             w_type = p_action['type']
             w_button = p_action['button']
@@ -168,10 +191,17 @@ class ProfileExecutor(threading.Thread):
             if w_type == 11:
                 args = "--repeat 2"
 
-            print("Mouse button command: ", click_command)
-            os.system('ydotool click ' + args + " --next-delay 25 " + click_command)
+            command = 'click ' + args + " --next-delay 25 " + click_command
+            self.execute_ydotool_command(command)
         elif w_action_name == 'mouse scroll action':
-            os.system('ydotool mousemove --wheel -x 0 -y' + str(p_action['delta']))
+            command = 'mousemove --wheel -x 0 -y' + str(p_action['delta'])
+            self.execute_ydotool_command(command)
+
+    def execute_ydotool_command(self, command):
+        if self.ydotoold is not None:
+            os.system('env YDOTOOL_SOCKET=' + YDOTOOLD_SOCKET_PATH + ' ydotool ' + command)
+        else:
+            print('ydotoold daemon not running')
 
     class CommandThread(threading.Thread):
         def __init__(self, p_profile_executor, p_actions, p_repeat):
