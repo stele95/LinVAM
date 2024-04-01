@@ -89,7 +89,9 @@ You can also use ``--language='languageName'`` for specifying a language. If ``-
 ### Display LinVAM profile and language in MangoHud
 If you are using [MangoHud](https://github.com/flightlessmango/MangoHud), you can set it up for displaying selected LinVAM profile and language.
 
-If ``build-and-install.sh`` has been executed, it will ask for setting up MangoHud. If you are building and installing by yourself, you can run ``setup-mangohud.sh`` script to set it up.
+If you are installing using the ``build-and-install.sh`` script, it will ask for setting up MangoHud. If installing by another way, run the following command in the terminal after installing ``LinVAM``:
+
+    linvam --setup-mangohud
 
 For this to work, you will need ``sed`` and ``grep`` which are probably already installed, if not install them with your package managers.
 
