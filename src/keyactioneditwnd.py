@@ -1,4 +1,8 @@
+import threading
+
 from PyQt6.QtWidgets import QDialog
+
+import keyboard
 
 from ui_keyactioneditwnd import Ui_KeyActionEditDialog
 
@@ -13,6 +17,10 @@ class KeyActionEditWnd(QDialog):
         self.ui.cancel.clicked.connect(self.slot_cancel)
 
         self.m_key_action = {}
+
+        t = threading.Thread(target=self.key_input())
+        t.daemon = True
+        t.start()
 
         if p_key_action is None:
             return
@@ -30,3 +38,17 @@ class KeyActionEditWnd(QDialog):
 
     def slot_cancel(self):
         super().reject()
+
+    def key_input(self):
+        print('Starting listening for keys')
+        try:
+            while True:
+                event = keyboard.read_event()
+                print('Event: ' + str(event))
+                text = self.ui.keyEdit.text()
+                if len(text) > 0:
+                    text += "+"
+                #self.ui.keyEdit.setText(text+event)
+        except Exception as ex:
+            print(str(ex))
+            pass
