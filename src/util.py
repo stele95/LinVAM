@@ -180,8 +180,7 @@ def get_mangohud_file_path(directory):
     directory = directory.replace('~', prefix)
     if str(directory).endswith('/'):
         return directory + MANGOHUD_CONF_FILE
-    else:
-        return directory + '/' + MANGOHUD_CONF_FILE
+    return directory + '/' + MANGOHUD_CONF_FILE
 
 
 def write_to_mangohud_language_script_file():
