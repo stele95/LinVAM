@@ -93,6 +93,10 @@ If you are installing using the ``build-and-install.sh`` script, it will ask for
 
     linvam --setup-mangohud
 
+This expects a ``MangoHud.conf`` file located at ``~/.config/MangoHud/``. If your config file is located in some other place, execute the previous command like this where ``/path/to/dir/`` is a path to a dir containing ``MangoHud.conf`` file:
+
+    linvam --setup-mangohud --path='/path/to/dir/'
+
 For this to work, you will need ``sed`` and ``grep`` which are probably already installed, if not install them with your package managers.
 
 ### Profiles

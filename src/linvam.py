@@ -234,6 +234,20 @@ if __name__ == "__main__":
             case '--setup-mangohud':
                 setup_mangohud()
                 sys.exit()
+    elif len(sys.argv) == 3 and sys.argv[1] == '--setup-mangohud':
+        # noinspection PyBroadException
+        # pylint: disable=bare-except
+        try:
+            arg_split = sys.argv[2].split('=')
+            if arg_split[0] == '--path':
+                setup_mangohud(arg_split[1])
+            else:
+                print("Unexpected second argument, expecting --path='path/to/file'," +
+                      " e.g. --path='/home/user/.config/MangoHud/")
+        except:
+            print("Unexpected second argument, expecting --path='path/to/file'," +
+                  " e.g. --path='/home/user/.config/MangoHud/")
+        sys.exit()
     app = QApplication(sys.argv)
     mainWnd = MainWnd()
     mainWnd.setWindowTitle("LinVAM v" + CONST_VERSION)
