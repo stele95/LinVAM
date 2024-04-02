@@ -100,11 +100,7 @@ Profiles are saved to and loaded from ``profiles.json`` file located at ``/home/
 
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/main-gui.png)
 ### Key combinations
-To assign key combinations, input the wanted sequence in the input field. Keys are separated by ```+```, use ``hold`` and ``release`` keywords for representing when a specific key should be held or released.
-
-Some examples:
-- hold left shift+a+w+d+w+s+up+release left shift
-- left shift+a+d+1+5+n5
+For inputting combinations, press keys in order you want them to be executed (holding keys is also supported).
 
 ![Comnbinations](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/combination.png)
 ### Complex commands
