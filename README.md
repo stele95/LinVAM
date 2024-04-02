@@ -16,6 +16,12 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 - Support for joysticks and gaming devices
 
 ## Install
+### Available packages
+#### AUR
+[![AUR](https://img.shields.io/aur/version/linvam)](https://aur.archlinux.org/packages/linvam)
+
+After installing from AUR, run ``sudo usermod -aG input $USER`` to allow [ydotool](https://github.com/ReimuNotMoe/ydotool) to [input without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#udev-rule-for-input)
+
 ### Requirements
 - PyQt6
 - sounddevice
