@@ -2,7 +2,7 @@ import json
 import os
 import subprocess
 
-CONST_VERSION = '0.5.0'
+CONST_VERSION = '0.5.1'
 HOME_DIR = os.path.expanduser('~')
 LINVAM_SETTINGS_FOLDER = HOME_DIR + '/.local/share/LinVAM/'
 YDOTOOLD_SOCKET_PATH = LINVAM_SETTINGS_FOLDER + '.ydotoold_socket'
