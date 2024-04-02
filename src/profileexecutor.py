@@ -11,7 +11,7 @@ import sounddevice
 from vosk import Model, KaldiRecognizer
 
 from util import (get_language_code, get_settings_path, get_voice_packs_folder_path, get_language_name,
-                  YDOTOOLD_SOCKET_PATH)
+                  YDOTOOLD_SOCKET_PATH, OLD_KEYS_SPLITTER, KEYS_SPLITTER)
 
 
 class ProfileExecutor(threading.Thread):
@@ -271,7 +271,10 @@ class ProfileExecutor(threading.Thread):
         # ydotool has a different key mapping.
         # check /usr/include/linux/input-event-codes.h for key mappings
         original_key = w_key
-        keys = w_key.split('+')
+        if KEYS_SPLITTER in w_key:
+            keys = w_key.split(KEYS_SPLITTER)
+        else:
+            keys = w_key.split(OLD_KEYS_SPLITTER)
         commands = ""
         for key in keys:
             commands += self.create_key_event(key) + " "
