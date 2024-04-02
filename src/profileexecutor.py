@@ -309,6 +309,8 @@ class ProfileExecutor(threading.Thread):
     @staticmethod
     def map_key(w_key):
         match w_key.casefold():
+            case 'ctrl':
+                return '29'
             case 'left ctrl':
                 return '29'
             case 'right ctrl':
@@ -317,10 +319,16 @@ class ProfileExecutor(threading.Thread):
                 return '42'
             case 'right shift':
                 return '54'
+            case 'alt':
+                return '56'
             case 'left alt':
                 return '56'
             case 'right alt':
                 return '100'
+            case 'alt gr':
+                return '100'
+            case 'windows':
+                return '125'
             case 'left windows':
                 return '125'
             case 'right windows':
