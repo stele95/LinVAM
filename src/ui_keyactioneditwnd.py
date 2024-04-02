@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_KeyActionEditDialog(object):
     def setupUi(self, KeyActionEditDialog):
         KeyActionEditDialog.setObjectName("KeyActionEditDialog")
-        KeyActionEditDialog.resize(471, 164)
+        KeyActionEditDialog.resize(725, 164)
         self.gridLayout = QtWidgets.QGridLayout(KeyActionEditDialog)
         self.gridLayout.setObjectName("gridLayout")
         self.label = QtWidgets.QLabel(parent=KeyActionEditDialog)
@@ -36,6 +36,8 @@ class Ui_KeyActionEditDialog(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.keyEdit = QtWidgets.QLineEdit(parent=KeyActionEditDialog)
+        self.keyEdit.setEnabled(True)
+        self.keyEdit.setReadOnly(True)
         self.keyEdit.setObjectName("keyEdit")
         self.horizontalLayout.addWidget(self.keyEdit)
         self.gridLayout.addLayout(self.horizontalLayout, 1, 0, 1, 1)
@@ -46,7 +48,7 @@ class Ui_KeyActionEditDialog(object):
     def retranslateUi(self, KeyActionEditDialog):
         _translate = QtCore.QCoreApplication.translate
         KeyActionEditDialog.setWindowTitle(_translate("KeyActionEditDialog", "Key Action Dialog"))
-        self.label.setText(_translate("KeyActionEditDialog", "Key (Combination):"))
+        self.label.setText(_translate("KeyActionEditDialog", "Key combinations (input by pressing keys on keyboard):"))
         self.ok.setText(_translate("KeyActionEditDialog", "Save"))
         self.cancel.setText(_translate("KeyActionEditDialog", "Cancel"))
 

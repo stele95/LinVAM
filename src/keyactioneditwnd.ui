@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>471</width>
+    <width>725</width>
     <height>164</height>
    </rect>
   </property>
@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Key (Combination):</string>
+      <string>Key combinations (input by pressing keys on keyboard):</string>
      </property>
     </widget>
    </item>
@@ -74,7 +74,14 @@
    <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLineEdit" name="keyEdit"/>
+      <widget class="QLineEdit" name="keyEdit">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
