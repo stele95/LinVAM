@@ -112,7 +112,11 @@ Profiles are saved to and loaded from ``profiles.json`` file located at ``/home/
 ### Key combinations
 To assign key combinations, input the wanted sequence in the input field. Keys are separated by ```+```, use ``hold`` and ``release`` keywords for representing when a specific key should be held or released.
 
-![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/combination.png)
+Some examples:
+- hold left shift+a+w+d+w+s+up+release left shift
+- left shift+a+d+1+5+n5
+
+![Comnbinations](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/combination.png)
 ### Complex commands
 It is possible to add multiple actions to a voice command for complex macros with the ability to add a pause between each action.
 You can also assign mouse movements and system commands if you require (eg opening applications such as calculator, browser etc)
@@ -128,11 +132,8 @@ Place the audio file into these category folders or in any subfolder within a ca
 In theory any audio file should work, but tested only with MP3 files.
 
 Example:
-~/voicepacks/my voicepack/custom commands/hello.mp3
-~/voicepacks/my voicepack/other/thank you.mp3
-
-If you own a HCS voicepack, copy the whole voicepack folder (like 'hcspack', 'hcspack-eden', ...) to the ``voicepacks`` folder, so it reads like this:
-``~/voicepacks/hcspack/...``
+- ~/voicepacks/my voicepack/custom commands/hello.mp3
+- ~/voicepacks/my voicepack/other/thank you.mp3
 
 ### Improve voice recognition accuracy
 Default recognition accuracy should be good enough for most usages.
