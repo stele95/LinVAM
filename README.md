@@ -31,9 +31,8 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 
 ### Install steps
 - install python3 and pip
-- Download the source code zip file from the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``build-and-install.sh`` from the ``scripts`` folder in the extracted files
 - install [ydotool](https://github.com/ReimuNotMoe/ydotool) and ffmpeg
-- After installing [ydotool](https://github.com/ReimuNotMoe/ydotool), [configure it to run without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
+- Download the source code zip file from the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``build-and-install.sh`` from the ``scripts`` folder in the extracted files
 - Don't forget to restart your device after finishing installation steps
 
 ## Build
@@ -46,7 +45,7 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 
 ## Configuring ydotool
 ### TL/DR
-- Run ``configure-ydotoold.sh``, this will set up [Udev rule for input](https://github.com/stele95/LinVAM?tab=readme-ov-file#udev-rule-for-input)
+- Run ``configure-ydotoold.sh`` or check for commands bellow if you didn't install by running ``build-and-install.sh``, this will set up [Udev rule for input](https://github.com/stele95/LinVAM?tab=readme-ov-file#udev-rule-for-input)
 
 ### Manual configuration
 #### Udev rule for input
