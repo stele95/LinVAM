@@ -10,7 +10,7 @@ from profileexecutor import ProfileExecutor, get_settings_path
 from soundfiles import SoundFiles
 from ui_mainwnd import Ui_MainWidget
 from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
-                  CONST_VERSION, init_config_folder)
+                  CONST_VERSION, init_config_folder, setup_mangohud)
 
 
 class MainWnd(QWidget):
@@ -226,8 +226,27 @@ class MainWnd(QWidget):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 2 and sys.argv[1] == '--version':
-        print("Version: " + str(CONST_VERSION))
+    if len(sys.argv) == 2:
+        match sys.argv[1]:
+            case '--version':
+                print("Version: " + str(CONST_VERSION))
+                sys.exit()
+            case '--setup-mangohud':
+                setup_mangohud()
+                sys.exit()
+    elif len(sys.argv) == 3 and sys.argv[1] == '--setup-mangohud':
+        # noinspection PyBroadException
+        # pylint: disable=bare-except
+        try:
+            arg_split = sys.argv[2].split('=')
+            if arg_split[0] == '--path':
+                setup_mangohud(arg_split[1])
+            else:
+                print("Unexpected second argument, expecting --path='path/to/file'," +
+                      " e.g. --path='/home/user/.config/MangoHud/")
+        except:
+            print("Unexpected second argument, expecting --path='path/to/file'," +
+                  " e.g. --path='/home/user/.config/MangoHud/")
         sys.exit()
     app = QApplication(sys.argv)
     mainWnd = MainWnd()
