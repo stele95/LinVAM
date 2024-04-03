@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import json
-import shlex
 import signal
 import subprocess
 import sys
@@ -8,7 +7,7 @@ import sys
 from profileexecutor import ProfileExecutor, get_settings_path
 from soundfiles import SoundFiles
 from util import (get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file, CONST_VERSION,
-                  init_config_folder)
+                  init_config_folder, LINVAM_COMMANDS_FILE_PATH)
 
 
 class LinVAMRun:
@@ -16,7 +15,8 @@ class LinVAMRun:
         self.m_profile_executor = None
         self.m_config = {
             'profileName': '',
-            'language': self.get_language_from_database()
+            'language': self.get_language_from_database(),
+            'openCommandsFile': 0
         }
         init_config_folder()
         self.m_sound = SoundFiles()
@@ -38,6 +38,8 @@ class LinVAMRun:
             self.m_profile_executor.set_profile(profile)
             save_linvamrun_run_config('profile', profile['name'])
             self.m_profile_executor.set_enable_listening(True)
+            if self.m_config['openCommandsFile']:
+                subprocess.Popen(['xdg-open', LINVAM_COMMANDS_FILE_PATH])
         else:
             print('linvamrun: Profile not found, not listening...')
 
@@ -54,6 +56,8 @@ class LinVAMRun:
                         self.m_config['profileName'] = arg_split[1]
                     case '--language':
                         self.m_config['language'] = arg_split[1]
+                    case '--open-commands':
+                        self.m_config['openCommandsFile'] = 1
             except Exception as ex:
                 print('Error parsing argument ' + str(argument) + ": " + str(ex))
 
