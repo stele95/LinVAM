@@ -20,9 +20,11 @@ class CommandEditWnd(QDialog):
         self.ui.deleteBut.clicked.connect(self.slot_delete)
         self.ui.ok.clicked.connect(self.slot_ok)
         self.ui.cancel.clicked.connect(self.slot_cancel)
-        self.ui.keyBut.clicked.connect(self.slot_new_key_edit)
-        self.ui.mouseBut.clicked.connect(self.slot_new_mouse_edit)
-        self.ui.pauseBut.clicked.connect(self.slot_new_pause_edit)
+        self.ui.keyBtn.clicked.connect(self.slot_new_key_edit)
+        self.ui.mouseBtn.clicked.connect(self.slot_new_mouse_edit)
+        self.ui.pauseBtn.clicked.connect(self.slot_new_pause_edit)
+        self.ui.playSoundBtn.clicked.connect(self.slot_new_sound_edit)
+        self.ui.stopSoundBtn.clicked.connect(self.slot_stop_sound)
         self.ui.upBut.clicked.connect(self.slot_action_up)
         self.ui.downBut.clicked.connect(self.slot_action_down)
         self.ui.editBut.clicked.connect(self.slot_action_edit)
@@ -31,9 +33,7 @@ class CommandEditWnd(QDialog):
         w_other_menu = QMenu()
         w_other_menu.addAction('Execute another command', self.slot_do_another_command)
         w_other_menu.addAction('Stop another command', self.slot_stop_another_command)
-        w_other_menu.addAction('Play sound', self.slot_new_sound_edit)
-        w_other_menu.addAction('Stop sound', self.slot_stop_sound)
-        self.ui.otherBut.setMenu(w_other_menu)
+        self.ui.otherBtn.setMenu(w_other_menu)
 
         self.m_command = {}
         if p_command is not None:
