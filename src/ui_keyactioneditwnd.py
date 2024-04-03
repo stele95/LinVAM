@@ -53,6 +53,12 @@ class Ui_KeyActionEditDialog(object):
         self.sbDelay.setMaximum(9999)
         self.sbDelay.setObjectName("sbDelay")
         self.horizontalLayout_2.addWidget(self.sbDelay)
+        self.resetDelay = QtWidgets.QToolButton(parent=KeyActionEditDialog)
+        self.resetDelay.setToolTipDuration(5000)
+        icon = QtGui.QIcon.fromTheme("edit-reset")
+        self.resetDelay.setIcon(icon)
+        self.resetDelay.setObjectName("resetDelay")
+        self.horizontalLayout_2.addWidget(self.resetDelay)
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem3)
         self.recordingButton = QtWidgets.QPushButton(parent=KeyActionEditDialog)
@@ -71,7 +77,9 @@ class Ui_KeyActionEditDialog(object):
         self.cancel.setText(_translate("KeyActionEditDialog", "Cancel"))
         self.label_2.setText(_translate("KeyActionEditDialog", "Delay between key events when executing commands (in milliseconds).\n"
 "Pressing a key and then releasing a key counts as two events.\n"
-"Holding a key is a single event."))
+"Holding a key is a single event. Leave at the default value if not sure."))
+        self.resetDelay.setToolTip(_translate("KeyActionEditDialog", "Reset to default value"))
+        self.resetDelay.setText(_translate("KeyActionEditDialog", "..."))
         self.recordingButton.setText(_translate("KeyActionEditDialog", "Start recording"))
 
 

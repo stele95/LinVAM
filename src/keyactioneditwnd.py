@@ -15,6 +15,7 @@ class KeyActionEditWnd(QDialog):
         self.ui.ok.clicked.connect(self.slot_ok)
         self.ui.cancel.clicked.connect(self.slot_cancel)
         self.ui.recordingButton.clicked.connect(self.recording_click)
+        self.ui.resetDelay.clicked.connect(self.reset_delay)
         self.m_key_action = {}
         self.keyboard_listener = None
         if action is not None:
@@ -25,6 +26,9 @@ class KeyActionEditWnd(QDialog):
                 self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY)
         else:
             self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY)
+
+    def reset_delay(self):
+        self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY)
 
     def recording_click(self):
         if self.keyboard_listener is None:
