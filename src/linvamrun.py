@@ -98,7 +98,7 @@ if __name__ == "__main__":
         sys.exit()
     linvamrun = LinVAMRun()
     args = []
-    RUN_COMMANDS = ''
+    RUN_COMMANDS = []
     IS_ARGS = True
     if len(sys.argv) > 1:
         for i in range(1, len(sys.argv)):
@@ -109,15 +109,12 @@ if __name__ == "__main__":
                 else:
                     args.append(arg)
             else:
-                if len(RUN_COMMANDS) != 0:
-                    RUN_COMMANDS += ' '
-                RUN_COMMANDS = RUN_COMMANDS + '\'' + arg + '\''
+                RUN_COMMANDS.append(arg)
             i += 1
     linvamrun.start_listening(args)
     if len(RUN_COMMANDS) > 0:
-        argsForSubprocess = shlex.split(RUN_COMMANDS)
         try:
-            result = subprocess.run(argsForSubprocess, check=False)
+            result = subprocess.run(RUN_COMMANDS, check=False)
         except subprocess.CalledProcessError as e:
             print('linvamrun: Command failed with return code ' + str(e.returncode))
         linvamrun.shut_down()
