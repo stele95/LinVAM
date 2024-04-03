@@ -111,7 +111,7 @@ Profiles are saved to and loaded from ``profiles.json`` file located at ``/home/
 
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/main-gui.png)
 ### Key combinations
-For inputting combinations, press keys in the order you want them to be executed (holding keys is also supported).
+For inputting combinations, press the ``Start recording`` button and then enter the desired combination by pressing keys on the keyboard in the desired order.
 
 ![Comnbinations](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/combination.png)
 ### Complex commands
