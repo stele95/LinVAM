@@ -89,7 +89,7 @@ class CommandEditWnd(QDialog):
             self.add_action(w_command_do_action)
 
     def slot_new_key_edit(self):
-        w_key_edit_wnd = KeyActionEditWnd(self)
+        w_key_edit_wnd = KeyActionEditWnd(None, self)
         if w_key_edit_wnd.exec() == QDialog.DialogCode.Accepted:
             self.add_action(w_key_edit_wnd.m_key_action)
 
@@ -133,7 +133,7 @@ class CommandEditWnd(QDialog):
         w_action = json.loads(w_json_action)
 
         if w_action['name'] == 'key action':
-            w_key_edit_wnd = KeyActionEditWnd(self)
+            w_key_edit_wnd = KeyActionEditWnd(w_action, self)
             if w_key_edit_wnd.exec() == QDialog.DialogCode.Accepted:
                 w_json_action = json.dumps(w_key_edit_wnd.m_key_action)
         elif (w_action['name'] == 'mouse click action' or w_action['name'] == 'mouse move action' or w_action['name']

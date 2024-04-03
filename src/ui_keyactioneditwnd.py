@@ -12,12 +12,9 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_KeyActionEditDialog(object):
     def setupUi(self, KeyActionEditDialog):
         KeyActionEditDialog.setObjectName("KeyActionEditDialog")
-        KeyActionEditDialog.resize(725, 164)
+        KeyActionEditDialog.resize(727, 191)
         self.gridLayout = QtWidgets.QGridLayout(KeyActionEditDialog)
         self.gridLayout.setObjectName("gridLayout")
-        self.label = QtWidgets.QLabel(parent=KeyActionEditDialog)
-        self.label.setObjectName("label")
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
         self.gridLayout.addItem(spacerItem, 2, 0, 1, 1)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
@@ -32,7 +29,21 @@ class Ui_KeyActionEditDialog(object):
         self.cancel.setAutoDefault(False)
         self.cancel.setObjectName("cancel")
         self.horizontalLayout_3.addWidget(self.cancel)
-        self.gridLayout.addLayout(self.horizontalLayout_3, 3, 0, 1, 1)
+        self.gridLayout.addLayout(self.horizontalLayout_3, 5, 0, 1, 1)
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.label_2 = QtWidgets.QLabel(parent=KeyActionEditDialog)
+        self.label_2.setObjectName("label_2")
+        self.horizontalLayout_2.addWidget(self.label_2)
+        self.sbDelay = QtWidgets.QSpinBox(parent=KeyActionEditDialog)
+        self.sbDelay.setObjectName("sbDelay")
+        self.horizontalLayout_2.addWidget(self.sbDelay)
+        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem2)
+        self.recordingButton = QtWidgets.QPushButton(parent=KeyActionEditDialog)
+        self.recordingButton.setObjectName("recordingButton")
+        self.horizontalLayout_2.addWidget(self.recordingButton)
+        self.gridLayout.addLayout(self.horizontalLayout_2, 3, 0, 1, 1)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.keyEdit = QtWidgets.QLineEdit(parent=KeyActionEditDialog)
@@ -41,6 +52,11 @@ class Ui_KeyActionEditDialog(object):
         self.keyEdit.setObjectName("keyEdit")
         self.horizontalLayout.addWidget(self.keyEdit)
         self.gridLayout.addLayout(self.horizontalLayout, 1, 0, 1, 1)
+        spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.gridLayout.addItem(spacerItem3, 4, 0, 1, 1)
+        self.label = QtWidgets.QLabel(parent=KeyActionEditDialog)
+        self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
 
         self.retranslateUi(KeyActionEditDialog)
         QtCore.QMetaObject.connectSlotsByName(KeyActionEditDialog)
@@ -48,9 +64,11 @@ class Ui_KeyActionEditDialog(object):
     def retranslateUi(self, KeyActionEditDialog):
         _translate = QtCore.QCoreApplication.translate
         KeyActionEditDialog.setWindowTitle(_translate("KeyActionEditDialog", "Key Action Dialog"))
-        self.label.setText(_translate("KeyActionEditDialog", "Key combinations (input by pressing keys on the keyboard):"))
         self.ok.setText(_translate("KeyActionEditDialog", "Save"))
         self.cancel.setText(_translate("KeyActionEditDialog", "Cancel"))
+        self.label_2.setText(_translate("KeyActionEditDialog", "Delay between keys when executing commands (in milliseconds):"))
+        self.recordingButton.setText(_translate("KeyActionEditDialog", "Start recording"))
+        self.label.setText(_translate("KeyActionEditDialog", "Key combinations (input by pressing keys on the keyboard):"))
 
 
 if __name__ == "__main__":
