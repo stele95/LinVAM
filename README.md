@@ -23,30 +23,39 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 After installing from AUR, run ``sudo usermod -aG tty,input $USER`` to allow [uinput access without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#udev-rule-for-input)
 
 ### Requirements
-- PyQt6
-- sounddevice
-- srt
-- requests
-- tqdm
-- vosk
+- python packages:
+  - PyQt6
+  - sounddevice
+  - srt
+  - requests
+  - tqdm
+  - vosk
 - ffmpeg
 - [ydotool](https://github.com/ReimuNotMoe/ydotool)
 
 ### Optional requirements
 - HCS voicepacks
 
-### Install steps
-- install python3 and pip
+### Install manually
+Since ``LinVAM`` relies on ``python`` to run, there are two ways of installing it. Both ways require that ``python3`` is installed.
+
+#### 1. Installing by using system python packages (``LinVAM`` should use the system Qt theme if installed this way)
+- install pip and all [required packages](https://github.com/stele95/LinVAM?tab=readme-ov-file#requirements) using your system package manager
+- Download the source code zip file from the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``source build-and-install.sh`` from the ``scripts`` folder in the extracted files
+- Don't forget to restart your device after finishing installation steps
+
+#### 2. Installing by creating a virtual environment for ``LinVAM`` python packages (``LinVAM`` will have a default theme that doesn't use the system Qt theme settings)
 - install [ydotool](https://github.com/ReimuNotMoe/ydotool) and ffmpeg
-- Download the source code zip file from the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``build-and-install.sh`` from the ``scripts`` folder in the extracted files
+- Download the source code zip file from the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it, enter scripts folder, open terminal in that folder and execute the following command:
+
+
+    source setup-python-virtual-environment.sh && source build-and-install.sh
+
+
 - Don't forget to restart your device after finishing installation steps
 
 ## Build
-- install python3 and pip
-- install [Nuitka](https://github.com/Nuitka/Nuitka) by running the following command
-
-        pip install nuitka
-
+- install ``python3`` and ``nuitka`` using you preferred method of installation (system packages or python virtual environment)
 - Run the ``build.sh`` script
 
 ## Configuring uinput access

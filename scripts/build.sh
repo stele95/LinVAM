@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 python3 -m nuitka \
    --output-dir=../build \
    --output-filename=linvam \
