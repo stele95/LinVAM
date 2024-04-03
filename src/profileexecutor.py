@@ -11,7 +11,8 @@ import sounddevice
 from vosk import Model, KaldiRecognizer
 
 from util import (get_language_code, get_settings_path, get_voice_packs_folder_path, get_language_name,
-                  YDOTOOLD_SOCKET_PATH, OLD_KEYS_SPLITTER, KEYS_SPLITTER, DEFAULT_KEY_DELAY_IN_MILLISECONDS)
+                  YDOTOOLD_SOCKET_PATH, OLD_KEYS_SPLITTER, KEYS_SPLITTER, DEFAULT_KEY_DELAY_IN_MILLISECONDS,
+                  COMMANDS_LIST_FILE)
 
 
 class ProfileExecutor(threading.Thread):
@@ -104,7 +105,7 @@ class ProfileExecutor(threading.Thread):
             for part in parts:
                 self.commands_list.append(part)
         print('Profile: ' + self.m_profile['name'])
-        with open(get_settings_path("command.list"), 'w', encoding="utf-8") as f:
+        with open(get_settings_path(COMMANDS_LIST_FILE), 'w', encoding="utf-8") as f:
             json.dump(self.commands_list, f, indent=4)
             f.close()
 
