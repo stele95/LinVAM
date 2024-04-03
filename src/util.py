@@ -8,6 +8,7 @@ LINVAM_SETTINGS_FOLDER = HOME_DIR + '/.local/share/LinVAM/'
 YDOTOOLD_SOCKET_PATH = LINVAM_SETTINGS_FOLDER + '.ydotoold_socket'
 KEYS_SPLITTER = '->'
 OLD_KEYS_SPLITTER = '+'
+DEFAULT_KEY_DELAY_IN_MILLISECONDS = 60
 
 
 def get_supported_languages():
