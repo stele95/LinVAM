@@ -72,7 +72,7 @@ For easy setup, execute the ``configure-uinput-access.sh`` script from the ``scr
 You will need to restart your computer for the change to take effect.
 
 ## Usage
-Start LinVAM from your list of applications or by typing ``linvam`` in the terminal. This works on both X11 and Wayland, but prior ydotool setup is required, read [Configuring uinput access](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-uinput-access)
+Start LinVAM from your list of applications or by typing ``linvam`` in the terminal. This works on both X11 and Wayland, but prior uinput access setup is required, read [Configuring uinput access](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-uinput-access)
 
 ### Usage with Steam
 After setting up profiles in the GUI app, you can add ``linvamrun --profile='Profile name' -- %command%`` to the game launch options for starting the console app for listening when opening games.
@@ -100,7 +100,7 @@ Profiles are saved to and loaded from ``profiles.json`` file located at ``/home/
 
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/main-gui.png)
 ### Key combinations
-For inputting combinations, press keys in order you want them to be executed (holding keys is also supported).
+For inputting combinations, press keys in the order you want them to be executed (holding keys is also supported).
 
 ![Comnbinations](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/combination.png)
 ### Complex commands
