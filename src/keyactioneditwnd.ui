@@ -7,13 +7,40 @@
     <x>0</x>
     <y>0</y>
     <width>727</width>
-    <height>191</height>
+    <height>222</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Key Action Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="4" column="0">
+    <spacer name="verticalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="keyEdit">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
    <item row="2" column="0">
     <spacer name="verticalSpacer">
      <property name="orientation">
@@ -26,6 +53,13 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Key combinations (input by pressing keys on the keyboard):</string>
+     </property>
+    </widget>
    </item>
    <item row="5" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -69,7 +103,9 @@
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Delay between keys when executing commands (in milliseconds):</string>
+        <string>Delay between key events when executing commands (in milliseconds).
+Pressing a key and then releasing a key counts as two events.
+Holding a key is a single event.</string>
        </property>
       </widget>
      </item>
@@ -107,40 +143,6 @@
       </widget>
      </item>
     </layout>
-   </item>
-   <item row="1" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLineEdit" name="keyEdit">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="4" column="0">
-    <spacer name="verticalSpacer_3">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Key combinations (input by pressing keys on the keyboard):</string>
-     </property>
-    </widget>
    </item>
   </layout>
  </widget>
