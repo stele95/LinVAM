@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QDialog
 
 import keyboard
 from ui_keyactioneditwnd import Ui_KeyActionEditDialog
-from util import KEYS_SPLITTER, DEFAULT_KEY_DELAY
+from util import KEYS_SPLITTER, DEFAULT_KEY_DELAY_IN_MILLISECONDS
 
 
 class KeyActionEditWnd(QDialog):
@@ -23,12 +23,12 @@ class KeyActionEditWnd(QDialog):
             if 'delay' in action:
                 self.ui.sbDelay.setValue(action['delay'])
             else:
-                self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY)
+                self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY_IN_MILLISECONDS)
         else:
-            self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY)
+            self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY_IN_MILLISECONDS)
 
     def reset_delay(self):
-        self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY)
+        self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY_IN_MILLISECONDS)
 
     def recording_click(self):
         if self.keyboard_listener is None:
