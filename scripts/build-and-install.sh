@@ -3,6 +3,7 @@ set -e
 echo "Setting up python virtual environment"
 python -m venv venv
 source venv/bin/activate
+python -m pip install --upgrade pip wheel
 echo "Installing python requirements with pip..."
 pip install -r requirements.txt
 source ./build.sh
