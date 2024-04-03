@@ -55,11 +55,7 @@ Since ``LinVAM`` relies on ``python`` to run, there are two ways of installing i
 - Don't forget to restart your device after finishing installation steps
 
 ## Build
-- install python3 and pip
-- install [Nuitka](https://github.com/Nuitka/Nuitka) by running the following command
-
-        pip install nuitka
-
+- install ``python3`` and ``nuitka`` using you preferred method of installation (system packages or python virtual environment)
 - Run the ``build.sh`` script
 
 ## Configuring uinput access
