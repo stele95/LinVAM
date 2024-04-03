@@ -144,8 +144,7 @@ class ProfileExecutor(threading.Thread):
         # {'name': 'mouse wheel action', 'delta':10}
         w_action_name = p_action['name']
         if w_action_name == 'key action':
-            w_key = p_action['key']
-            self.press_key(w_key)
+            self.press_key(p_action)
         elif w_action_name == 'pause action':
             print("Sleep ", p_action['time'])
             time.sleep(p_action['time'])
@@ -267,21 +266,25 @@ class ProfileExecutor(threading.Thread):
                       + p_cmd_name['file'])
         self.m_sound.play(sound_file)
 
-    def press_key(self, w_key):
+    def press_key(self, action):
         # ydotool has a different key mapping.
         # check /usr/include/linux/input-event-codes.h for key mappings
-        original_key = w_key
-        if KEYS_SPLITTER in w_key:
-            keys = w_key.split(KEYS_SPLITTER)
+        original_key = action['key']
+        if 'delay' in action:
+            delay = action['delay']
         else:
-            keys = w_key.split(OLD_KEYS_SPLITTER)
+            delay = 65
+        if KEYS_SPLITTER in original_key:
+            keys = original_key.split(KEYS_SPLITTER)
+        else:
+            keys = original_key.split(OLD_KEYS_SPLITTER)
         commands = ""
         for key in keys:
             commands += self.create_key_event(key) + " "
         if len(commands) < 1:
             print('Commands not recognized, skipping')
             return
-        self.execute_ydotool_command('key -d 65 ' + commands)
+        self.execute_ydotool_command('key -d ' + str(delay) + ' ' + commands)
         print("original command: ", original_key)
         print("ydotool converted command: ", commands)
 
