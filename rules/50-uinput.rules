@@ -1,0 +1,2 @@
+# give python keyboard module access to read input events - used for setting up commands by LinVAM
+KERNEL=="uinput", TAG+="uaccess""

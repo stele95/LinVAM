@@ -6,7 +6,7 @@ sh ./build.sh
 sudo cp linvam /usr/local/bin/
 sudo cp linvamrun /usr/local/bin/
 sudo cp ../src/LinVAM.desktop /usr/share/applications/
-sh ./configure-ydotoold.sh
+sh ./configure-uinput-access.sh
 echo "Set up MangoHud for displaying LinVAM? [y/N]: "
 read MANGOHUD
 if [ "$MANGOHUD" == "y" ] || [ "$MANGOHUD" == "Y" ]

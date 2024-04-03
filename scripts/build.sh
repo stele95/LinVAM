@@ -18,6 +18,7 @@ python3 -m nuitka \
    --follow-import-to=ui_profileeditwnd \
    --follow-import-to=ui_soundactioneditwnd \
    --follow-import-to=util \
+   --follow-import-to=keyboard \
    ../src/linvam.py
 
 python3 -m nuitka \

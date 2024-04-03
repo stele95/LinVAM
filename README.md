@@ -20,7 +20,7 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 #### AUR
 [![AUR](https://img.shields.io/aur/version/linvam)](https://aur.archlinux.org/packages/linvam)
 
-After installing from AUR, run ``sudo usermod -aG input $USER`` to allow [ydotool](https://github.com/ReimuNotMoe/ydotool) to [input without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#udev-rule-for-input)
+After installing from AUR, run ``sudo usermod -aG tty,input $USER`` to allow [uinput access without sudo](https://github.com/stele95/LinVAM?tab=readme-ov-file#udev-rule-for-input)
 
 ### Requirements
 - PyQt6
@@ -49,40 +49,30 @@ After installing from AUR, run ``sudo usermod -aG input $USER`` to allow [ydotoo
 
 - Run the ``build.sh`` script
 
-## Configuring ydotool
+## Configuring uinput access
 ### TL/DR
-- Run ``configure-ydotoold.sh`` or check for commands bellow if you didn't install by running ``build-and-install.sh``, this will set up [Udev rule for input](https://github.com/stele95/LinVAM?tab=readme-ov-file#udev-rule-for-input)
+- Run ``configure-uinput-access.sh`` if you didn't install by running ``build-and-install.sh``, this will set up [Udev rule for input](https://github.com/stele95/LinVAM?tab=readme-ov-file#udev-rule-for-input)
 
 ### Manual configuration
 #### Udev rule for input
-To simulate typing, the program needs access to your ``/dev/uinput`` device.
-By default, this requires root privileges every time you run ``ydotool``.
+To simulate typing and recording key events, the program needs access to your ``/dev/uinput`` device. By default, this requires root privileges.
 
-To avoid that, you can give the program permanent access to the input device by adding your username to the ``input``
-user group on your system and giving the group write access to the ``uinput`` device.
+To avoid that, you can give the program permanent access to the input device by adding your username to ``input`` and ``tty``
+user groups on your system and giving the group write access to the ``uinput`` device.
 
 To do that, we use an udev rule.
 Udev is the Linux system that detects and reacts to devices getting plugged or unplugged on your computer.
 It also works with virtual devices like ``ydotool``.
 
-To add the current ``$USER`` to a group, you can use the ``usermod`` command:
+You also need to define new udev rules that will give needed groups permanent write access to the uinput device
+(this will give ``ydotoold`` write access and ``LinVAM`` read access).
 
-    sudo usermod -aG input $USER
-
-
-You then need to define a new udev rule that will give the ``input`` group permanent write access to the uinput device
-(this will give ``ydotoold`` write access too).
-
-    echo '## Give ydotoold access to the uinput device
-    ## Solution by https://github.com/ReimuNotMoe/ydotool/issues/25#issuecomment-535842993
-    KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"
-    ' | sudo tee /etc/udev/rules.d/80-uinput.rules > /dev/null
-
+For easy setup, execute the ``configure-uinput-access.sh`` script from the ``scripts`` folder.
 
 You will need to restart your computer for the change to take effect.
 
 ## Usage
-Start LinVAM from your list of applications or by typing ``linvam`` in the terminal. This works on both X11 and Wayland, but prior ydotool setup is required, read [Configuring ydotool](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-ydotool)
+Start LinVAM from your list of applications or by typing ``linvam`` in the terminal. This works on both X11 and Wayland, but prior uinput access setup is required, read [Configuring uinput access](https://github.com/stele95/LinVAM?tab=readme-ov-file#configuring-uinput-access)
 
 ### Usage with Steam
 After setting up profiles in the GUI app, you can add ``linvamrun --profile='Profile name' -- %command%`` to the game launch options for starting the console app for listening when opening games.
@@ -110,11 +100,7 @@ Profiles are saved to and loaded from ``profiles.json`` file located at ``/home/
 
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/main-gui.png)
 ### Key combinations
-To assign key combinations, input the wanted sequence in the input field. Keys are separated by ```+```, use ``hold`` and ``release`` keywords for representing when a specific key should be held or released.
-
-Some examples:
-- hold left shift+a+w+d+w+s+up+release left shift
-- left shift+a+d+1+5+n5
+For inputting combinations, press keys in the order you want them to be executed (holding keys is also supported).
 
 ![Comnbinations](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/combination.png)
 ### Complex commands
