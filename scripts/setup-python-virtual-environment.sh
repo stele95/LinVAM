@@ -6,4 +6,4 @@ python -m venv ~/.local/share/LinVAM/venv
 source ~/.local/share/LinVAM/venv/bin/activate
 python -m pip install --upgrade pip wheel
 echo "Installing python requirements with pip..."
-pip install -r requirements.txt
+pip install -r ../requirements.txt
