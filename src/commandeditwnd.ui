@@ -283,12 +283,18 @@
        <property name="text">
         <string>Play sound</string>
        </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="stopSoundBtn">
        <property name="text">
         <string>Stop sound</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
