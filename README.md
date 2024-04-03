@@ -36,7 +36,7 @@ After installing from AUR, run ``sudo usermod -aG tty,input $USER`` to allow [ui
 ### Optional requirements
 - HCS voicepacks
 
-### Install
+### Install manually
 Since ``LinVAM`` relies on ``python`` to run, there are two ways of installing it. Both ways require that ``python3`` is installed.
 
 #### 1. Installing by using system python packages (``LinVAM`` should use the system Qt theme if installed this way)
