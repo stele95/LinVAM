@@ -284,8 +284,8 @@ class ProfileExecutor(threading.Thread):
         if len(commands) < 1:
             print('Commands not recognized, skipping')
             return
-        self.execute_ydotool_command('key -d ' + str(delay) + ' ' + commands)
         print("Command: ", original_key)
+        self.execute_ydotool_command('key -d ' + str(delay) + ' ' + commands)
 
     def create_key_event(self, w_key):
         if "hold" in w_key:
