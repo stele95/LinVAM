@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Key combinations (input by pressing keys on keyboard):</string>
+      <string>Key combinations (input by pressing keys on the keyboard):</string>
      </property>
     </widget>
    </item>

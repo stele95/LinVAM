@@ -12,31 +12,38 @@ class KeyActionEditWnd(QDialog):
         super().__init__(p_parent)
         self.ui = Ui_KeyActionEditDialog()
         self.ui.setupUi(self)
-
         self.ui.ok.clicked.connect(self.slot_ok)
         self.ui.cancel.clicked.connect(self.slot_cancel)
-
         self.m_key_action = {}
-
-        self.listener = keyboard.hook(callback=self.on_key_event)
+        self.keyboard_listener = keyboard.hook(callback=self.on_key_event)
 
     def slot_ok(self):
         w_hot_key = self.ui.keyEdit.text()
         if w_hot_key == '':
             return
         self.m_key_action = {'name': 'key action', 'key': w_hot_key}
-        self.listener()
+        self.stop_keyboard_listener()
         super().accept()
 
     def slot_cancel(self):
-        self.listener()
+        self.stop_keyboard_listener()
         super().reject()
 
     # disabling pylint invalid-name since this is an override of a method from QWidget
     # pylint: disable=invalid-name
     def closeEvent(self, event):
-        self.listener()
+        self.stop_keyboard_listener()
         event.accept()
+
+    def stop_keyboard_listener(self):
+        # noinspection PyBroadException
+        # pylint: disable=bare-except
+        try:
+            if self.keyboard_listener is not None:
+                self.keyboard_listener()
+                self.keyboard_listener = None
+        except Exception as ex:
+            print(str(ex))
 
     def on_key_event(self, event):
         current_text = self.ui.keyEdit.text()
