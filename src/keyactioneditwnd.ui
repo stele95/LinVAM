@@ -74,7 +74,17 @@
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="sbDelay"/>
+      <widget class="QSpinBox" name="sbDelay">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximum">
+        <number>9999</number>
+       </property>
+      </widget>
      </item>
      <item>
       <spacer name="horizontalSpacer_2">

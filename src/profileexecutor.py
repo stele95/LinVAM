@@ -11,7 +11,7 @@ import sounddevice
 from vosk import Model, KaldiRecognizer
 
 from util import (get_language_code, get_settings_path, get_voice_packs_folder_path, get_language_name,
-                  YDOTOOLD_SOCKET_PATH, OLD_KEYS_SPLITTER, KEYS_SPLITTER)
+                  YDOTOOLD_SOCKET_PATH, OLD_KEYS_SPLITTER, KEYS_SPLITTER, DEFAULT_KEY_DELAY)
 
 
 class ProfileExecutor(threading.Thread):
@@ -273,7 +273,7 @@ class ProfileExecutor(threading.Thread):
         if 'delay' in action:
             delay = action['delay']
         else:
-            delay = 65
+            delay = DEFAULT_KEY_DELAY
         if KEYS_SPLITTER in original_key:
             keys = original_key.split(KEYS_SPLITTER)
         else:

@@ -36,6 +36,8 @@ class Ui_KeyActionEditDialog(object):
         self.label_2.setObjectName("label_2")
         self.horizontalLayout_2.addWidget(self.label_2)
         self.sbDelay = QtWidgets.QSpinBox(parent=KeyActionEditDialog)
+        self.sbDelay.setMinimumSize(QtCore.QSize(0, 0))
+        self.sbDelay.setMaximum(9999)
         self.sbDelay.setObjectName("sbDelay")
         self.horizontalLayout_2.addWidget(self.sbDelay)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
