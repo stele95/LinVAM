@@ -11,7 +11,8 @@ import sounddevice
 from vosk import Model, KaldiRecognizer
 
 from util import (get_language_code, get_settings_path, get_voice_packs_folder_path, get_language_name,
-                  YDOTOOLD_SOCKET_PATH)
+                  YDOTOOLD_SOCKET_PATH, OLD_KEYS_SPLITTER, KEYS_SPLITTER, DEFAULT_KEY_DELAY_IN_MILLISECONDS,
+                  COMMANDS_LIST_FILE)
 
 
 class ProfileExecutor(threading.Thread):
@@ -104,7 +105,7 @@ class ProfileExecutor(threading.Thread):
             for part in parts:
                 self.commands_list.append(part)
         print('Profile: ' + self.m_profile['name'])
-        with open(get_settings_path("command.list"), 'w', encoding="utf-8") as f:
+        with open(get_settings_path(COMMANDS_LIST_FILE), 'w', encoding="utf-8") as f:
             json.dump(self.commands_list, f, indent=4)
             f.close()
 
@@ -144,8 +145,7 @@ class ProfileExecutor(threading.Thread):
         # {'name': 'mouse wheel action', 'delta':10}
         w_action_name = p_action['name']
         if w_action_name == 'key action':
-            w_key = p_action['key']
-            self.press_key(w_key)
+            self.press_key(p_action)
         elif w_action_name == 'pause action':
             print("Sleep ", p_action['time'])
             time.sleep(p_action['time'])
@@ -267,20 +267,26 @@ class ProfileExecutor(threading.Thread):
                       + p_cmd_name['file'])
         self.m_sound.play(sound_file)
 
-    def press_key(self, w_key):
+    def press_key(self, action):
         # ydotool has a different key mapping.
         # check /usr/include/linux/input-event-codes.h for key mappings
-        original_key = w_key
-        keys = w_key.split('+')
+        original_key = action['key']
+        if 'delay' in action:
+            delay = action['delay']
+        else:
+            delay = DEFAULT_KEY_DELAY_IN_MILLISECONDS
+        if KEYS_SPLITTER in original_key:
+            keys = original_key.split(KEYS_SPLITTER)
+        else:
+            keys = original_key.split(OLD_KEYS_SPLITTER)
         commands = ""
         for key in keys:
             commands += self.create_key_event(key) + " "
         if len(commands) < 1:
             print('Commands not recognized, skipping')
             return
-        self.execute_ydotool_command('key -d 65 ' + commands)
-        print("original command: ", original_key)
-        print("ydotool converted command: ", commands)
+        print("Command: ", original_key)
+        self.execute_ydotool_command('key -d ' + str(delay) + ' ' + commands)
 
     def create_key_event(self, w_key):
         if "hold" in w_key:
@@ -306,6 +312,8 @@ class ProfileExecutor(threading.Thread):
     @staticmethod
     def map_key(w_key):
         match w_key.casefold():
+            case 'ctrl':
+                return '29'
             case 'left ctrl':
                 return '29'
             case 'right ctrl':
@@ -314,10 +322,16 @@ class ProfileExecutor(threading.Thread):
                 return '42'
             case 'right shift':
                 return '54'
+            case 'alt':
+                return '56'
             case 'left alt':
                 return '56'
             case 'right alt':
                 return '100'
+            case 'alt gr':
+                return '100'
+            case 'windows':
+                return '125'
             case 'left windows':
                 return '125'
             case 'right windows':

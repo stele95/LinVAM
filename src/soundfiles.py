@@ -55,10 +55,10 @@ class SoundFiles:
                         category = 'default'
                     # there might be subfolders, so we have more than 6 split results...
                     # for the ease of mind, we concat the voicepack subfolders to 1 category name
-                    # like voicepacks/hcspack/Characters/Astra/blah.mp3 will become:
+                    # like voicepacks/hd2/smth/folder/blah.mp3 will become:
                     #
-                    # voicepack = hcspack
-                    # category  = Characters/Astra
+                    # voicepack = hd2
+                    # category  = smth/folder
                     # file      = blah.mp4
 
                     if len(path_parts) > 6:

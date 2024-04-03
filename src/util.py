@@ -2,10 +2,15 @@ import json
 import os
 import subprocess
 
-CONST_VERSION = '0.5.1'
+CONST_VERSION = '0.6.0'
 HOME_DIR = os.path.expanduser('~')
 LINVAM_SETTINGS_FOLDER = HOME_DIR + '/.local/share/LinVAM/'
+COMMANDS_LIST_FILE = 'commands.list'
+LINVAM_COMMANDS_FILE_PATH = LINVAM_SETTINGS_FOLDER + COMMANDS_LIST_FILE
 YDOTOOLD_SOCKET_PATH = LINVAM_SETTINGS_FOLDER + '.ydotoold_socket'
+KEYS_SPLITTER = '->'
+OLD_KEYS_SPLITTER = '+'
+DEFAULT_KEY_DELAY_IN_MILLISECONDS = 60
 
 
 def get_supported_languages():
