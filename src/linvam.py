@@ -98,7 +98,7 @@ class MainWnd(QWidget):
             print("No of profiles read from file: " + str(no_of_profiles))
             for position, w_profile in enumerate(w_profiles):
                 name = w_profile['name']
-                w_json_profile = json.dumps(w_profile)
+                w_json_profile = json.dumps(w_profile, ensure_ascii=False)
                 self.ui.profileCbx.addItem(name, w_json_profile)
                 if name == selected_profile:
                     selected_profile_position = position
@@ -144,7 +144,7 @@ class MainWnd(QWidget):
         w_profile_edit_wnd = ProfileEditWnd(None, self)
         if w_profile_edit_wnd.exec() == QDialog.DialogCode.Accepted:
             w_profile = w_profile_edit_wnd.m_profile
-            w_json_profile = json.dumps(w_profile)
+            w_json_profile = json.dumps(w_profile, ensure_ascii=False)
             self.ui.profileCbx.addItem(w_profile['name'], w_json_profile)
             self.ui.profileCbx.setCurrentIndex(self.ui.profileCbx.count() - 1)
             self.save_to_database()
@@ -159,7 +159,7 @@ class MainWnd(QWidget):
             w_profile = w_profile_edit_wnd.m_profile
             self.m_profile_executor.set_profile(w_profile)
             self.ui.profileCbx.setItemText(w_idx, w_profile['name'])
-            w_json_profile = json.dumps(w_profile)
+            w_json_profile = json.dumps(w_profile, ensure_ascii=False)
             self.ui.profileCbx.setItemData(w_idx, w_json_profile)
             self.save_to_database()
 
@@ -174,7 +174,7 @@ class MainWnd(QWidget):
             w_profile = json.loads(w_json_profile)
             w_profile_copy = w_profile
             w_profile_copy['name'] = text
-            w_json_profile = json.dumps(w_profile_copy)
+            w_json_profile = json.dumps(w_profile_copy, ensure_ascii=False)
             self.ui.profileCbx.addItem(w_profile_copy['name'], w_json_profile)
 
     def name_exists(self, text):

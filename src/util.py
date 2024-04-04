@@ -27,7 +27,7 @@ def get_supported_languages():
 
 def save_profiles(profiles):
     with codecs.open(get_settings_path(PROFILES_FILE_NAME), "w", encoding="utf-8") as f:
-        json.dump(profiles, f, indent=4)
+        json.dump(profiles, f, indent=4, ensure_ascii=False)
         f.close()
 
 
@@ -44,7 +44,7 @@ def save_profiles_to_file(directory_path):
 
 def save_to_commands_file(commands):
     with codecs.open(get_settings_path(COMMANDS_LIST_FILE), 'w', encoding="utf-8") as f:
-        json.dump(commands, f, indent=4)
+        json.dump(commands, f, indent=4, ensure_ascii=False)
         f.close()
 
 
@@ -104,7 +104,7 @@ def save_linvam_run_config(config_name, value):
     configs = get_linvam_run_configs()
     configs[config_name] = value
     with codecs.open(get_linvam_run_file_path(), "w", encoding="utf-8") as f:
-        json.dump(configs, f, indent=4)
+        json.dump(configs, f, indent=4, ensure_ascii=False)
         f.close()
 
 
@@ -128,7 +128,7 @@ def save_linvamrun_run_config(config_name, value):
     configs = get_linvamrun_run_configs()
     configs[config_name] = value
     with codecs.open(get_linvamrun_run_file_path(), "w", encoding="utf-8") as f:
-        json.dump(configs, f, indent=4)
+        json.dump(configs, f, indent=4, ensure_ascii=False)
         f.close()
 
 
@@ -154,16 +154,16 @@ def save_config(config_name, value):
     configs = get_configs()
     configs[config_name] = value
     with codecs.open(get_settings_path('config'), "w", encoding="utf-8") as f:
-        json.dump(configs, f, indent=4)
+        json.dump(configs, f, indent=4, ensure_ascii=False)
         f.close()
 
 
 def get_default_config_values():
-    return json.dumps({'profile': '', 'language': 'English'}, indent=4)
+    return json.dumps({'profile': '', 'language': 'English'}, indent=4, ensure_ascii=False)
 
 
 def get_default_run_config_values():
-    return json.dumps({'profile': '', 'language': ''}, indent=4)
+    return json.dumps({'profile': '', 'language': ''}, indent=4, ensure_ascii=False)
 
 
 def get_voice_packs_folder_path():
