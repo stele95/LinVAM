@@ -3,7 +3,7 @@ import json
 import os
 import subprocess
 
-CONST_VERSION = '0.6.1'
+CONST_VERSION = '0.6.2'
 HOME_DIR = os.path.expanduser('~')
 LINVAM_SETTINGS_FOLDER = HOME_DIR + '/.local/share/LinVAM/'
 COMMANDS_LIST_FILE = 'commands.list'
