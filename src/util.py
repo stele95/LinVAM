@@ -38,8 +38,16 @@ def read_profiles():
     return profiles
 
 
-def save_profiles_to_file(directory_path):
+def copy_profiles_to_dir(directory_path):
     os.system('cp ' + get_settings_path(PROFILES_FILE_NAME) + ' ' + directory_path)
+
+
+def import_profiles_from_file(file_path):
+    with codecs.open(file_path, "r", encoding="utf-8") as f:
+        profiles = f.read()
+        f.close()
+        save_profiles(json.loads(profiles))
+
 
 
 def save_to_commands_file(commands):

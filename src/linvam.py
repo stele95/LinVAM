@@ -11,7 +11,7 @@ from soundfiles import SoundFiles
 from ui_mainwnd import Ui_MainWidget
 from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
                   CONST_VERSION, init_config_folder, setup_mangohud, read_profiles, save_profiles,
-                  save_profiles_to_file)
+                  copy_profiles_to_dir, HOME_DIR, import_profiles_from_file)
 
 
 class MainWnd(QWidget):
@@ -38,12 +38,7 @@ class MainWnd(QWidget):
         self.ui.sliderVolume.valueChanged.connect(lambda: self.m_sound.set_volume(self.ui.sliderVolume.value()))
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-        position = self.load_from_database()
-        self.ui.profileCbx.currentIndexChanged.connect(self.slot_profile_changed)
-        if position > 0:
-            self.ui.profileCbx.setCurrentIndex(position)
-        elif position == 0:
-            self.slot_profile_changed(position)
+        self.init_profiles()
 
         language_position = self.load_languages()
         self.ui.languageCbx.currentIndexChanged.connect(self.language_changed)
@@ -54,12 +49,27 @@ class MainWnd(QWidget):
 
         self.check_buttons_states()
 
+    def init_profiles(self):
+        position = self.load_from_database()
+        self.ui.profileCbx.currentIndexChanged.connect(self.slot_profile_changed)
+        if position > 0:
+            self.ui.profileCbx.setCurrentIndex(position)
+        elif position == 0:
+            self.slot_profile_changed(position)
+
     def export_profile(self):
-        path = QFileDialog.getExistingDirectory(self, 'Select a location for extracting profiles')
-        save_profiles_to_file(path)
+        path = QFileDialog.getExistingDirectory(self, 'Select a location for extracting profiles', HOME_DIR)
+        if not path:
+            return
+        copy_profiles_to_dir(path)
 
     def import_profile(self):
-        print("Import profile")
+        (path, _) = QFileDialog.getOpenFileName(self, 'Select a file for importing profiles from', HOME_DIR,
+                                                "Profiles json file (*.json)")
+        if not path:
+            return
+        import_profiles_from_file(path)
+        self.init_profiles()
 
     def merge_profiles(self):
         print("Merge profiles")
