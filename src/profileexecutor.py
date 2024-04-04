@@ -266,7 +266,7 @@ class ProfileExecutor(threading.Thread):
 
     def press_key(self, action):
         print("Command: ", action['key'])
-        if 'events' in action:
+        if 'key_events' in action:
             self.handle_new_key_press(action)
         else:
             self.handle_old_key_press(action)
@@ -276,7 +276,7 @@ class ProfileExecutor(threading.Thread):
             delay = action['delay']
         else:
             delay = DEFAULT_KEY_DELAY_IN_MILLISECONDS
-        events = str(action['events']).replace(KEYS_SPLITTER, ' ')
+        events = str(action['key_events']).replace(KEYS_SPLITTER, ' ')
         self.execute_ydotool_key_events(delay, events)
 
     def handle_old_key_press(self, action):
