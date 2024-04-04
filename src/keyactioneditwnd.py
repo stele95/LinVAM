@@ -25,6 +25,8 @@ class KeyActionEditWnd(QDialog):
                 self.ui.sbDelay.setValue(action['delay'])
             else:
                 self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY_IN_MILLISECONDS)
+            if 'key_events' in action:
+                self.key_events = str(action['key_events']).split(KEYS_SPLITTER)
         else:
             self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY_IN_MILLISECONDS)
 
@@ -39,7 +41,7 @@ class KeyActionEditWnd(QDialog):
             self.ui.recordingButton.setText('Stop recording')
             self.set_buttons_enabled(False)
         else:
-            self.keyboard_listener()
+            self.stop_keyboard_listener()
             self.ui.recordingButton.setText('Start recording')
             self.set_buttons_enabled(True)
 

@@ -32,10 +32,14 @@ def save_profiles(profiles):
 
 
 def read_profiles():
-    with codecs.open(get_settings_path(PROFILES_FILE_NAME), "r", encoding="utf-8") as f:
-        profiles = f.read()
-        f.close()
-    return profiles
+    try:
+        with codecs.open(get_settings_path(PROFILES_FILE_NAME), "r", encoding="utf-8") as f:
+            profiles = f.read()
+            f.close()
+        return profiles
+    except Exception as ex:
+        print(str(ex))
+        return '[]'
 
 
 def copy_profiles_to_dir(directory_path):
@@ -43,21 +47,27 @@ def copy_profiles_to_dir(directory_path):
 
 
 def import_profiles_from_file(file_path):
-    with codecs.open(file_path, "r", encoding="utf-8") as f:
-        profiles = f.read()
-        f.close()
-        save_profiles(json.loads(profiles))
+    try:
+        with codecs.open(file_path, "r", encoding="utf-8") as f:
+            profiles = f.read()
+            f.close()
+            save_profiles(json.loads(profiles))
+    except Exception as ex:
+        print(str(ex))
 
 
 def merge_profiles(file_path):
-    current_profiles = json.loads(read_profiles())
-    with codecs.open(file_path, "r", encoding="utf-8") as f:
-        new_profiles = f.read()
-        f.close()
-    for profile in json.loads(new_profiles):
-        profile['name'] = get_safe_name(current_profiles, profile['name'])
-        current_profiles.append(profile)
-    save_profiles(current_profiles)
+    try:
+        current_profiles = json.loads(read_profiles())
+        with codecs.open(file_path, "r", encoding="utf-8") as f:
+            new_profiles = f.read()
+            f.close()
+        for profile in json.loads(new_profiles):
+            profile['name'] = get_safe_name(current_profiles, profile['name'])
+            current_profiles.append(profile)
+        save_profiles(current_profiles)
+    except Exception as ex:
+        print(str(ex))
 
 
 def get_safe_name(profiles, text):
