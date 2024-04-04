@@ -264,6 +264,6 @@ class ProfileExecutor(threading.Thread):
         self.m_sound.play(sound_file)
 
     def press_key(self, action):
-        print("Command: ", action['key'])
         events = str(action['key_events']).replace(KEYS_SPLITTER, ' ')
         self.execute_ydotool_command('key -d ' + str(action['delay']) + ' ' + events)
+        print("Command: ", action['key'])
