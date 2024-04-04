@@ -154,6 +154,7 @@ class MainWnd(QWidget):
         w_profile_edit_wnd = ProfileEditWnd(None, self)
         if w_profile_edit_wnd.exec() == QDialog.DialogCode.Accepted:
             w_profile = w_profile_edit_wnd.m_profile
+            w_profile['name'] = self.get_safe_name(w_profile['name'])
             w_json_profile = json.dumps(w_profile, ensure_ascii=False)
             self.ui.profileCbx.addItem(w_profile['name'], w_json_profile)
             self.ui.profileCbx.setCurrentIndex(self.ui.profileCbx.count() - 1)
@@ -177,8 +178,7 @@ class MainWnd(QWidget):
         text, ok_pressed = QInputDialog.getText(self, "Copy profile", "Enter new profile name:",
                                                 QLineEdit.EchoMode.Normal, "")
         if ok_pressed and text != '':
-            if self.name_exists(text):
-                return
+            text = self.get_safe_name(text)
             w_idx = self.ui.profileCbx.currentIndex()
             w_json_profile = self.ui.profileCbx.itemData(w_idx)
             w_profile = json.loads(w_json_profile)
@@ -186,6 +186,18 @@ class MainWnd(QWidget):
             w_profile_copy['name'] = text
             w_json_profile = json.dumps(w_profile_copy, ensure_ascii=False)
             self.ui.profileCbx.addItem(w_profile_copy['name'], w_json_profile)
+            self.ui.profileCbx.setCurrentIndex(self.ui.profileCbx.currentIndex() + 1)
+            self.save_to_database()
+
+    def get_safe_name(self, text):
+        i = 0
+        while self.name_exists(text):
+            number = '(' + str(i) + ')'
+            if number in text:
+                text = str(text).replace(number, '').strip()
+            i += 1
+            text = text + ' (' + str(i) + ')'
+        return text
 
     def name_exists(self, text):
         all_items = [json.loads(self.ui.profileCbx.itemData(i)) for i in range(self.ui.profileCbx.count())]

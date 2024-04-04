@@ -49,7 +49,6 @@ def import_profiles_from_file(file_path):
         save_profiles(json.loads(profiles))
 
 
-
 def save_to_commands_file(commands):
     with codecs.open(get_settings_path(COMMANDS_LIST_FILE), 'w', encoding="utf-8") as f:
         json.dump(commands, f, indent=4, ensure_ascii=False)
