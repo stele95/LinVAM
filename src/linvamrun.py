@@ -7,11 +7,12 @@ import sys
 from profileexecutor import ProfileExecutor
 from soundfiles import SoundFiles
 from util import (get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file, CONST_VERSION,
-                  init_config_folder, LINVAM_COMMANDS_FILE_PATH, read_profiles)
+                  init_config_folder, LINVAM_COMMANDS_FILE_PATH, read_profiles, update_profiles_for_new_version)
 
 
 class LinVAMRun:
     def __init__(self):
+        update_profiles_for_new_version()
         self.m_profile_executor = None
         self.m_config = {
             'profileName': '',

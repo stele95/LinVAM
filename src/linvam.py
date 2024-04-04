@@ -11,12 +11,14 @@ from soundfiles import SoundFiles
 from ui_mainwnd import Ui_MainWidget
 from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
                   CONST_VERSION, init_config_folder, setup_mangohud, read_profiles, save_profiles,
-                  copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name)
+                  copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name,
+                  update_profiles_for_new_version)
 
 
 class MainWnd(QWidget):
     def __init__(self, p_parent=None):
         super().__init__(p_parent)
+        update_profiles_for_new_version()
 
         self.m_config = None
         self.m_active_profile = None
