@@ -13,7 +13,13 @@ class Ui_KeyActionEditDialog(object):
     def setupUi(self, KeyActionEditDialog):
         KeyActionEditDialog.setObjectName("KeyActionEditDialog")
         KeyActionEditDialog.resize(710, 280)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(KeyActionEditDialog.sizePolicy().hasHeightForWidth())
+        KeyActionEditDialog.setSizePolicy(sizePolicy)
         KeyActionEditDialog.setMinimumSize(QtCore.QSize(710, 280))
+        KeyActionEditDialog.setMaximumSize(QtCore.QSize(710, 280))
         self.gridLayout = QtWidgets.QGridLayout(KeyActionEditDialog)
         self.gridLayout.setObjectName("gridLayout")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()

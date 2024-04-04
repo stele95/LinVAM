@@ -17,6 +17,7 @@ class KeyActionEditWnd(QDialog):
         self.ui.recordingButton.clicked.connect(self.recording_click)
         self.ui.resetDelay.clicked.connect(self.reset_delay)
         self.m_key_action = {}
+        self.key_events = []
         self.keyboard_listener = None
         if action is not None:
             self.ui.keyEdit.setText(action['key'])
@@ -24,6 +25,8 @@ class KeyActionEditWnd(QDialog):
                 self.ui.sbDelay.setValue(action['delay'])
             else:
                 self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY_IN_MILLISECONDS)
+            if 'key_events' in action:
+                self.key_events = str(action['key_events']).split(KEYS_SPLITTER)
         else:
             self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY_IN_MILLISECONDS)
 
@@ -34,10 +37,11 @@ class KeyActionEditWnd(QDialog):
         if self.keyboard_listener is None:
             self.keyboard_listener = keyboard.hook(callback=self.on_key_event)
             self.ui.keyEdit.setText('')
+            self.key_events = []
             self.ui.recordingButton.setText('Stop recording')
             self.set_buttons_enabled(False)
         else:
-            self.keyboard_listener()
+            self.stop_keyboard_listener()
             self.ui.recordingButton.setText('Start recording')
             self.set_buttons_enabled(True)
 
@@ -50,7 +54,15 @@ class KeyActionEditWnd(QDialog):
         w_hot_key = self.ui.keyEdit.text()
         if w_hot_key == '':
             return
-        self.m_key_action = {'name': 'key action', 'key': w_hot_key, 'delay': self.ui.sbDelay.value()}
+        events = ''
+        for event in self.key_events:
+            if not events:
+                events = event
+            else:
+                events += KEYS_SPLITTER + event
+
+        self.m_key_action = {'name': 'key action', 'key': w_hot_key, 'delay': self.ui.sbDelay.value(),
+                             'key_events': events}
         self.stop_keyboard_listener()
         super().accept()
 
@@ -86,6 +98,7 @@ class KeyActionEditWnd(QDialog):
 
         if not current_text:
             self.ui.keyEdit.setText(key)
+            self.append_key_event(event)
             return
         keys = current_text.split(KEYS_SPLITTER)
         previous_key = keys[len(keys) - 1]
@@ -94,6 +107,7 @@ class KeyActionEditWnd(QDialog):
                 keys[len(keys) - 1] = event.name
             else:
                 keys.append(key)
+            self.append_key_event(event)
             command = ''
             for single_key in keys:
                 if not command:
@@ -101,3 +115,12 @@ class KeyActionEditWnd(QDialog):
                 else:
                     command += KEYS_SPLITTER + single_key
             self.ui.keyEdit.setText(command)
+
+    def append_key_event(self, event):
+        if 'down' in event.event_type:
+            event_type_int = 1
+        elif 'up' in event.event_type:
+            event_type_int = 0
+        else:
+            return
+        self.key_events.append(str(event.scan_code) + ':' + str(event_type_int))

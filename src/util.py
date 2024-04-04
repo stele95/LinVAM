@@ -1,6 +1,7 @@
 import codecs
 import json
 import os
+import re
 import subprocess
 
 CONST_VERSION = '0.6.2'
@@ -25,6 +26,26 @@ def get_supported_languages():
     ]
 
 
+# pylint: disable=too-many-nested-blocks
+def update_profiles_for_new_version():
+    if not get_config('profiles_updated'):
+        try:
+            profiles = json.loads(read_profiles())
+            for profile in profiles:
+                for command in profile['commands']:
+                    for action in command['actions']:
+                        if action['name'] == 'key action':
+                            if 'key_events' not in action:
+                                commands = create_commands_list(action['key'])
+                                action['key_events'] = commands
+                            if 'delay' not in action:
+                                action['delay'] = DEFAULT_KEY_DELAY_IN_MILLISECONDS
+            save_profiles(profiles)
+            save_config('profiles_updated', True)
+        except Exception as ex:
+            print(str(ex))
+
+
 def save_profiles(profiles):
     with codecs.open(get_settings_path(PROFILES_FILE_NAME), "w", encoding="utf-8") as f:
         json.dump(profiles, f, indent=4, ensure_ascii=False)
@@ -32,10 +53,14 @@ def save_profiles(profiles):
 
 
 def read_profiles():
-    with codecs.open(get_settings_path(PROFILES_FILE_NAME), "r", encoding="utf-8") as f:
-        profiles = f.read()
-        f.close()
-    return profiles
+    try:
+        with codecs.open(get_settings_path(PROFILES_FILE_NAME), "r", encoding="utf-8") as f:
+            profiles = f.read()
+            f.close()
+        return profiles
+    except Exception as ex:
+        print(str(ex))
+        return '[]'
 
 
 def copy_profiles_to_dir(directory_path):
@@ -43,21 +68,27 @@ def copy_profiles_to_dir(directory_path):
 
 
 def import_profiles_from_file(file_path):
-    with codecs.open(file_path, "r", encoding="utf-8") as f:
-        profiles = f.read()
-        f.close()
-        save_profiles(json.loads(profiles))
+    try:
+        with codecs.open(file_path, "r", encoding="utf-8") as f:
+            profiles = f.read()
+            f.close()
+            save_profiles(json.loads(profiles))
+    except Exception as ex:
+        print(str(ex))
 
 
 def merge_profiles(file_path):
-    current_profiles = json.loads(read_profiles())
-    with codecs.open(file_path, "r", encoding="utf-8") as f:
-        new_profiles = f.read()
-        f.close()
-    for profile in json.loads(new_profiles):
-        profile['name'] = get_safe_name(current_profiles, profile['name'])
-        current_profiles.append(profile)
-    save_profiles(current_profiles)
+    try:
+        current_profiles = json.loads(read_profiles())
+        with codecs.open(file_path, "r", encoding="utf-8") as f:
+            new_profiles = f.read()
+            f.close()
+        for profile in json.loads(new_profiles):
+            profile['name'] = get_safe_name(current_profiles, profile['name'])
+            current_profiles.append(profile)
+        save_profiles(current_profiles)
+    except Exception as ex:
+        print(str(ex))
 
 
 def get_safe_name(profiles, text):
@@ -185,7 +216,12 @@ def get_configs():
 
 
 def get_config(config_name):
-    return get_configs()[config_name]
+    # noinspection PyBroadException
+    # pylint: disable=bare-except
+    try:
+        return get_configs()[config_name]
+    except:
+        return ''
 
 
 def save_config(config_name, value):
@@ -261,6 +297,262 @@ def write_to_mangohud_profile_script_file():
     with (codecs.open(LINVAM_SETTINGS_FOLDER + 'mangohud-profile.sh', "w", encoding="utf-8")) as f:
         f.writelines(line + '\n' for line in MANGOHUD_PROFILE_SCRIPT)
         f.close()
+
+
+def create_commands_list(keys):
+    if KEYS_SPLITTER in keys:
+        keys_list = keys.split(KEYS_SPLITTER)
+    else:
+        keys_list = keys.split(OLD_KEYS_SPLITTER)
+    commands = ""
+    for key in keys_list:
+        if not commands:
+            commands = create_key_event(key)
+        else:
+            commands += KEYS_SPLITTER + create_key_event(key)
+    return commands
+
+
+def create_key_event(w_key):
+    if "hold" in w_key:
+        w_key = re.sub('hold', '', w_key, flags=re.IGNORECASE)
+        w_key = map_key(w_key.strip())
+        if len(w_key) < 1:
+            return ''
+        return str(w_key) + ":1"
+
+    if "release" in w_key:
+        w_key = re.sub('release', '', w_key, flags=re.IGNORECASE)
+        w_key = map_key(w_key.strip())
+        if len(w_key) < 1:
+            return ''
+        return str(w_key) + ":0"
+
+    w_key = map_key(w_key.strip())
+    if len(w_key) < 1:
+        return ''
+    return str(w_key) + ":1" + KEYS_SPLITTER + str(w_key) + ":0"
+
+
+# pylint: disable=too-many-return-statements
+def map_key(w_key):
+    # ydotool has a different key mapping.
+    # check /usr/include/linux/input-event-codes.h for key mappings
+    match w_key.casefold():
+        case 'ctrl':
+            return '29'
+        case 'left ctrl':
+            return '29'
+        case 'right ctrl':
+            return '97'
+        case 'left shift':
+            return '42'
+        case 'right shift':
+            return '54'
+        case 'alt':
+            return '56'
+        case 'left alt':
+            return '56'
+        case 'right alt':
+            return '100'
+        case 'alt gr':
+            return '100'
+        case 'windows':
+            return '125'
+        case 'left windows':
+            return '125'
+        case 'right windows':
+            return '126'
+        case 'left super':
+            return '125'
+        case 'right super':
+            return '126'
+        case 'left meta':
+            return '125'
+        case 'right meta':
+            return '126'
+        case 'tab':
+            return '15'
+        case 'esc':
+            return '1'
+        case 'left':
+            return '105'
+        case 'right':
+            return '106'
+        case 'up':
+            return '103'
+        case 'down':
+            return '108'
+        case 'insert':
+            return '110'
+        case 'delete':
+            return '111'
+        case 'home':
+            return '102'
+        case 'end':
+            return '107'
+        case 'pageup':
+            return '104'
+        case 'pagedown':
+            return '109'
+        case 'return':
+            return '28'
+        case 'enter':
+            return '28'
+        case 'backspace':
+            return '14'
+        case '1':
+            return '2'
+        case '2':
+            return '3'
+        case '3':
+            return '4'
+        case '4':
+            return '5'
+        case '5':
+            return '6'
+        case '6':
+            return '7'
+        case '7':
+            return '8'
+        case '8':
+            return '9'
+        case '9':
+            return '10'
+        case '0':
+            return '11'
+        case '-':
+            return '12'
+        case '=':
+            return '13'
+        case 'q':
+            return '16'
+        case 'w':
+            return '17'
+        case 'e':
+            return '18'
+        case 'r':
+            return '19'
+        case 't':
+            return '20'
+        case 'y':
+            return '21'
+        case 'u':
+            return '22'
+        case 'i':
+            return '23'
+        case 'o':
+            return '24'
+        case 'p':
+            return '25'
+        case 'left bracket':
+            return '26'
+        case 'right bracket':
+            return '27'
+        case 'a':
+            return '30'
+        case 's':
+            return '31'
+        case 'd':
+            return '32'
+        case 'f':
+            return '33'
+        case 'g':
+            return '34'
+        case 'h':
+            return '35'
+        case 'j':
+            return '36'
+        case 'k':
+            return '37'
+        case 'l':
+            return '38'
+        case ';':
+            return '39'
+        case '\'':
+            return '40'
+        case 'backslash':
+            return '43'
+        case 'z':
+            return '44'
+        case 'x':
+            return '45'
+        case 'c':
+            return '46'
+        case 'v':
+            return '47'
+        case 'b':
+            return '48'
+        case 'n':
+            return '49'
+        case 'm':
+            return '50'
+        case ',':
+            return '51'
+        case '.':
+            return '52'
+        case 'forwardslash':
+            return '53'
+        case 'space':
+            return '57'
+        case 'capslock':
+            return '58'
+        case 'f1':
+            return '59'
+        case 'f2':
+            return '60'
+        case 'f3':
+            return '61'
+        case 'f4':
+            return '62'
+        case 'f5':
+            return '63'
+        case 'f6':
+            return '64'
+        case 'f7':
+            return '65'
+        case 'f8':
+            return '66'
+        case 'f9':
+            return '67'
+        case 'f10':
+            return '68'
+        case 'f11':
+            return '87'
+        case 'f12':
+            return '88'
+        case 'scrolllock':
+            return '70'
+        case 'numlock':
+            return '69'
+        case 'n7':  # Num 7
+            return '71'
+        case 'n8':  # Num 8
+            return '72'
+        case 'n9':  # Num 9
+            return '73'
+        case 'n-':  # Num -
+            return '74'
+        case 'n4':  # Num 4
+            return '75'
+        case 'n5':  # Num 5
+            return '76'
+        case 'n6':  # Num 6
+            return '77'
+        case 'nplus':  # Num +
+            return '78'
+        case 'n1':  # Num 1
+            return '79'
+        case 'n2':  # Num 2
+            return '80'
+        case 'n3':  # Num 3
+            return '81'
+        case 'n0':  # Num 0
+            return '82'
+        case 'ndot':  # Num .
+            return '83'
+        case _:
+            return ''
 
 
 MANGOHUD_CONF_FILE_APPEND_COMMANDS = [
