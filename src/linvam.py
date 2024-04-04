@@ -11,7 +11,7 @@ from soundfiles import SoundFiles
 from ui_mainwnd import Ui_MainWidget
 from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
                   CONST_VERSION, init_config_folder, setup_mangohud, read_profiles, save_profiles,
-                  copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles)
+                  copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name)
 
 
 class MainWnd(QWidget):
@@ -196,23 +196,10 @@ class MainWnd(QWidget):
             self.save_to_database()
 
     def get_safe_name(self, text):
-        i = 0
-        while self.name_exists(text):
-            number = '(' + str(i) + ')'
-            if number in text:
-                text = str(text).replace(number, '').strip()
-            i += 1
-            text = text + ' (' + str(i) + ')'
-        return text
-
-    def name_exists(self, text):
-        all_items = [json.loads(self.ui.profileCbx.itemData(i)) for i in range(self.ui.profileCbx.count())]
-        found = False
-        i = 0
-        while not found and i < len(all_items):
-            found = all_items[i]['name'] == text
-            i += 1
-        return found
+        return get_safe_name(
+            [json.loads(self.ui.profileCbx.itemData(i)) for i in range(self.ui.profileCbx.count())],
+            text
+        )
 
     def slot_remove_profile(self):
         w_cur_idx = self.ui.profileCbx.currentIndex()
