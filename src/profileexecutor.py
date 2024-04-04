@@ -265,6 +265,21 @@ class ProfileExecutor(threading.Thread):
         self.m_sound.play(sound_file)
 
     def press_key(self, action):
+        print("Command: ", action['key'])
+        if 'events' in action:
+            self.handle_new_key_press(action)
+        else:
+            self.handle_old_key_press(action)
+
+    def handle_new_key_press(self, action):
+        if 'delay' in action:
+            delay = action['delay']
+        else:
+            delay = DEFAULT_KEY_DELAY_IN_MILLISECONDS
+        events = str(action['events']).replace(KEYS_SPLITTER, ' ')
+        self.execute_ydotool_key_events(delay, events)
+
+    def handle_old_key_press(self, action):
         # ydotool has a different key mapping.
         # check /usr/include/linux/input-event-codes.h for key mappings
         original_key = action['key']
@@ -282,8 +297,10 @@ class ProfileExecutor(threading.Thread):
         if len(commands) < 1:
             print('Commands not recognized, skipping')
             return
-        print("Command: ", original_key)
-        self.execute_ydotool_command('key -d ' + str(delay) + ' ' + commands)
+        self.execute_ydotool_key_events(delay, commands)
+
+    def execute_ydotool_key_events(self, delay, events):
+        self.execute_ydotool_command('key -d ' + str(delay) + ' ' + events)
 
     def create_key_event(self, w_key):
         if "hold" in w_key:
