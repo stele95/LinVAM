@@ -309,7 +309,7 @@ def create_commands_list(keys):
         if not commands:
             commands = create_key_event(key)
         else:
-            commands += ' ' + create_key_event(key)
+            commands += KEYS_SPLITTER + create_key_event(key)
     return commands
 
 
