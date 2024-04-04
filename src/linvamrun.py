@@ -4,10 +4,10 @@ import signal
 import subprocess
 import sys
 
-from profileexecutor import ProfileExecutor, get_settings_path
+from profileexecutor import ProfileExecutor
 from soundfiles import SoundFiles
 from util import (get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file, CONST_VERSION,
-                  init_config_folder, LINVAM_COMMANDS_FILE_PATH)
+                  init_config_folder, LINVAM_COMMANDS_FILE_PATH, read_profiles)
 
 
 class LinVAMRun:
@@ -74,18 +74,16 @@ class LinVAMRun:
 
     @staticmethod
     def _get_profile_from_database(profile_name):
-        with open(get_settings_path("profiles.json"), "r", encoding="utf-8") as f:
-            profiles = f.read()
-            f.close()
-            # noinspection PyBroadException
-            try:
-                w_profiles = json.loads(profiles)
-                for w_profile in w_profiles:
-                    name = w_profile['name']
-                    if name == profile_name:
-                        return w_profile
-            except Exception as ex:
-                print("linvamrun: failed loading profiles from file: " + str(ex))
+        profiles = read_profiles()
+        # noinspection PyBroadException
+        try:
+            w_profiles = json.loads(profiles)
+            for w_profile in w_profiles:
+                name = w_profile['name']
+                if name == profile_name:
+                    return w_profile
+        except Exception as ex:
+            print("linvamrun: failed loading profiles from file: " + str(ex))
         return {}
 
     @staticmethod

@@ -40,7 +40,7 @@ class CommandEditWnd(QDialog):
             self.ui.say.setText(p_command['name'])
             w_actions = p_command['actions']
             for w_action in w_actions:
-                w_json_action = json.dumps(w_action)
+                w_json_action = json.dumps(w_action, ensure_ascii=False)
                 w_item = QListWidgetItem(w_json_action)
                 w_item.setData(Qt.ItemDataRole.UserRole, w_json_action)
                 self.ui.actionsListWidget.addItem(w_item)
@@ -61,7 +61,7 @@ class CommandEditWnd(QDialog):
         self.ui.ok.setEnabled(self.ui.actionsListWidget.count() > 0)
 
     def add_action(self, p_action):
-        w_json_action = json.dumps(p_action)
+        w_json_action = json.dumps(p_action, ensure_ascii=False)
         w_item = QListWidgetItem(w_json_action)
         w_item.setData(Qt.ItemDataRole.UserRole, w_json_action)
         self.ui.actionsListWidget.addItem(w_item)
@@ -135,26 +135,26 @@ class CommandEditWnd(QDialog):
         if w_action['name'] == 'key action':
             w_key_edit_wnd = KeyActionEditWnd(w_action, self)
             if w_key_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-                w_json_action = json.dumps(w_key_edit_wnd.m_key_action)
+                w_json_action = json.dumps(w_key_edit_wnd.m_key_action, ensure_ascii=False)
         elif (w_action['name'] == 'mouse click action' or w_action['name'] == 'mouse move action' or w_action['name']
               == 'mouse scroll action'):
             w_mouse_edit_wnd = MouseActionEditWnd(w_action, self)
             if w_mouse_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-                w_json_action = json.dumps(w_mouse_edit_wnd.m_mouse_action)
+                w_json_action = json.dumps(w_mouse_edit_wnd.m_mouse_action, ensure_ascii=False)
         elif w_action['name'] == 'pause action':
             w_pause_edit_wnd = PauseActionEditWnd(w_action, self)
             if w_pause_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-                w_json_action = json.dumps(w_pause_edit_wnd.m_pause_action)
+                w_json_action = json.dumps(w_pause_edit_wnd.m_pause_action, ensure_ascii=False)
         elif w_action['name'] == 'command stop action' or w_action['name'] == 'command execute action':
             text, ok_pressed = QInputDialog.getText(self, "Get Command Name", "Another command name:",
                                                     QLineEdit.EchoMode.Normal, w_action['command name'])
             if ok_pressed and text != '':
                 w_action['command name'] = text
-                w_json_action = json.dumps(w_action)
+                w_json_action = json.dumps(w_action, ensure_ascii=False)
         elif w_action['name'] == 'play sound':
             w_sound_edit_wnd = SoundActionEditWnd(self.m_parent.m_parent.m_sound, w_action, self)
             if w_sound_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-                w_json_action = json.dumps(w_sound_edit_wnd.m_sound_action)
+                w_json_action = json.dumps(w_sound_edit_wnd.m_sound_action, ensure_ascii=False)
 
         w_item.setText(w_json_action)
         w_item.setData(Qt.ItemDataRole.UserRole, w_json_action)
