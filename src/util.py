@@ -26,6 +26,7 @@ def get_supported_languages():
     ]
 
 
+# pylint: disable=too-many-nested-blocks
 def update_profiles_for_new_version():
     if not get_config('profiles_updated'):
         try:
