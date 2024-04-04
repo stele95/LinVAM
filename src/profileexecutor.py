@@ -10,9 +10,8 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
-from util import (get_language_code, get_settings_path, get_voice_packs_folder_path, get_language_name,
-                  YDOTOOLD_SOCKET_PATH, OLD_KEYS_SPLITTER, KEYS_SPLITTER, DEFAULT_KEY_DELAY_IN_MILLISECONDS,
-                  COMMANDS_LIST_FILE)
+from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
+                  OLD_KEYS_SPLITTER, KEYS_SPLITTER, DEFAULT_KEY_DELAY_IN_MILLISECONDS, save_to_commands_file)
 
 
 class ProfileExecutor(threading.Thread):
@@ -105,9 +104,7 @@ class ProfileExecutor(threading.Thread):
             for part in parts:
                 self.commands_list.append(part)
         print('Profile: ' + self.m_profile['name'])
-        with open(get_settings_path(COMMANDS_LIST_FILE), 'w', encoding="utf-8") as f:
-            json.dump(self.commands_list, f, indent=4)
-            f.close()
+        save_to_commands_file(self.commands_list)
 
     def set_enable_listening(self, p_enable):
         if self.recognizer is None:

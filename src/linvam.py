@@ -3,14 +3,15 @@ import json
 import signal
 import sys
 
-from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessageBox, QLineEdit
+from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessageBox, QLineEdit, QFileDialog
 
 from profileeditwnd import ProfileEditWnd
-from profileexecutor import ProfileExecutor, get_settings_path
+from profileexecutor import ProfileExecutor
 from soundfiles import SoundFiles
 from ui_mainwnd import Ui_MainWidget
 from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
-                  CONST_VERSION, init_config_folder, setup_mangohud)
+                  CONST_VERSION, init_config_folder, setup_mangohud, read_profiles, save_profiles,
+                  copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name)
 
 
 class MainWnd(QWidget):
@@ -30,16 +31,14 @@ class MainWnd(QWidget):
         self.ui.editBut.clicked.connect(self.slot_edit_profile)
         self.ui.copyBut.clicked.connect(self.slot_copy_profile)
         self.ui.removeBut.clicked.connect(self.slot_remove_profile)
+        self.ui.exportBtn.clicked.connect(self.export_profile)
+        self.ui.importBtn.clicked.connect(self.import_profile)
+        self.ui.mergeBtn.clicked.connect(self.merge_profiles)
         self.ui.listeningChk.stateChanged.connect(self.slot_listening_enabled)
         self.ui.sliderVolume.valueChanged.connect(lambda: self.m_sound.set_volume(self.ui.sliderVolume.value()))
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-        position = self.load_from_database()
-        self.ui.profileCbx.currentIndexChanged.connect(self.slot_profile_changed)
-        if position > 0:
-            self.ui.profileCbx.setCurrentIndex(position)
-        elif position == 0:
-            self.slot_profile_changed(position)
+        self.init_profiles()
 
         language_position = self.load_languages()
         self.ui.languageCbx.currentIndexChanged.connect(self.language_changed)
@@ -49,6 +48,37 @@ class MainWnd(QWidget):
             self.language_changed(language_position)
 
         self.check_buttons_states()
+
+    def init_profiles(self):
+        self.ui.profileCbx.clear()
+        position = self.load_from_database()
+        self.ui.profileCbx.currentIndexChanged.connect(self.slot_profile_changed)
+        if position > 0:
+            self.ui.profileCbx.setCurrentIndex(position)
+        elif position == 0:
+            self.slot_profile_changed(position)
+
+    def export_profile(self):
+        path = QFileDialog.getExistingDirectory(self, 'Select a location for extracting profiles', HOME_DIR)
+        if not path:
+            return
+        copy_profiles_to_dir(path)
+
+    def import_profile(self):
+        (path, _) = QFileDialog.getOpenFileName(self, 'Select a file for importing profiles from', HOME_DIR,
+                                                "Profiles json file (*.json)")
+        if not path:
+            return
+        import_profiles_from_file(path)
+        self.init_profiles()
+
+    def merge_profiles(self):
+        (path, _) = QFileDialog.getOpenFileName(self, 'Select a file for merging profiles with', HOME_DIR,
+                                                "Profiles json file (*.json)")
+        if not path:
+            return
+        merge_profiles(path)
+        self.init_profiles()
 
     def check_buttons_states(self):
         enabled = self.ui.profileCbx.count() > 0
@@ -69,32 +99,27 @@ class MainWnd(QWidget):
 
             w_profile = json.loads(w_json_profile)
             w_profiles.append(w_profile)
-
-        with open(get_settings_path("profiles.json"), "w", encoding="utf-8") as f:
-            json.dump(w_profiles, f, indent=4)
-            f.close()
+        save_profiles(w_profiles)
 
     def load_from_database(self):
         selected_profile = get_config('profile')
         selected_profile_position = 0
-        with open(get_settings_path("profiles.json"), "r", encoding="utf-8") as f:
-            profiles = f.read()
-            f.close()
-            no_of_profiles = 0
+        profiles = read_profiles()
+        no_of_profiles = 0
 
-            # noinspection PyBroadException
-            try:
-                w_profiles = json.loads(profiles)
-                no_of_profiles = len(w_profiles)
-                print("No of profiles read from file: " + str(no_of_profiles))
-                for position, w_profile in enumerate(w_profiles):
-                    name = w_profile['name']
-                    w_json_profile = json.dumps(w_profile)
-                    self.ui.profileCbx.addItem(name, w_json_profile)
-                    if name == selected_profile:
-                        selected_profile_position = position
-            except Exception as e:
-                print("Error loading profiles: " + str(e))
+        # noinspection PyBroadException
+        try:
+            w_profiles = json.loads(profiles)
+            no_of_profiles = len(w_profiles)
+            print("No of profiles read from file: " + str(no_of_profiles))
+            for position, w_profile in enumerate(w_profiles):
+                name = w_profile['name']
+                w_json_profile = json.dumps(w_profile, ensure_ascii=False)
+                self.ui.profileCbx.addItem(name, w_json_profile)
+                if name == selected_profile:
+                    selected_profile_position = position
+        except Exception as e:
+            print("Error loading profiles: " + str(e))
 
         if no_of_profiles < 1:
             selected_profile_position = -1
@@ -135,7 +160,8 @@ class MainWnd(QWidget):
         w_profile_edit_wnd = ProfileEditWnd(None, self)
         if w_profile_edit_wnd.exec() == QDialog.DialogCode.Accepted:
             w_profile = w_profile_edit_wnd.m_profile
-            w_json_profile = json.dumps(w_profile)
+            w_profile['name'] = self.get_safe_name(w_profile['name'])
+            w_json_profile = json.dumps(w_profile, ensure_ascii=False)
             self.ui.profileCbx.addItem(w_profile['name'], w_json_profile)
             self.ui.profileCbx.setCurrentIndex(self.ui.profileCbx.count() - 1)
             self.save_to_database()
@@ -150,7 +176,7 @@ class MainWnd(QWidget):
             w_profile = w_profile_edit_wnd.m_profile
             self.m_profile_executor.set_profile(w_profile)
             self.ui.profileCbx.setItemText(w_idx, w_profile['name'])
-            w_json_profile = json.dumps(w_profile)
+            w_json_profile = json.dumps(w_profile, ensure_ascii=False)
             self.ui.profileCbx.setItemData(w_idx, w_json_profile)
             self.save_to_database()
 
@@ -158,24 +184,22 @@ class MainWnd(QWidget):
         text, ok_pressed = QInputDialog.getText(self, "Copy profile", "Enter new profile name:",
                                                 QLineEdit.EchoMode.Normal, "")
         if ok_pressed and text != '':
-            if self.name_exists(text):
-                return
+            text = self.get_safe_name(text)
             w_idx = self.ui.profileCbx.currentIndex()
             w_json_profile = self.ui.profileCbx.itemData(w_idx)
             w_profile = json.loads(w_json_profile)
             w_profile_copy = w_profile
             w_profile_copy['name'] = text
-            w_json_profile = json.dumps(w_profile_copy)
+            w_json_profile = json.dumps(w_profile_copy, ensure_ascii=False)
             self.ui.profileCbx.addItem(w_profile_copy['name'], w_json_profile)
+            self.ui.profileCbx.setCurrentIndex(self.ui.profileCbx.currentIndex() + 1)
+            self.save_to_database()
 
-    def name_exists(self, text):
-        all_items = [json.loads(self.ui.profileCbx.itemData(i)) for i in range(self.ui.profileCbx.count())]
-        found = False
-        i = 0
-        while not found and i < len(all_items):
-            found = all_items[i]['name'] == text
-            i += 1
-        return found
+    def get_safe_name(self, text):
+        return get_safe_name(
+            [json.loads(self.ui.profileCbx.itemData(i)) for i in range(self.ui.profileCbx.count())],
+            text
+        )
 
     def slot_remove_profile(self):
         w_cur_idx = self.ui.profileCbx.currentIndex()

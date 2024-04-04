@@ -106,19 +106,24 @@ This expects a ``MangoHud.conf`` file located at ``~/.config/MangoHud/``. If you
 For this to work, you will need ``sed`` and ``grep`` which are probably already installed, if not install them with your package managers.
 
 ### Profiles
-Multiple profiles are supported.  To create a new profile for a specific task/game click new and the main profile editor window will be displayed.
-Profiles are saved to and loaded from ``profiles.json`` file located at ``/home/$USER/.local/share/LinVAM/`` and can be backed up from there.
+Multiple profiles are supported. To create a new profile for a specific task/game click ``Add`` and the main profile editor window will be displayed.
+Profiles are saved to and loaded from ``profiles.json`` file located at ``/home/$USER/.local/share/LinVAM/``.
+
+Backup options:
+- Use ``Export`` to export ``profiles.json`` file to selected location for backing up.
+- Use ``Import`` to import profiles from ``profiles.json`` file when restoring backup. CAUTION! This overrides any existing profiles.
+- Use ``Merge`` to add profiles from ``profiles.json`` file you selected. This doesn't delete existing profiles, it adds new ones alongside existing ones.
 
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/main-gui.png)
 ### Key combinations
 For inputting combinations, press the ``Start recording`` button and then enter the desired combination by pressing keys on the keyboard in the desired order. Once finished, press ``Stop recording``.
 
-![Comnbinations](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/combination.png)
+![Combinations](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/combination.png)
 ### Complex commands
 It is possible to add multiple actions to a voice command for complex macros with the ability to add a pause between each action.
 You can also assign mouse movements and system commands if you require (eg opening applications such as calculator, browser etc)
 
-![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/complex.png)
+![Commands GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/complex.png)
 
 ### Output audio
 In the Command Edit Dialog, chose 'Other' and then 'Play sound'. Pick the sound you would like to play.
