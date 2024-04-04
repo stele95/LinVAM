@@ -49,6 +49,37 @@ def import_profiles_from_file(file_path):
         save_profiles(json.loads(profiles))
 
 
+def merge_profiles(file_path):
+    current_profiles = json.loads(read_profiles())
+    with codecs.open(file_path, "r", encoding="utf-8") as f:
+        new_profiles = f.read()
+        f.close()
+    for profile in json.loads(new_profiles):
+        profile['name'] = get_safe_name(current_profiles, profile['name'])
+        current_profiles.append(profile)
+    save_profiles(current_profiles)
+
+
+def get_safe_name(profiles, text):
+    i = 0
+    while name_exists(profiles, text):
+        number = '(' + str(i) + ')'
+        if number in text:
+            text = str(text).replace(number, '').strip()
+        i += 1
+        text = text + ' (' + str(i) + ')'
+    return text
+
+
+def name_exists(profiles, text):
+    found = False
+    i = 0
+    while not found and i < len(profiles):
+        found = profiles[i]['name'] == text
+        i += 1
+    return found
+
+
 def save_to_commands_file(commands):
     with codecs.open(get_settings_path(COMMANDS_LIST_FILE), 'w', encoding="utf-8") as f:
         json.dump(commands, f, indent=4, ensure_ascii=False)

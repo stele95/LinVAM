@@ -11,7 +11,7 @@ from soundfiles import SoundFiles
 from ui_mainwnd import Ui_MainWidget
 from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
                   CONST_VERSION, init_config_folder, setup_mangohud, read_profiles, save_profiles,
-                  copy_profiles_to_dir, HOME_DIR, import_profiles_from_file)
+                  copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles)
 
 
 class MainWnd(QWidget):
@@ -50,6 +50,7 @@ class MainWnd(QWidget):
         self.check_buttons_states()
 
     def init_profiles(self):
+        self.ui.profileCbx.clear()
         position = self.load_from_database()
         self.ui.profileCbx.currentIndexChanged.connect(self.slot_profile_changed)
         if position > 0:
@@ -72,7 +73,12 @@ class MainWnd(QWidget):
         self.init_profiles()
 
     def merge_profiles(self):
-        print("Merge profiles")
+        (path, _) = QFileDialog.getOpenFileName(self, 'Select a file for merging profiles with', HOME_DIR,
+                                                "Profiles json file (*.json)")
+        if not path:
+            return
+        merge_profiles(path)
+        self.init_profiles()
 
     def check_buttons_states(self):
         enabled = self.ui.profileCbx.count() > 0
