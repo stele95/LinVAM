@@ -1,3 +1,4 @@
+import codecs
 import json
 import os
 import subprocess
@@ -11,6 +12,7 @@ YDOTOOLD_SOCKET_PATH = LINVAM_SETTINGS_FOLDER + '.ydotoold_socket'
 KEYS_SPLITTER = '->'
 OLD_KEYS_SPLITTER = '+'
 DEFAULT_KEY_DELAY_IN_MILLISECONDS = 60
+PROFILES_FILE_NAME = 'profiles.json'
 
 
 def get_supported_languages():
@@ -21,6 +23,29 @@ def get_supported_languages():
         'French',
         'German'
     ]
+
+
+def save_profiles(profiles):
+    with codecs.open(get_settings_path(PROFILES_FILE_NAME), "w", encoding="utf-8") as f:
+        json.dump(profiles, f, indent=4)
+        f.close()
+
+
+def read_profiles():
+    with codecs.open(get_settings_path(PROFILES_FILE_NAME), "r", encoding="utf-8") as f:
+        profiles = f.read()
+        f.close()
+    return profiles
+
+
+def save_profiles_to_file(directory_path):
+    os.system('cp ' + get_settings_path(PROFILES_FILE_NAME) + ' ' + directory_path)
+
+
+def save_to_commands_file(commands):
+    with codecs.open(get_settings_path(COMMANDS_LIST_FILE), 'w', encoding="utf-8") as f:
+        json.dump(commands, f, indent=4)
+        f.close()
 
 
 def get_language_code(language_name):
@@ -59,7 +84,7 @@ def init_config_folder():
 def get_settings_path(setting, default_value=None):
     file = LINVAM_SETTINGS_FOLDER + setting
     if not os.path.exists(file):
-        with (open(file, "w", encoding="utf-8")) as f:
+        with (codecs.open(file, "w", encoding="utf-8")) as f:
             if default_value is not None:
                 f.write(default_value)
             f.close()
@@ -78,13 +103,13 @@ def delete_linvam_run_file():
 def save_linvam_run_config(config_name, value):
     configs = get_linvam_run_configs()
     configs[config_name] = value
-    with open(get_linvam_run_file_path(), "w", encoding="utf-8") as f:
+    with codecs.open(get_linvam_run_file_path(), "w", encoding="utf-8") as f:
         json.dump(configs, f, indent=4)
         f.close()
 
 
 def get_linvam_run_configs():
-    with open(get_linvam_run_file_path(), "r", encoding="utf-8") as f:
+    with codecs.open(get_linvam_run_file_path(), "r", encoding="utf-8") as f:
         config_text = f.read()
         f.close()
     return json.loads(config_text)
@@ -102,20 +127,20 @@ def get_linvamrun_run_file_path():
 def save_linvamrun_run_config(config_name, value):
     configs = get_linvamrun_run_configs()
     configs[config_name] = value
-    with open(get_linvamrun_run_file_path(), "w", encoding="utf-8") as f:
+    with codecs.open(get_linvamrun_run_file_path(), "w", encoding="utf-8") as f:
         json.dump(configs, f, indent=4)
         f.close()
 
 
 def get_linvamrun_run_configs():
-    with open(get_linvamrun_run_file_path(), "r", encoding="utf-8") as f:
+    with codecs.open(get_linvamrun_run_file_path(), "r", encoding="utf-8") as f:
         config_text = f.read()
         f.close()
     return json.loads(config_text)
 
 
 def get_configs():
-    with open(get_settings_path('config', get_default_config_values()), "r", encoding="utf-8") as f:
+    with codecs.open(get_settings_path('config', get_default_config_values()), "r", encoding="utf-8") as f:
         config_text = f.read()
         f.close()
     return json.loads(config_text)
@@ -128,7 +153,7 @@ def get_config(config_name):
 def save_config(config_name, value):
     configs = get_configs()
     configs[config_name] = value
-    with open(get_settings_path('config'), "w", encoding="utf-8") as f:
+    with codecs.open(get_settings_path('config'), "w", encoding="utf-8") as f:
         json.dump(configs, f, indent=4)
         f.close()
 
@@ -172,7 +197,7 @@ def setup_mangohud(directory=MANGOHUD_CONF_DIR):
         init_config_folder()
         write_to_mangohud_language_script_file()
         write_to_mangohud_profile_script_file()
-        with (open(get_mangohud_file_path(directory), "a", encoding="utf-8")) as f:
+        with (codecs.open(get_mangohud_file_path(directory), "a", encoding="utf-8")) as f:
             f.writelines(line + '\n' for line in MANGOHUD_CONF_FILE_APPEND_COMMANDS)
             f.close()
         print('Setup finished.')
@@ -189,13 +214,13 @@ def get_mangohud_file_path(directory):
 
 
 def write_to_mangohud_language_script_file():
-    with (open(LINVAM_SETTINGS_FOLDER + 'mangohud-language.sh', "w", encoding="utf-8")) as f:
+    with (codecs.open(LINVAM_SETTINGS_FOLDER + 'mangohud-language.sh', "w", encoding="utf-8")) as f:
         f.writelines(line + '\n' for line in MANGOHUD_LANGUAGE_SCRIPT)
         f.close()
 
 
 def write_to_mangohud_profile_script_file():
-    with (open(LINVAM_SETTINGS_FOLDER + 'mangohud-profile.sh', "w", encoding="utf-8")) as f:
+    with (codecs.open(LINVAM_SETTINGS_FOLDER + 'mangohud-profile.sh', "w", encoding="utf-8")) as f:
         f.writelines(line + '\n' for line in MANGOHUD_PROFILE_SCRIPT)
         f.close()
 
