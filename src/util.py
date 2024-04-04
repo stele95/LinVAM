@@ -331,7 +331,7 @@ def create_key_event(w_key):
     w_key = map_key(w_key.strip())
     if len(w_key) < 1:
         return ''
-    return str(w_key) + ":1 " + str(w_key) + ":0"
+    return str(w_key) + ":1" + KEYS_SPLITTER + str(w_key) + ":0"
 
 
 # pylint: disable=too-many-return-statements
