@@ -49,8 +49,31 @@ class ProfileExecutor(threading.Thread):
     # noinspection PyUnusedLocal
     # pylint: disable=unused-argument
     def listen_callback(self, in_data, frame_count, time_info, status):
-        if self.recognizer is None:
+        result_string = self.get_listen_result(in_data)
+        if not result_string:
             return
+        self.check_commands(result_string)
+
+    # noinspection PyUnusedLocal
+    # pylint: disable=unused-argument
+    def listen_callback_debug(self, in_data, frame_count, time_info, status):
+        result_string = self.get_listen_result(in_data)
+        if not result_string:
+            return
+        print(str(result_string))
+        self.check_commands(result_string)
+
+    def check_commands(self, result_string):
+        for command in self.commands_list:
+            if command in result_string:
+                self.recognizer.Result()
+                print('Detected: ' + command)
+                self.do_command(command)
+                break
+
+    def get_listen_result(self, in_data):
+        if self.recognizer is None:
+            return ''
         if self.recognizer.AcceptWaveform(bytes(in_data)):
             result = self.recognizer.Result()
         else:
@@ -59,18 +82,9 @@ class ProfileExecutor(threading.Thread):
         try:
             result_string = result_json['partial']
         except KeyError:
-            return
+            return ''
             # result_string = result_json['text']
-
-        if result_string == '':
-            return
-
-        for command in self.commands_list:
-            if command in result_string:
-                self.recognizer.Result()
-                print('Detected: ' + command)
-                self.do_command(command)
-                break
+        return result_string
 
     def set_language(self, language):
         listening = self.m_stream is not None
@@ -87,8 +101,12 @@ class ProfileExecutor(threading.Thread):
     def start_stream(self):
         if self.recognizer is None:
             return
-        self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
-                                                   blocksize=4000, callback=self.listen_callback)
+        if self.p_parent.m_config['debug']:
+            self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
+                                                       blocksize=4000, callback=self.listen_callback_debug)
+        else:
+            self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
+                                                       blocksize=4000, callback=self.listen_callback)
         self.m_stream.start()
 
     def set_profile(self, p_profile):
@@ -153,9 +171,9 @@ class ProfileExecutor(threading.Thread):
             self.m_sound.stop()
         elif w_action_name == 'mouse move action':
             if p_action['absolute']:
-                command = 'mousemove --absolute -x' + str(p_action['x']) + " -y " + str(p_action['y'])
+                command = 'mousemove --absolute -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
             else:
-                command = 'mousemove -x' + str(p_action['x']) + " -y " + str(p_action['y'])
+                command = 'mousemove -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
             self.execute_ydotool_command(command)
         elif w_action_name == 'mouse click action':
             w_type = p_action['type']
@@ -196,6 +214,8 @@ class ProfileExecutor(threading.Thread):
     def execute_ydotool_command(self, command):
         if self.ydotoold is not None:
             os.system('env YDOTOOL_SOCKET=' + YDOTOOLD_SOCKET_PATH + ' ydotool ' + command)
+            if self.p_parent.m_config['debug']:
+                print('Executed ydotool command: ' + command)
         else:
             print('ydotoold daemon not running')
 
@@ -266,4 +286,3 @@ class ProfileExecutor(threading.Thread):
     def press_key(self, action):
         events = str(action['key_events']).replace(KEYS_SPLITTER, ' ')
         self.execute_ydotool_command('key -d ' + str(action['delay']) + ' ' + events)
-        print("Command: ", action['key'])

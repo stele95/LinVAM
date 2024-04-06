@@ -17,7 +17,8 @@ class LinVAMRun:
         self.m_config = {
             'profileName': '',
             'language': self.get_language_from_database(),
-            'openCommandsFile': 0
+            'openCommandsFile': 0,
+            'debug': 0
         }
         init_config_folder()
         self.m_sound = SoundFiles()
@@ -60,6 +61,8 @@ class LinVAMRun:
                         self.m_config['language'] = arg_split[1]
                     case '--open-commands':
                         self.m_config['openCommandsFile'] = 1
+                    case '--debug':
+                        self.m_config['debug'] = 1
             except Exception as ex:
                 print('Error parsing argument ' + str(argument) + ": " + str(ex))
 

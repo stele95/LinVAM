@@ -239,16 +239,22 @@ class MainWnd(QWidget):
 
     def handle_args(self):
         self.m_config = {
-            'testEnv': 0,
+            'debug': 0,
         }
 
         if len(sys.argv) == 1:
             return
 
-        for i in range(1, len(sys.argv)):
-            if sys.argv[i] == '-testEnv':
-                self.m_config['testEnv'] = 1
-            i += 1
+        for argument in sys.argv:
+            # noinspection PyBroadException
+            # pylint: disable=bare-except
+            try:
+                args_split = argument.split('=')
+                match args_split[0]:
+                    case '--debug':
+                        self.m_config['debug'] = 1
+            except Exception as ex:
+                print('Error parsing argument ' + str(argument) + ": " + str(ex))
 
 
 if __name__ == "__main__":
