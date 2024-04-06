@@ -171,9 +171,9 @@ class ProfileExecutor(threading.Thread):
             self.m_sound.stop()
         elif w_action_name == 'mouse move action':
             if p_action['absolute']:
-                command = 'mousemove --absolute -x' + str(p_action['x']) + " -y " + str(p_action['y'])
+                command = 'mousemove --absolute -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
             else:
-                command = 'mousemove -x' + str(p_action['x']) + " -y " + str(p_action['y'])
+                command = 'mousemove -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
             self.execute_ydotool_command(command)
         elif w_action_name == 'mouse click action':
             w_type = p_action['type']
