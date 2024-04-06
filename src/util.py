@@ -557,8 +557,8 @@ def map_key(w_key):
 
 MANGOHUD_CONF_FILE_APPEND_COMMANDS = [
     'custom_text=LinVAM',
-    'exec=sh ~/.local/share/LinVAM/mangohud-profile.sh',
-    'exec=sh ~/.local/share/LinVAM/mangohud-language.sh'
+    'exec=source ~/.local/share/LinVAM/mangohud-profile.sh',
+    'exec=source ~/.local/share/LinVAM/mangohud-language.sh'
 ]
 
 MANGOHUD_LANGUAGE_SCRIPT = [
