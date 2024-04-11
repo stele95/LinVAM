@@ -123,7 +123,7 @@ class ProfileExecutor(threading.Thread):
         print('Profile: ' + self.m_profile['name'])
         save_to_commands_file(self.commands_list)
         # this is a dirty fix until the whole keywords recognition is refactored
-        self.commands_list.sort(key=lambda command: len(command), reverse=True)
+        self.commands_list.sort(key=len, reverse=True)
 
     def set_enable_listening(self, p_enable):
         if self.recognizer is None:
