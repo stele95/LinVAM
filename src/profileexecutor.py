@@ -177,7 +177,7 @@ class ProfileExecutor(threading.Thread):
         elif w_action_name == 'mouse move action':
             self._move_mouse(p_action)
         elif w_action_name == 'mouse click action':
-            self._click_mouse_key_ydotool(p_action)
+            self._click_mouse_key(p_action)
         elif w_action_name == 'mouse scroll action':
             self._scroll_mouse_ydotool(p_action)
 
@@ -201,6 +201,28 @@ class ProfileExecutor(threading.Thread):
     def _scroll_mouse_ydotool(self, p_action):
         command = 'mousemove --wheel -x 0 -y' + str(p_action['delta'])
         self._execute_ydotool_command(command)
+
+    def _click_mouse_key(self, action):
+        if self.p_parent.m_config['ydotool']:
+            self._click_mouse_key_mouse(action)
+        else:
+            self._click_mouse_key_ydotool(action)
+
+    @staticmethod
+    def _click_mouse_key_mouse(p_action):
+        w_type = p_action['type']
+        w_button = p_action['button']
+        match w_type:
+            case 1:
+                mouse.press(w_button)
+            case 0:
+                mouse.release(w_button)
+            case 10:
+                mouse.click(w_button)
+            case 11:
+                mouse.double_click(w_button)
+            case _:
+                print("Unknown mouse type " + w_type + " , skipping")
 
     def _click_mouse_key_ydotool(self, p_action):
         w_type = p_action['type']
