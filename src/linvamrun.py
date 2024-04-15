@@ -20,7 +20,8 @@ class LinVAMRun:
             'language': self.get_language_from_database(),
             'openCommandsFile': 0,
             'debug': 0,
-            'ydotool': 0
+            'keyboard': 0,
+            'mouse': 0
         }
         init_config_folder()
         self.m_sound = SoundFiles()

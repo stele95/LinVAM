@@ -25,7 +25,7 @@ class ProfileExecutor(threading.Thread):
         self.m_cmd_threads = {}
         self.p_parent = p_parent
         self.ydotoold = None
-        if self.p_parent.m_config['ydotool']:
+        if not self.p_parent.m_config['keyboard'] or not self.p_parent.m_config['mouse']:
             self.start_ydotoold()
 
         self.m_stream = None
@@ -182,10 +182,10 @@ class ProfileExecutor(threading.Thread):
             self._scroll_mouse_ydotool(p_action)
 
     def _move_mouse(self, action):
-        if self.p_parent.m_config['ydotool']:
-            self._move_mouse_ydotool(action)
-        else:
+        if self.p_parent.m_config['mouse']:
             self._move_mouse_mouse(action)
+        else:
+            self._move_mouse_ydotool(action)
 
     @staticmethod
     def _move_mouse_mouse(p_action):
@@ -206,10 +206,10 @@ class ProfileExecutor(threading.Thread):
         self._execute_ydotool_command(command)
 
     def _click_mouse_key(self, action):
-        if self.p_parent.m_config['ydotool']:
-            self._click_mouse_key_ydotool(action)
-        else:
+        if self.p_parent.m_config['mouse']:
             self._click_mouse_key_mouse(action)
+        else:
+            self._click_mouse_key_ydotool(action)
 
     @staticmethod
     def _click_mouse_key_mouse(p_action):
@@ -337,10 +337,10 @@ class ProfileExecutor(threading.Thread):
         self.m_sound.play(sound_file)
 
     def _press_key(self, action):
-        if self.p_parent.m_config['ydotool']:
-            self._press_key_ydotool(action)
-        else:
+        if self.p_parent.m_config['keyboard']:
             self._press_key_keyboard(action)
+        else:
+            self._press_key_ydotool(action)
 
     def _press_key_ydotool(self, action):
         events = str(action['key_events']).replace(KEYS_SPLITTER, ' ')

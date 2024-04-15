@@ -28,8 +28,10 @@ def handle_args(config):
             match arg_split[0]:
                 case '--debug':
                     config['debug'] = 1
-                case '--use-ydotool':
-                    config['ydotool'] = 1
+                case '--use-keyboard':
+                    config['keyboard'] = 1
+                case '--use-mouse':
+                    config['mouse'] = 1
                 case '--profile':
                     config['profileName'] = arg_split[1]
                 case '--language':

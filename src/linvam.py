@@ -22,7 +22,8 @@ class MainWnd(QWidget):
 
         self.m_config = {
             'debug': 0,
-            'ydotool': 0
+            'keyboard': 0,
+            'mouse': 0
         }
         self.m_active_profile = None
         self.ui = Ui_MainWidget()
