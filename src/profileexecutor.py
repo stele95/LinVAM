@@ -161,7 +161,7 @@ class ProfileExecutor(threading.Thread):
         # {'name': 'mouse wheel action', 'delta':10}
         w_action_name = p_action['name']
         if w_action_name == 'key action':
-            self._press_key(p_action)
+            self._press_key_ydotool(p_action)
         elif w_action_name == 'pause action':
             print("Sleep ", p_action['time'])
             time.sleep(p_action['time'])
@@ -172,24 +172,24 @@ class ProfileExecutor(threading.Thread):
         elif w_action_name == 'stop sound':
             self.m_sound.stop()
         elif w_action_name == 'mouse move action':
-            self._move_mouse(p_action)
+            self._move_mouse_ydotool(p_action)
         elif w_action_name == 'mouse click action':
-            self._click_mouse_key(p_action)
+            self._click_mouse_key_ydotool(p_action)
         elif w_action_name == 'mouse scroll action':
-            self._scroll_mouse(p_action)
+            self._scroll_mouse_ydotool(p_action)
 
-    def _move_mouse(self, p_action):
+    def _move_mouse_ydotool(self, p_action):
         if p_action['absolute']:
             command = 'mousemove --absolute -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
         else:
             command = 'mousemove -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
         self._execute_ydotool_command(command)
 
-    def _scroll_mouse(self, p_action):
+    def _scroll_mouse_ydotool(self, p_action):
         command = 'mousemove --wheel -x 0 -y' + str(p_action['delta'])
         self._execute_ydotool_command(command)
 
-    def _click_mouse_key(self, p_action):
+    def _click_mouse_key_ydotool(self, p_action):
         w_type = p_action['type']
         w_button = p_action['button']
         click_command = '0x'
@@ -294,6 +294,6 @@ class ProfileExecutor(threading.Thread):
                       + p_cmd_name['file'])
         self.m_sound.play(sound_file)
 
-    def _press_key(self, action):
+    def _press_key_ydotool(self, action):
         events = str(action['key_events']).replace(KEYS_SPLITTER, ' ')
         self._execute_ydotool_command('key -d ' + str(action['delay']) + ' ' + events)
