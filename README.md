@@ -141,3 +141,9 @@ Example:
 Default recognition accuracy should be good enough for most usages.
 If you want to improve voice recognition accuracy, please see this resource on how to train the acoustic model:
 https://alphacephei.com/vosk/adaptation
+
+## Debugging if something isn't working
+You can use the following arguments with ``linvam`` or ``linvamrun`` for debugging when something isn't working:
+- ``--debug`` - prints additional info while running
+- ``--use-keyboard`` - LinVAM will try and input keyboard events directly to ``input`` instead of through ``ydotool``
+- ``--use-mouse`` - LinVAM will try and input mouse events directly to ``input`` instead of through ``ydotool`` (works on X11 only for now)

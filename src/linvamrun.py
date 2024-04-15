@@ -7,7 +7,8 @@ import sys
 from profileexecutor import ProfileExecutor
 from soundfiles import SoundFiles
 from util import (get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file, CONST_VERSION,
-                  init_config_folder, LINVAM_COMMANDS_FILE_PATH, read_profiles, update_profiles_for_new_version)
+                  init_config_folder, LINVAM_COMMANDS_FILE_PATH, read_profiles, update_profiles_for_new_version,
+                  handle_args)
 
 
 class LinVAMRun:
@@ -18,14 +19,16 @@ class LinVAMRun:
             'profileName': '',
             'language': self.get_language_from_database(),
             'openCommandsFile': 0,
-            'debug': 0
+            'debug': 0,
+            'keyboard': 0,
+            'mouse': 0
         }
         init_config_folder()
         self.m_sound = SoundFiles()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    def start_listening(self, run_args):
-        self.handle_args(run_args)
+    def start_listening(self):
+        handle_args(self.m_config)
         self.m_profile_executor = ProfileExecutor(self)
         language = self.m_config['language']
         self.m_profile_executor.set_language(language)
@@ -45,26 +48,6 @@ class LinVAMRun:
                 subprocess.Popen(['xdg-open', LINVAM_COMMANDS_FILE_PATH])
         else:
             print('linvamrun: Profile not found, not listening...')
-
-    def handle_args(self, run_args):
-        if len(run_args) == 0:
-            return
-        for argument in run_args:
-            # noinspection PyBroadException
-            # pylint: disable=bare-except
-            try:
-                arg_split = argument.split('=')
-                match arg_split[0]:
-                    case '--profile':
-                        self.m_config['profileName'] = arg_split[1]
-                    case '--language':
-                        self.m_config['language'] = arg_split[1]
-                    case '--open-commands':
-                        self.m_config['openCommandsFile'] = 1
-                    case '--debug':
-                        self.m_config['debug'] = 1
-            except Exception as ex:
-                print('Error parsing argument ' + str(argument) + ": " + str(ex))
 
     # noinspection PyUnusedLocal
     # pylint: disable=unused-argument
@@ -104,7 +87,6 @@ if __name__ == "__main__":
         print("Version: " + str(CONST_VERSION))
         sys.exit()
     linvamrun = LinVAMRun()
-    args = []
     RUN_COMMANDS = []
     IS_ARGS = True
     if len(sys.argv) > 1:
@@ -113,12 +95,10 @@ if __name__ == "__main__":
             if IS_ARGS:
                 if arg == '--':
                     IS_ARGS = False
-                else:
-                    args.append(arg)
             else:
                 RUN_COMMANDS.append(arg)
             i += 1
-    linvamrun.start_listening(args)
+    linvamrun.start_listening()
     if len(RUN_COMMANDS) > 0:
         try:
             result = subprocess.run(RUN_COMMANDS, check=False)

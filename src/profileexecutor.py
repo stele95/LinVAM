@@ -9,6 +9,8 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
+from keyboard import nixmouse as _os_mouse
+from keyboard import nixkeyboard as _os_keyboard
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
                   KEYS_SPLITTER, save_to_commands_file)
 
@@ -23,7 +25,8 @@ class ProfileExecutor(threading.Thread):
         self.m_cmd_threads = {}
         self.p_parent = p_parent
         self.ydotoold = None
-        self.start_ydotoold()
+        if not self.p_parent.m_config['keyboard'] or not self.p_parent.m_config['mouse']:
+            self.start_ydotoold()
 
         self.m_stream = None
 
@@ -68,7 +71,7 @@ class ProfileExecutor(threading.Thread):
             if command in result_string:
                 self.recognizer.Result()
                 print('Detected: ' + command)
-                self.do_command(command)
+                self._do_command(command)
                 break
 
     def get_listen_result(self, in_data):
@@ -102,11 +105,11 @@ class ProfileExecutor(threading.Thread):
         if self.recognizer is None:
             return
         if self.p_parent.m_config['debug']:
-            self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
-                                                       blocksize=4000, callback=self.listen_callback_debug)
+            callback = self.listen_callback_debug
         else:
-            self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
-                                                       blocksize=4000, callback=self.listen_callback)
+            callback = self.listen_callback
+        self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
+                                                   blocksize=4000, callback=callback)
         self.m_stream.start()
 
     def set_profile(self, p_profile):
@@ -161,59 +164,117 @@ class ProfileExecutor(threading.Thread):
         # {'name': 'mouse wheel action', 'delta':10}
         w_action_name = p_action['name']
         if w_action_name == 'key action':
-            self.press_key(p_action)
+            self._press_key(p_action)
         elif w_action_name == 'pause action':
             print("Sleep ", p_action['time'])
             time.sleep(p_action['time'])
         elif w_action_name == 'command stop action':
-            self.stop_command(p_action['command name'])
+            self._stop_command(p_action['command name'])
         elif w_action_name in ['command play sound', 'play sound']:
-            self.play_sound(p_action)
+            self._play_sound(p_action)
         elif w_action_name == 'stop sound':
             self.m_sound.stop()
         elif w_action_name == 'mouse move action':
-            if p_action['absolute']:
-                command = 'mousemove --absolute -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
-            else:
-                command = 'mousemove -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
-            self.execute_ydotool_command(command)
+            self._move_mouse(p_action)
         elif w_action_name == 'mouse click action':
-            w_type = p_action['type']
-            w_button = p_action['button']
-            click_command = '0x'
-            match w_type:
-                case 1:
-                    click_command += '4'
-                case 0:
-                    click_command += '8'
-                case 10:
-                    click_command += 'C'
-                case 11:
-                    click_command += 'C'
-                case _:
-                    click_command += '0'
-
-            match w_button:
-                case 'left':
-                    click_command += '0'
-                case 'middle':
-                    click_command += '2'
-                case 'right':
-                    click_command += '1'
-                case _:
-                    click_command += '0'
-
-            args = ""
-            if w_type == 11:
-                args = "--repeat 2"
-
-            command = 'click ' + args + " --next-delay 25 " + click_command
-            self.execute_ydotool_command(command)
+            self._click_mouse_key(p_action)
         elif w_action_name == 'mouse scroll action':
-            command = 'mousemove --wheel -x 0 -y' + str(p_action['delta'])
-            self.execute_ydotool_command(command)
+            self._scroll_mouse(p_action)
 
-    def execute_ydotool_command(self, command):
+    def _move_mouse(self, action):
+        if self.p_parent.m_config['mouse']:
+            self._move_mouse_mouse(action)
+        else:
+            self._move_mouse_ydotool(action)
+
+    @staticmethod
+    def _move_mouse_mouse(p_action):
+        if p_action['absolute']:
+            _os_mouse.move_to(p_action['x'], p_action['y'])
+        else:
+            _os_mouse.move_relative(p_action['x'], p_action['y'])
+
+    def _move_mouse_ydotool(self, p_action):
+        if p_action['absolute']:
+            command = 'mousemove --absolute -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
+        else:
+            command = 'mousemove -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
+        self._execute_ydotool_command(command)
+
+    def _scroll_mouse(self, action):
+        if self.p_parent.m_config['mouse']:
+            self._scroll_mouse_mouse(action)
+        else:
+            self._scroll_mouse_ydotool(action)
+
+    @staticmethod
+    def _scroll_mouse_mouse(p_action):
+        _os_mouse.wheel(p_action('delta'))
+
+    def _scroll_mouse_ydotool(self, p_action):
+        command = 'mousemove --wheel -x 0 -y' + str(p_action['delta'])
+        self._execute_ydotool_command(command)
+
+    def _click_mouse_key(self, action):
+        if self.p_parent.m_config['mouse']:
+            self._click_mouse_key_mouse(action)
+        else:
+            self._click_mouse_key_ydotool(action)
+
+    @staticmethod
+    def _click_mouse_key_mouse(p_action):
+        w_type = p_action['type']
+        w_button = p_action['button']
+        match w_type:
+            case 1:
+                _os_mouse.press(w_button)
+            case 0:
+                _os_mouse.release(w_button)
+            case 10:
+                _os_mouse.press(w_button)
+                _os_mouse.release(w_button)
+            case 11:
+                _os_mouse.press(w_button)
+                _os_mouse.release(w_button)
+                _os_mouse.press(w_button)
+                _os_mouse.release(w_button)
+            case _:
+                print("Unknown mouse type " + w_type + " , skipping")
+
+    def _click_mouse_key_ydotool(self, p_action):
+        w_type = p_action['type']
+        w_button = p_action['button']
+        click_command = '0x'
+        match w_type:
+            case 1:
+                click_command += '4'
+            case 0:
+                click_command += '8'
+            case 10:
+                click_command += 'C'
+            case 11:
+                click_command += 'C'
+            case _:
+                click_command += '0'
+
+        match w_button:
+            case 'left':
+                click_command += '0'
+            case 'middle':
+                click_command += '2'
+            case 'right':
+                click_command += '1'
+            case _:
+                click_command += '0'
+
+        args = ""
+        if w_type == 11:
+            args = "--repeat 2"
+
+        command = 'click ' + args + " --next-delay 25 " + click_command
+        self._execute_ydotool_command(command)
+
+    def _execute_ydotool_command(self, command):
         if self.ydotoold is not None:
             os.system('env YDOTOOL_SOCKET=' + YDOTOOLD_SOCKET_PATH + ' ydotool ' + command)
             if self.p_parent.m_config['debug']:
@@ -240,8 +301,8 @@ class ProfileExecutor(threading.Thread):
             self.m_stop = True
             threading.Thread.join(self)
 
-    def do_command(self, p_cmd_name):
-        w_command = self.get_command_for_executing(p_cmd_name)
+    def _do_command(self, p_cmd_name):
+        w_command = self._get_command_for_executing(p_cmd_name)
         if w_command is None:
             return
         w_actions = w_command['actions']
@@ -258,7 +319,7 @@ class ProfileExecutor(threading.Thread):
             w_cmd_thread.start()
             self.m_cmd_threads[p_cmd_name] = w_cmd_thread
 
-    def get_command_for_executing(self, cmd_name):
+    def _get_command_for_executing(self, cmd_name):
         if self.m_profile is None:
             return None
 
@@ -275,16 +336,35 @@ class ProfileExecutor(threading.Thread):
                 break
         return command
 
-    def stop_command(self, p_cmd_name):
+    def _stop_command(self, p_cmd_name):
         if p_cmd_name in self.m_cmd_threads:
             self.m_cmd_threads[p_cmd_name].stop()
             del self.m_cmd_threads[p_cmd_name]
 
-    def play_sound(self, p_cmd_name):
+    def _play_sound(self, p_cmd_name):
         sound_file = (get_voice_packs_folder_path() + p_cmd_name['pack'] + '/' + p_cmd_name['cat'] + '/'
                       + p_cmd_name['file'])
         self.m_sound.play(sound_file)
 
-    def press_key(self, action):
+    def _press_key(self, action):
+        if self.p_parent.m_config['keyboard']:
+            self._press_key_keyboard(action)
+        else:
+            self._press_key_ydotool(action)
+
+    def _press_key_ydotool(self, action):
         events = str(action['key_events']).replace(KEYS_SPLITTER, ' ')
-        self.execute_ydotool_command('key -d ' + str(action['delay']) + ' ' + events)
+        self._execute_ydotool_command('key -d ' + str(action['delay']) + ' ' + events)
+
+    @staticmethod
+    def _press_key_keyboard(action):
+        events = str(action['key_events']).split(KEYS_SPLITTER)
+        for event in events:
+            splits = event.split(':')
+            code = int(splits[0])
+            match splits[1]:
+                case '1':
+                    _os_keyboard.press(code)
+                    time.sleep(int(action['delay']) / 1000)
+                case '0':
+                    _os_keyboard.release(code)

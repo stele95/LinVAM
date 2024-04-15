@@ -12,7 +12,7 @@ from ui_mainwnd import Ui_MainWidget
 from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
                   CONST_VERSION, init_config_folder, setup_mangohud, read_profiles, save_profiles,
                   copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name,
-                  update_profiles_for_new_version)
+                  update_profiles_for_new_version, handle_args)
 
 
 class MainWnd(QWidget):
@@ -20,11 +20,15 @@ class MainWnd(QWidget):
         super().__init__(p_parent)
         update_profiles_for_new_version()
 
-        self.m_config = None
+        self.m_config = {
+            'debug': 0,
+            'keyboard': 0,
+            'mouse': 0
+        }
         self.m_active_profile = None
         self.ui = Ui_MainWidget()
         self.ui.setupUi(self)
-        self.handle_args()
+        handle_args(self.m_config)
         init_config_folder()
         self.m_sound = SoundFiles()
         self.m_profile_executor = ProfileExecutor(self)
@@ -236,25 +240,6 @@ class MainWnd(QWidget):
         self.m_profile_executor.shutdown()
         delete_linvam_run_file()
         event.accept()
-
-    def handle_args(self):
-        self.m_config = {
-            'debug': 0,
-        }
-
-        if len(sys.argv) == 1:
-            return
-
-        for argument in sys.argv:
-            # noinspection PyBroadException
-            # pylint: disable=bare-except
-            try:
-                args_split = argument.split('=')
-                match args_split[0]:
-                    case '--debug':
-                        self.m_config['debug'] = 1
-            except Exception as ex:
-                print('Error parsing argument ' + str(argument) + ": " + str(ex))
 
 
 if __name__ == "__main__":

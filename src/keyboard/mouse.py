@@ -9,7 +9,7 @@ import platform as _platform
 if _platform.system() == 'Windows':
     from. import _winmouse as _os_mouse
 elif _platform.system() == 'Linux':
-    from. import _nixmouse as _os_mouse
+    from. import nixmouse as _os_mouse
 elif _platform.system() == 'Darwin':
     from. import _darwinmouse as _os_mouse
 else:
