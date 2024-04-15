@@ -240,6 +240,7 @@ class MainWnd(QWidget):
     def handle_args(self):
         self.m_config = {
             'debug': 0,
+            'ydotool': 0
         }
 
         if len(sys.argv) == 1:
@@ -253,6 +254,8 @@ class MainWnd(QWidget):
                 match args_split[0]:
                     case '--debug':
                         self.m_config['debug'] = 1
+                    case '--use-ydotool':
+                        self.m_config['ydotool'] = 1
             except Exception as ex:
                 print('Error parsing argument ' + str(argument) + ": " + str(ex))
 
