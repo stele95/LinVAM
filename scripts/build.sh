@@ -28,6 +28,7 @@ python3 -m nuitka \
    --follow-import-to=profileexecutor \
    --follow-import-to=soundfiles \
    --follow-import-to=util \
+   --follow-import-to=keyboard \
    ../src/linvamrun.py
 
 #python3 -m nuitka \
