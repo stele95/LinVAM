@@ -68,7 +68,7 @@ class ProfileExecutor(threading.Thread):
             if command in result_string:
                 self.recognizer.Result()
                 print('Detected: ' + command)
-                self.do_command(command)
+                self._do_command(command)
                 break
 
     def get_listen_result(self, in_data):
@@ -161,35 +161,35 @@ class ProfileExecutor(threading.Thread):
         # {'name': 'mouse wheel action', 'delta':10}
         w_action_name = p_action['name']
         if w_action_name == 'key action':
-            self.press_key(p_action)
+            self._press_key(p_action)
         elif w_action_name == 'pause action':
             print("Sleep ", p_action['time'])
             time.sleep(p_action['time'])
         elif w_action_name == 'command stop action':
-            self.stop_command(p_action['command name'])
+            self._stop_command(p_action['command name'])
         elif w_action_name in ['command play sound', 'play sound']:
-            self.play_sound(p_action)
+            self._play_sound(p_action)
         elif w_action_name == 'stop sound':
             self.m_sound.stop()
         elif w_action_name == 'mouse move action':
-            self.move_mouse(p_action)
+            self._move_mouse(p_action)
         elif w_action_name == 'mouse click action':
-            self.click_mouse_key(p_action)
+            self._click_mouse_key(p_action)
         elif w_action_name == 'mouse scroll action':
-            self.scroll_mouse(p_action)
+            self._scroll_mouse(p_action)
 
-    def move_mouse(self, p_action):
+    def _move_mouse(self, p_action):
         if p_action['absolute']:
             command = 'mousemove --absolute -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
         else:
             command = 'mousemove -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
-        self.execute_ydotool_command(command)
+        self._execute_ydotool_command(command)
 
-    def scroll_mouse(self, p_action):
+    def _scroll_mouse(self, p_action):
         command = 'mousemove --wheel -x 0 -y' + str(p_action['delta'])
-        self.execute_ydotool_command(command)
+        self._execute_ydotool_command(command)
 
-    def click_mouse_key(self, p_action):
+    def _click_mouse_key(self, p_action):
         w_type = p_action['type']
         w_button = p_action['button']
         click_command = '0x'
@@ -220,9 +220,9 @@ class ProfileExecutor(threading.Thread):
             args = "--repeat 2"
 
         command = 'click ' + args + " --next-delay 25 " + click_command
-        self.execute_ydotool_command(command)
+        self._execute_ydotool_command(command)
 
-    def execute_ydotool_command(self, command):
+    def _execute_ydotool_command(self, command):
         if self.ydotoold is not None:
             os.system('env YDOTOOL_SOCKET=' + YDOTOOLD_SOCKET_PATH + ' ydotool ' + command)
             if self.p_parent.m_config['debug']:
@@ -249,8 +249,8 @@ class ProfileExecutor(threading.Thread):
             self.m_stop = True
             threading.Thread.join(self)
 
-    def do_command(self, p_cmd_name):
-        w_command = self.get_command_for_executing(p_cmd_name)
+    def _do_command(self, p_cmd_name):
+        w_command = self._get_command_for_executing(p_cmd_name)
         if w_command is None:
             return
         w_actions = w_command['actions']
@@ -267,7 +267,7 @@ class ProfileExecutor(threading.Thread):
             w_cmd_thread.start()
             self.m_cmd_threads[p_cmd_name] = w_cmd_thread
 
-    def get_command_for_executing(self, cmd_name):
+    def _get_command_for_executing(self, cmd_name):
         if self.m_profile is None:
             return None
 
@@ -284,16 +284,16 @@ class ProfileExecutor(threading.Thread):
                 break
         return command
 
-    def stop_command(self, p_cmd_name):
+    def _stop_command(self, p_cmd_name):
         if p_cmd_name in self.m_cmd_threads:
             self.m_cmd_threads[p_cmd_name].stop()
             del self.m_cmd_threads[p_cmd_name]
 
-    def play_sound(self, p_cmd_name):
+    def _play_sound(self, p_cmd_name):
         sound_file = (get_voice_packs_folder_path() + p_cmd_name['pack'] + '/' + p_cmd_name['cat'] + '/'
                       + p_cmd_name['file'])
         self.m_sound.play(sound_file)
 
-    def press_key(self, action):
+    def _press_key(self, action):
         events = str(action['key_events']).replace(KEYS_SPLITTER, ' ')
-        self.execute_ydotool_command('key -d ' + str(action['delay']) + ' ' + events)
+        self._execute_ydotool_command('key -d ' + str(action['delay']) + ' ' + events)
