@@ -24,7 +24,8 @@ class ProfileExecutor(threading.Thread):
         self.m_cmd_threads = {}
         self.p_parent = p_parent
         self.ydotoold = None
-        self.start_ydotoold()
+        if self.p_parent.m_config['ydotool']:
+            self.start_ydotoold()
 
         self.m_stream = None
 
