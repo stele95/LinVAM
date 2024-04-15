@@ -9,7 +9,7 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
-import keyboard
+from keyboard import nixkeyboard as _os_keyboard
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
                   KEYS_SPLITTER, save_to_commands_file)
 
@@ -310,9 +310,10 @@ class ProfileExecutor(threading.Thread):
         events = str(action['key_events']).split(KEYS_SPLITTER)
         for event in events:
             splits = event.split(':')
+            code = int(splits[0])
             match splits[1]:
-                case '0':
-                    keyboard.press(splits[0])
-                    time.sleep(action['delay'])
                 case '1':
-                    keyboard.release(splits[0])
+                    _os_keyboard.press(code)
+                    time.sleep(int(action['delay']) / 1000)
+                case '0':
+                    _os_keyboard.release(code)
