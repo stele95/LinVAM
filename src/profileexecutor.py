@@ -5,8 +5,8 @@ import signal
 import subprocess
 import threading
 import time
-
 import sounddevice
+import keyboard
 from vosk import Model, KaldiRecognizer
 
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
@@ -161,7 +161,7 @@ class ProfileExecutor(threading.Thread):
         # {'name': 'mouse wheel action', 'delta':10}
         w_action_name = p_action['name']
         if w_action_name == 'key action':
-            self._press_key_ydotool(p_action)
+            self._press_key(p_action)
         elif w_action_name == 'pause action':
             print("Sleep ", p_action['time'])
             time.sleep(p_action['time'])
@@ -294,6 +294,24 @@ class ProfileExecutor(threading.Thread):
                       + p_cmd_name['file'])
         self.m_sound.play(sound_file)
 
+    def _press_key(self, action):
+        if self.p_parent.m_config['ydotool']:
+            self._press_key_ydotool(action)
+        else:
+            self._press_key_keyboard(action)
+
     def _press_key_ydotool(self, action):
         events = str(action['key_events']).replace(KEYS_SPLITTER, ' ')
         self._execute_ydotool_command('key -d ' + str(action['delay']) + ' ' + events)
+
+    @staticmethod
+    def _press_key_keyboard(action):
+        events = str(action['key_events']).split(KEYS_SPLITTER)
+        for event in events:
+            splits = event.split(':')
+            match splits[1]:
+                case '0':
+                    keyboard.press(splits[0])
+                    time.sleep(action['delay'])
+                case '1':
+                    keyboard.release(splits[0])
