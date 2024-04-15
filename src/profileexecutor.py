@@ -9,6 +9,7 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
+import mouse
 from keyboard import nixkeyboard as _os_keyboard
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
                   KEYS_SPLITTER, save_to_commands_file)
@@ -174,11 +175,21 @@ class ProfileExecutor(threading.Thread):
         elif w_action_name == 'stop sound':
             self.m_sound.stop()
         elif w_action_name == 'mouse move action':
-            self._move_mouse_ydotool(p_action)
+            self._move_mouse(p_action)
         elif w_action_name == 'mouse click action':
             self._click_mouse_key_ydotool(p_action)
         elif w_action_name == 'mouse scroll action':
             self._scroll_mouse_ydotool(p_action)
+
+    def _move_mouse(self, action):
+        if self.p_parent.m_config['ydotool']:
+            self._move_mouse_ydotool(action)
+        else:
+            self._move_mouse_mouse(action)
+
+    @staticmethod
+    def _move_mouse_mouse(p_action):
+        mouse.move(p_action['x'], p_action['y'], absolute=p_action['absolute'])
 
     def _move_mouse_ydotool(self, p_action):
         if p_action['absolute']:
