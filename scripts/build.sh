@@ -20,6 +20,7 @@ python3 -m nuitka \
    --follow-import-to=ui_soundactioneditwnd \
    --follow-import-to=util \
    --follow-import-to=keyboard \
+   --follow-import-to=mouse \
    ../src/linvam.py
 
 python3 -m nuitka \
