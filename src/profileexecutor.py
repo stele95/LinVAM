@@ -5,10 +5,11 @@ import signal
 import subprocess
 import threading
 import time
+
 import sounddevice
-import keyboard
 from vosk import Model, KaldiRecognizer
 
+import keyboard
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
                   KEYS_SPLITTER, save_to_commands_file)
 
