@@ -3,6 +3,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 
 CONST_VERSION = '0.6.3'
 HOME_DIR = os.path.expanduser('~')
@@ -14,6 +15,29 @@ KEYS_SPLITTER = '->'
 OLD_KEYS_SPLITTER = '+'
 DEFAULT_KEY_DELAY_IN_MILLISECONDS = 60
 PROFILES_FILE_NAME = 'profiles.json'
+
+
+def handle_args(config):
+    if len(sys.argv) == 1:
+        return
+    for argument in sys.argv:
+        # noinspection PyBroadException
+        # pylint: disable=bare-except
+        try:
+            arg_split = argument.split('=')
+            match arg_split[0]:
+                case '--debug':
+                    config['debug'] = 1
+                case '--use-ydotool':
+                    config['ydotool'] = 1
+                case '--profile':
+                    config['profileName'] = arg_split[1]
+                case '--language':
+                    config['language'] = arg_split[1]
+                case '--open-commands':
+                    config['openCommandsFile'] = 1
+        except Exception as ex:
+            print('Error parsing argument ' + str(argument) + ": " + str(ex))
 
 
 def get_supported_languages():

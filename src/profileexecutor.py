@@ -102,11 +102,11 @@ class ProfileExecutor(threading.Thread):
         if self.recognizer is None:
             return
         if self.p_parent.m_config['debug']:
-            self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
-                                                       blocksize=4000, callback=self.listen_callback_debug)
+            callback = self.listen_callback_debug
         else:
-            self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
-                                                       blocksize=4000, callback=self.listen_callback)
+            callback = self.listen_callback_debug
+        self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
+                                                   blocksize=4000, callback=callback)
         self.m_stream.start()
 
     def set_profile(self, p_profile):
