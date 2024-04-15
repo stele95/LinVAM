@@ -9,7 +9,7 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
-import mouse
+from keyboard import nixmouse as _os_mouse
 from keyboard import nixkeyboard as _os_keyboard
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
                   KEYS_SPLITTER, save_to_commands_file)
@@ -189,7 +189,10 @@ class ProfileExecutor(threading.Thread):
 
     @staticmethod
     def _move_mouse_mouse(p_action):
-        mouse.move(p_action['x'], p_action['y'], absolute=p_action['absolute'])
+        if p_action['absolute']:
+            _os_mouse.move_to(p_action['x'], p_action['y'])
+        else:
+            _os_mouse.move_relative(p_action['x'], p_action['y'])
 
     def _move_mouse_ydotool(self, p_action):
         if p_action['absolute']:
@@ -204,9 +207,9 @@ class ProfileExecutor(threading.Thread):
 
     def _click_mouse_key(self, action):
         if self.p_parent.m_config['ydotool']:
-            self._click_mouse_key_mouse(action)
-        else:
             self._click_mouse_key_ydotool(action)
+        else:
+            self._click_mouse_key_mouse(action)
 
     @staticmethod
     def _click_mouse_key_mouse(p_action):
@@ -214,13 +217,17 @@ class ProfileExecutor(threading.Thread):
         w_button = p_action['button']
         match w_type:
             case 1:
-                mouse.press(w_button)
+                _os_mouse.press(w_button)
             case 0:
-                mouse.release(w_button)
+                _os_mouse.release(w_button)
             case 10:
-                mouse.click(w_button)
+                _os_mouse.press(w_button)
+                _os_mouse.release(w_button)
             case 11:
-                mouse.double_click(w_button)
+                _os_mouse.press(w_button)
+                _os_mouse.release(w_button)
+                _os_mouse.press(w_button)
+                _os_mouse.release(w_button)
             case _:
                 print("Unknown mouse type " + w_type + " , skipping")
 
