@@ -5,7 +5,7 @@ import re
 import subprocess
 import sys
 
-CONST_VERSION = '0.6.3'
+CONST_VERSION = '0.6.4-git'
 HOME_DIR = os.path.expanduser('~')
 LINVAM_SETTINGS_FOLDER = HOME_DIR + '/.local/share/LinVAM/'
 COMMANDS_LIST_FILE = 'commands.list'
