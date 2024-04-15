@@ -172,46 +172,55 @@ class ProfileExecutor(threading.Thread):
         elif w_action_name == 'stop sound':
             self.m_sound.stop()
         elif w_action_name == 'mouse move action':
-            if p_action['absolute']:
-                command = 'mousemove --absolute -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
-            else:
-                command = 'mousemove -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
-            self.execute_ydotool_command(command)
+            self.move_mouse(p_action)
         elif w_action_name == 'mouse click action':
-            w_type = p_action['type']
-            w_button = p_action['button']
-            click_command = '0x'
-            match w_type:
-                case 1:
-                    click_command += '4'
-                case 0:
-                    click_command += '8'
-                case 10:
-                    click_command += 'C'
-                case 11:
-                    click_command += 'C'
-                case _:
-                    click_command += '0'
-
-            match w_button:
-                case 'left':
-                    click_command += '0'
-                case 'middle':
-                    click_command += '2'
-                case 'right':
-                    click_command += '1'
-                case _:
-                    click_command += '0'
-
-            args = ""
-            if w_type == 11:
-                args = "--repeat 2"
-
-            command = 'click ' + args + " --next-delay 25 " + click_command
-            self.execute_ydotool_command(command)
+            self.click_mouse_key(p_action)
         elif w_action_name == 'mouse scroll action':
-            command = 'mousemove --wheel -x 0 -y' + str(p_action['delta'])
-            self.execute_ydotool_command(command)
+            self.scroll_mouse(p_action)
+
+    def move_mouse(self, p_action):
+        if p_action['absolute']:
+            command = 'mousemove --absolute -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
+        else:
+            command = 'mousemove -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
+        self.execute_ydotool_command(command)
+
+    def scroll_mouse(self, p_action):
+        command = 'mousemove --wheel -x 0 -y' + str(p_action['delta'])
+        self.execute_ydotool_command(command)
+
+    def click_mouse_key(self, p_action):
+        w_type = p_action['type']
+        w_button = p_action['button']
+        click_command = '0x'
+        match w_type:
+            case 1:
+                click_command += '4'
+            case 0:
+                click_command += '8'
+            case 10:
+                click_command += 'C'
+            case 11:
+                click_command += 'C'
+            case _:
+                click_command += '0'
+
+        match w_button:
+            case 'left':
+                click_command += '0'
+            case 'middle':
+                click_command += '2'
+            case 'right':
+                click_command += '1'
+            case _:
+                click_command += '0'
+
+        args = ""
+        if w_type == 11:
+            args = "--repeat 2"
+
+        command = 'click ' + args + " --next-delay 25 " + click_command
+        self.execute_ydotool_command(command)
 
     def execute_ydotool_command(self, command):
         if self.ydotoold is not None:
