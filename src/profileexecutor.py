@@ -179,7 +179,7 @@ class ProfileExecutor(threading.Thread):
         elif w_action_name == 'mouse click action':
             self._click_mouse_key(p_action)
         elif w_action_name == 'mouse scroll action':
-            self._scroll_mouse_ydotool(p_action)
+            self._scroll_mouse(p_action)
 
     def _move_mouse(self, action):
         if self.p_parent.m_config['mouse']:
@@ -200,6 +200,16 @@ class ProfileExecutor(threading.Thread):
         else:
             command = 'mousemove -x ' + str(p_action['x']) + " -y " + str(p_action['y'])
         self._execute_ydotool_command(command)
+
+    def _scroll_mouse(self, action):
+        if self.p_parent.m_config['mouse']:
+            self._scroll_mouse_mouse(action)
+        else:
+            self._scroll_mouse_ydotool(action)
+
+    @staticmethod
+    def _scroll_mouse_mouse(p_action):
+        _os_mouse.wheel(p_action('delta'))
 
     def _scroll_mouse_ydotool(self, p_action):
         command = 'mousemove --wheel -x 0 -y' + str(p_action['delta'])
