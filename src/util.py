@@ -141,6 +141,7 @@ def name_exists(profiles, text):
 
 
 def save_to_commands_file(commands):
+    commands.sort()
     with codecs.open(get_settings_path(COMMANDS_LIST_FILE), 'w', encoding="utf-8") as f:
         json.dump(commands, f, indent=4, ensure_ascii=False)
         f.close()
