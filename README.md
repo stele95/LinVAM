@@ -2,6 +2,8 @@
 Linux Voice Activated Macro
 
 ## Status
+This project is in a work in progress state, meaning both UI and functionality will be improved in the future.
+
 Currently supported languages (just for voice input, UI is in English):
 - English
 - Russian
@@ -11,7 +13,7 @@ Currently supported languages (just for voice input, UI is in English):
 
 Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice to text engine you can specify voice commands for the tool to recognise and actions to perform.
 
-### Planned additions
+### Planned additions 
 - Add location selection for output sounds instead of a hardcoded location
 - Support for joysticks and gaming devices
 
@@ -33,9 +35,6 @@ After installing from AUR, run ``sudo usermod -aG tty,input $USER`` to allow [ui
 - ffmpeg
 - [ydotool](https://github.com/ReimuNotMoe/ydotool)
 
-### Optional requirements
-- HCS voicepacks
-
 ### Install manually
 Since ``LinVAM`` relies on ``python`` to run, there are two ways of installing it. Both ways require that ``python3`` is installed. 
 
@@ -50,9 +49,7 @@ The steps for installing will change in the future to better support the recomme
 - install [ydotool](https://github.com/ReimuNotMoe/ydotool) and ffmpeg
 - Download the source code zip file from the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it, enter scripts folder, open terminal in that folder and execute the following command:
 
-
-    source setup-python-virtual-environment.sh && source build-and-install.sh
-
+      source setup-python-virtual-environment.sh && source build-and-install.sh
 
 - Don't forget to restart your device after finishing installation steps
 
