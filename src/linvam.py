@@ -78,7 +78,7 @@ class MainWnd(QWidget):
 
     def _stop_keyboard_listener(self):
         # noinspection PyBroadException
-        # pylint: disable=bare-except
+        # pylint: disable=bare-except,R0801
         try:
             if self.keyboard_listener is not None:
                 self.keyboard_listener()
