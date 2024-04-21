@@ -139,11 +139,11 @@ class ProfileExecutor(threading.Thread):
 
     def stop(self):
         if self.m_stream is not None:
-            print("Detection stopped")
             self.m_stream.stop()
             self.m_stream.close()
             self.m_stream = None
             self.recognizer.FinalResult()
+            print("Detection stopped")
 
     def shutdown(self):
         self.m_sound.stop()
