@@ -16,7 +16,7 @@ from util import (get_supported_languages, get_config, save_config, save_linvam_
                   CONST_VERSION, init_config_folder, setup_mangohud, read_profiles, save_profiles,
                   copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name,
                   update_profiles_for_new_version, handle_args, PUSH_TO_LISTEN_ENABLED_CONFIG,
-                  PUSH_TO_LISTEN_HOTKEY_CONFIG, KEYS_SPLITTER)
+                  PUSH_TO_LISTEN_HOTKEY_CONFIG, KEYS_SPLITTER, MOUSE_KEY_PTL_PREFIX)
 
 
 class MainWnd(QWidget):
@@ -111,8 +111,9 @@ class MainWnd(QWidget):
             return
         self._edit_ptl_keybind()
         button = event.button
-        self.ui.pushToListenHotkey.setText(('Mouse: ' + button).upper())
-        # save_config(PUSH_TO_LISTEN_HOTKEY_CONFIG, str(event_name)+KEYS_SPLITTER+str(event_code))
+        event_name = MOUSE_KEY_PTL_PREFIX + button
+        self.ui.pushToListenHotkey.setText(event_name.upper())
+        save_config(PUSH_TO_LISTEN_HOTKEY_CONFIG, str(event_name))
 
     def _setup_input_mode(self):
         ptl_enabled = get_config(PUSH_TO_LISTEN_ENABLED_CONFIG)
