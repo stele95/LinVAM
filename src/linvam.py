@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessa
 
 import keyboard
 import mouse
+from mouse import ButtonEvent
 from profileeditwnd import ProfileEditWnd
 from profileexecutor import ProfileExecutor
 from soundfiles import SoundFiles
@@ -71,10 +72,10 @@ class MainWnd(QWidget):
         else:
             self._stop_keyboard_listener()
             self.ui.btnEditKeybind.setText('Edit keybind')
-        if self.mouse_listener is None:
-            self.mouse_listener = mouse.hook(callback=self._on_mouse_key_event)
-        else:
-            self._stop_mouse_listener()
+        # if self.mouse_listener is None:
+        #     self.mouse_listener = mouse.hook(callback=self._on_mouse_key_event)
+        # else:
+        #     self._stop_mouse_listener()
 
     def _stop_keyboard_listener(self):
         # noinspection PyBroadException
@@ -91,7 +92,7 @@ class MainWnd(QWidget):
         # pylint: disable=bare-except
         try:
             if self.mouse_listener is not None:
-                self.mouse_listener()
+                mouse.unhook_all()
                 self.mouse_listener = None
         except Exception as ex:
             print(str(ex))
@@ -103,16 +104,15 @@ class MainWnd(QWidget):
         event_code = event.scan_code
         event_name = event.name
         self.ui.pushToListenHotkey.setText(event_name.upper())
-        save_config(PUSH_TO_LISTEN_HOTKEY_CONFIG, str(event_name)+KEYS_SPLITTER+str(event_code))
+        save_config(PUSH_TO_LISTEN_HOTKEY_CONFIG, str(event_name) + KEYS_SPLITTER + str(event_code))
 
     def _on_mouse_key_event(self, event):
-        if event.name == 'unknown':
+        if not isinstance(event, ButtonEvent):
             return
         self._edit_ptl_keybind()
-        event_code = event.scan_code
-        event_name = event.name
-        self.ui.pushToListenHotkey.setText(event_name.upper())
-        save_config(PUSH_TO_LISTEN_HOTKEY_CONFIG, str(event_name)+KEYS_SPLITTER+str(event_code))
+        button = event.button
+        self.ui.pushToListenHotkey.setText(('Mouse: ' + button).upper())
+        # save_config(PUSH_TO_LISTEN_HOTKEY_CONFIG, str(event_name)+KEYS_SPLITTER+str(event_code))
 
     def _setup_input_mode(self):
         ptl_enabled = get_config(PUSH_TO_LISTEN_ENABLED_CONFIG)

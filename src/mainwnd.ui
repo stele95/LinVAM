@@ -401,9 +401,15 @@ CAUTION! This will override all existing profiles.</string>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="maximumSize">
+       <property name="minimumSize">
         <size>
          <width>75</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>200</width>
          <height>16777215</height>
         </size>
        </property>
