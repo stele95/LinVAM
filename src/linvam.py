@@ -5,6 +5,7 @@ import sys
 
 from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessageBox, QLineEdit, QFileDialog
 
+import keyboard
 from profileeditwnd import ProfileEditWnd
 from profileexecutor import ProfileExecutor
 from soundfiles import SoundFiles
@@ -13,7 +14,7 @@ from util import (get_supported_languages, get_config, save_config, save_linvam_
                   CONST_VERSION, init_config_folder, setup_mangohud, read_profiles, save_profiles,
                   copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name,
                   update_profiles_for_new_version, handle_args, PUSH_TO_LISTEN_ENABLED_CONFIG,
-                  PUSH_TO_LISTEN_HOTKEY_CONFIG)
+                  PUSH_TO_LISTEN_HOTKEY_CONFIG, KEYS_SPLITTER)
 
 
 class MainWnd(QWidget):
@@ -27,6 +28,8 @@ class MainWnd(QWidget):
             'mouse': 0
         }
         self.m_active_profile = None
+        self.keyboard_listener = None
+        self.mouse_listener = None
         self.ui = Ui_MainWidget()
         self.ui.setupUi(self)
         self._setup_input_mode()
@@ -46,6 +49,7 @@ class MainWnd(QWidget):
         self.ui.sliderVolume.valueChanged.connect(lambda: self.m_sound.set_volume(self.ui.sliderVolume.value()))
         self.ui.rbAlways.clicked.connect(lambda: self._on_input_mode_changed(ptl_enabled=False))
         self.ui.rbPushToListen.clicked.connect(lambda: self._on_input_mode_changed(ptl_enabled=True))
+        self.ui.btnEditKeybind.clicked.connect(self._edit_ptl_keybind)
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
         self._init_profiles()
@@ -59,6 +63,56 @@ class MainWnd(QWidget):
 
         self._check_buttons_states()
 
+    def _edit_ptl_keybind(self):
+        if self.keyboard_listener is None:
+            self.keyboard_listener = keyboard.hook(callback=self._on_keyboard_key_event)
+            self.ui.btnEditKeybind.setText('Stop recording')
+        else:
+            self.stop_keyboard_listener()
+            self.ui.btnEditKeybind.setText('Edit keybind')
+        # if self.mouse_listener is None:
+        #     self.mouse_listener = mouse.hook(callback=self._on_mouse_key_event)
+        # else:
+        #     self.stop_mouse_listener()
+
+    def stop_keyboard_listener(self):
+        # noinspection PyBroadException
+        # pylint: disable=bare-except
+        try:
+            if self.keyboard_listener is not None:
+                self.keyboard_listener()
+                self.keyboard_listener = None
+        except Exception as ex:
+            print(str(ex))
+
+    def stop_mouse_listener(self):
+        # noinspection PyBroadException
+        # pylint: disable=bare-except
+        try:
+            if self.mouse_listener is not None:
+                self.mouse_listener()
+                self.mouse_listener = None
+        except Exception as ex:
+            print(str(ex))
+
+    def _on_keyboard_key_event(self, event):
+        if event.name == 'unknown':
+            return
+        self._edit_ptl_keybind()
+        event_code = event.scan_code
+        event_name = event.name
+        self.ui.pushToListenHotkey.setText(event_name.upper())
+        save_config(PUSH_TO_LISTEN_HOTKEY_CONFIG, str(event_name)+KEYS_SPLITTER+str(event_code))
+
+    def _on_mouse_key_event(self, event):
+        if event.name == 'unknown':
+            return
+        self._edit_ptl_keybind()
+        event_code = event.scan_code
+        event_name = event.name
+        self.ui.pushToListenHotkey.setText(event_name.upper())
+        save_config(PUSH_TO_LISTEN_HOTKEY_CONFIG, str(event_name)+KEYS_SPLITTER+str(event_code))
+
     def _setup_input_mode(self):
         ptl_enabled = get_config(PUSH_TO_LISTEN_ENABLED_CONFIG)
         ptl_enabled = bool(ptl_enabled)
@@ -68,7 +122,7 @@ class MainWnd(QWidget):
 
     def _on_input_mode_changed(self, ptl_enabled, save_to_config=True):
         ptl_hotkey = get_config(PUSH_TO_LISTEN_HOTKEY_CONFIG)
-        self.ui.pushToListenHotkey.setText(ptl_hotkey)
+        self.ui.pushToListenHotkey.setText(str(ptl_hotkey.split(KEYS_SPLITTER)[0]).upper())
         self.ui.pushToListenHotkey.setVisible(ptl_enabled)
         self.ui.btnEditKeybind.setVisible(ptl_enabled)
         if save_to_config:
@@ -257,6 +311,8 @@ class MainWnd(QWidget):
     # pylint: disable=invalid-name
     def closeEvent(self, event):
         self.m_profile_executor.shutdown()
+        self.stop_keyboard_listener()
+        self.stop_mouse_listener()
         delete_linvam_run_file()
         event.accept()
 
