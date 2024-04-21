@@ -13,7 +13,7 @@ from keyboard import nixkeyboard as _os_keyboard
 from mouse import nixmouse as _os_mouse
 from soundfiles import SoundFiles
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
-                  KEYS_SPLITTER, save_to_commands_file, is_push_to_listen)
+                  KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey)
 
 
 class ProfileExecutor(threading.Thread):
@@ -94,7 +94,6 @@ class ProfileExecutor(threading.Thread):
         return result_string
 
     def set_language(self, language):
-        listening = self.listening
         self._stop()
         language_code = get_language_code(language)
         if language_code is None:
@@ -102,11 +101,6 @@ class ProfileExecutor(threading.Thread):
             return
         print('Language: ' + get_language_name(language))
         self.recognizer = KaldiRecognizer(Model(lang=language_code), self.samplerate)
-        if listening:
-            if is_push_to_listen():
-                self._start_stream()
-            else:
-                self._init_stream()
             
     def _init_stream(self):
         if self.recognizer is None:
@@ -153,9 +147,13 @@ class ProfileExecutor(threading.Thread):
         if self.recognizer is None:
             return
         if not self.listening and p_enable:
-
-            self._start_stream()
-            print("Detection started")
+            if is_push_to_listen():
+                self._start_stream()
+                print('Detection started')
+            else:
+                self._init_stream()
+                ptl_hotkey = get_push_to_listen_hotkey()
+                print('Stream initialized, press ' + ptl_hotkey.name + ' to listen for commands')
         elif self.listening and not p_enable:
             self._stop()
 
@@ -166,7 +164,7 @@ class ProfileExecutor(threading.Thread):
             self.m_stream = None
             self.recognizer.FinalResult()
             self.listening = False
-            print("Detection stopped")
+            print('Detection stopped')
 
     def shutdown(self):
         self.m_sound.stop()

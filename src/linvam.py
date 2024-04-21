@@ -105,6 +105,7 @@ class MainWnd(QWidget):
         event_name = event.name
         name = save_push_to_listen_hotkey(event_name, event_code, False)
         self.ui.pushToListenHotkey.setText(name.upper())
+        self.m_profile_executor.reset_listening()
 
     def _on_mouse_key_event(self, event):
         if not isinstance(event, ButtonEvent):
@@ -112,6 +113,7 @@ class MainWnd(QWidget):
         self._edit_ptl_keybind()
         name = save_push_to_listen_hotkey(event.button, '', True)
         self.ui.pushToListenHotkey.setText(name.upper())
+        self.m_profile_executor.reset_listening()
 
     def _setup_input_mode(self):
         ptl_enabled = is_push_to_listen()
@@ -125,6 +127,7 @@ class MainWnd(QWidget):
         self.ui.pushToListenHotkey.setText(str(ptl_hotkey.name).upper())
         self.ui.pushToListenHotkey.setVisible(ptl_enabled)
         self.ui.btnEditKeybind.setVisible(ptl_enabled)
+        self.m_profile_executor.reset_listening()
         if save_to_config:
             save_is_push_to_listen(ptl_enabled)
 
