@@ -9,7 +9,7 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
-from keyboard import nixmouse as _os_mouse
+from mouse import nixmouse as _os_mouse
 from keyboard import nixkeyboard as _os_keyboard
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
                   KEYS_SPLITTER, save_to_commands_file)

@@ -1,7 +1,50 @@
 # -*- coding: utf-8 -*-
-import warnings
-warnings.simplefilter('always', DeprecationWarning)
-warnings.warn('The mouse sub-library is deprecated and will be removed in future versions. Please use the standalone package `mouse`.', DeprecationWarning, stacklevel=2)
+"""
+mouse
+=====
+
+Take full control of your mouse with this small Python library. Hook global events, register hotkeys, simulate mouse movement and clicks, and much more.
+
+_Huge thanks to [Kirill Pavlov](http://kirillpavlov.com/) for donating the package name. If you are looking for the Cheddargetter.com client implementation, [`pip install mouse==0.5.0`](https://pypi.python.org/pypi/mouse/0.5.0)._
+
+## Features
+
+- Global event hook on all mice devices (captures events regardless of focus).
+- **Listen** and **sends** mouse events.
+- Works with **Windows** and **Linux** (requires sudo).
+- Works with **MacOS** (requires granting accessibility permissions to terminal/python in System Preferences -> Security)
+- **Pure Python**, no C modules to be compiled.
+- **Zero dependencies** on Windows and Linux. Trivial to install and deploy, just copy the files.
+- **Python 2 and 3**.
+- Includes **high level API** (e.g. [record](#mouse.record) and [play](#mouse.play).
+- Events automatically captured in separate thread, doesn't block main program.
+- Tested and documented.
+
+This program makes no attempt to hide itself, so don't use it for keyloggers.
+
+## Usage
+
+Install the [PyPI package](https://pypi.python.org/pypi/mouse/):
+
+    $ sudo pip install mouse
+
+or clone the repository (no installation required, source files are sufficient):
+
+    $ git clone https://github.com/boppreh/mouse
+
+Then check the [API docs](https://github.com/boppreh/mouse#api) to see what features are available.
+
+
+## Known limitations:
+
+- Events generated under Windows don't report device id (`event.device == None`). [#21](https://github.com/boppreh/keyboard/issues/21)
+- To avoid depending on X the Linux parts reads raw device files (`/dev/input/input*`) but this requires root.
+- Other applications, such as some games, may register hooks that swallow all key events. In this case `mouse` will be unable to report events.
+"""
+# TODO
+# - infinite wait
+# - mouse.on_move
+version = '0.7.1'
 
 import time as _time
 
@@ -66,10 +109,13 @@ def wheel(delta=1):
     """ Scrolls the wheel `delta` clicks. Sign indicates direction. """
     _os_mouse.wheel(delta)
 
-def move(x, y, absolute=True, duration=0):
+def move(x, y, absolute=True, duration=0, steps_per_second=120.0):
     """
     Moves the mouse. If `absolute`, to position (x, y), otherwise move relative
     to the current position. If `duration` is non-zero, animates the movement.
+    The steps_per_second is only an approximation. Due to the internal sleep's
+    unreliability it cannot be followed strictly. The less its value is, the more
+    valid the number becomes.
     """
     x = int(x)
     y = int(y)
@@ -82,23 +128,42 @@ def move(x, y, absolute=True, duration=0):
         x = position_x + x
         y = position_y + y
 
-    if duration:
-        start_x = position_x
-        start_y = position_y
-        dx = x - start_x
-        dy = y - start_y
-
-        if dx == 0 and dy == 0:
-            _time.sleep(duration)
-        else:
-            # 120 movements per second.
-            # Round and keep float to ensure float division in Python 2
-            steps = max(1.0, float(int(duration * 120.0)))
-            for i in range(int(steps)+1):
-                move(start_x + dx*i/steps, start_y + dy*i/steps)
-                _time.sleep(duration/steps)
-    else:
+    if not duration:
         _os_mouse.move_to(x, y)
+        return
+    
+    start_x = position_x
+    start_y = position_y
+    dx = x - start_x
+    dy = y - start_y
+
+    if dx == 0 and dy == 0:
+        _time.sleep(duration)
+        return
+
+    interval_time = 1.0/steps_per_second
+    start_time = _time.perf_counter()
+    end_time = start_time + float(duration)
+    step_start_time = start_time
+    iteration_start_time = start_time
+    while iteration_start_time < end_time:
+        # Sleep to enforce the fps cap, considering the last step's duration and remaining time
+        last_step_duration = iteration_start_time - step_start_time
+        remaining_time = end_time - iteration_start_time
+        corrected_sleep_time = interval_time - last_step_duration
+        actual_sleep_time = min(remaining_time, corrected_sleep_time)
+        if actual_sleep_time > 0:
+            _time.sleep(actual_sleep_time)
+        step_start_time = _time.perf_counter()
+
+        # Move based on the elapsed time to ensure that the duration is valid
+        current_time = step_start_time - start_time
+        progress = current_time / duration
+        _os_mouse.move_to(start_x + dx*progress, start_y + dy*progress)
+        iteration_start_time = _time.perf_counter()
+
+    # Move to the destination to ensure the final position
+    _os_mouse.move_to(start_x + dx, start_y + dy)
 
 def drag(start_x, start_y, end_x, end_y, absolute=True, duration=0):
     """
@@ -127,6 +192,10 @@ def on_button(callback, args=(), buttons=(LEFT, MIDDLE, RIGHT, X, X2), types=(UP
     _listener.add_handler(handler)
     return handler
 
+def on_pressed(callback, args=()):
+    """ Invokes `callback` with `args` when the left button is pressed. """
+    return on_button(callback, args, [LEFT], [DOWN])
+
 def on_click(callback, args=()):
     """ Invokes `callback` with `args` when the left button is clicked. """
     return on_button(callback, args, [LEFT], [UP])
@@ -136,6 +205,14 @@ def on_double_click(callback, args=()):
     Invokes `callback` with `args` when the left button is double clicked.
     """
     return on_button(callback, args, [LEFT], [DOUBLE])
+
+def on_middle_double_click(callback, args=()):
+    """
+    Invokes `callback` with `args` when the left button is double clicked.
+    """
+    return on_button(callback, args, [MIDDLE], [DOUBLE])
+
+
 
 def on_right_click(callback, args=()):
     """ Invokes `callback` with `args` when the right button is clicked. """
@@ -166,7 +243,7 @@ def hook(callback):
     each time it is moved, a key status changes or the wheel is spun. A mouse
     event is passed as argument, with type either `mouse.ButtonEvent`,
     `mouse.WheelEvent` or `mouse.MoveEvent`.
-    
+
     Returns the given callback for easier development.
     """
     _listener.add_handler(callback)
