@@ -403,12 +403,15 @@ CAUTION! This will override all existing profiles.</string>
        </property>
        <property name="maximumSize">
         <size>
-         <width>100</width>
+         <width>75</width>
          <height>16777215</height>
         </size>
        </property>
        <property name="toolTip">
         <string>Keybind for listening for commands when using Push to listen input mode</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
        <property name="readOnly">
         <bool>true</bool>
