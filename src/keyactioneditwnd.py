@@ -41,7 +41,7 @@ class KeyActionEditWnd(QDialog):
             self.ui.recordingButton.setText('Stop recording')
             self.set_buttons_enabled(False)
         else:
-            self.stop_keyboard_listener()
+            self._stop_keyboard_listener()
             self.ui.recordingButton.setText('Start recording')
             self.set_buttons_enabled(True)
 
@@ -63,20 +63,20 @@ class KeyActionEditWnd(QDialog):
 
         self.m_key_action = {'name': 'key action', 'key': w_hot_key, 'delay': self.ui.sbDelay.value(),
                              'key_events': events}
-        self.stop_keyboard_listener()
+        self._stop_keyboard_listener()
         super().accept()
 
     def slot_cancel(self):
-        self.stop_keyboard_listener()
+        self._stop_keyboard_listener()
         super().reject()
 
     # disabling pylint invalid-name since this is an override of a method from QWidget
     # pylint: disable=invalid-name
     def closeEvent(self, event):
-        self.stop_keyboard_listener()
+        self._stop_keyboard_listener()
         event.accept()
 
-    def stop_keyboard_listener(self):
+    def _stop_keyboard_listener(self):
         # noinspection PyBroadException
         # pylint: disable=bare-except
         try:

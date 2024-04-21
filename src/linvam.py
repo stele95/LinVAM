@@ -69,16 +69,16 @@ class MainWnd(QWidget):
             self.keyboard_listener = keyboard.hook(callback=self._on_keyboard_key_event)
             self.ui.btnEditKeybind.setText('Stop recording')
         else:
-            self.stop_keyboard_listener()
+            self._stop_keyboard_listener()
             self.ui.btnEditKeybind.setText('Edit keybind')
         if self.mouse_listener is None:
             self.mouse_listener = mouse.hook(callback=self._on_mouse_key_event)
         else:
-            self.stop_mouse_listener()
+            self._stop_mouse_listener()
 
-    def stop_keyboard_listener(self):
+    def _stop_keyboard_listener(self):
         # noinspection PyBroadException
-        # pylint: disable=bare-except,R0801
+        # pylint: disable=bare-except
         try:
             if self.keyboard_listener is not None:
                 self.keyboard_listener()
@@ -86,7 +86,7 @@ class MainWnd(QWidget):
         except Exception as ex:
             print(str(ex))
 
-    def stop_mouse_listener(self):
+    def _stop_mouse_listener(self):
         # noinspection PyBroadException
         # pylint: disable=bare-except
         try:
@@ -312,8 +312,8 @@ class MainWnd(QWidget):
     # pylint: disable=invalid-name
     def closeEvent(self, event):
         self.m_profile_executor.shutdown()
-        self.stop_keyboard_listener()
-        self.stop_mouse_listener()
+        self._stop_keyboard_listener()
+        self._stop_mouse_listener()
         delete_linvam_run_file()
         event.accept()
 
