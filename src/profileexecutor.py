@@ -209,7 +209,7 @@ class ProfileExecutor(threading.Thread):
 
     @staticmethod
     def _scroll_mouse_mouse(p_action):
-        _os_mouse.wheel(p_action('delta'))
+        _os_mouse.wheel(p_action['delta'])
 
     def _scroll_mouse_ydotool(self, p_action):
         command = 'mousemove --wheel -x 0 -y' + str(p_action['delta'])
