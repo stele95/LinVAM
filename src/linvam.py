@@ -61,6 +61,7 @@ class MainWnd(QWidget):
 
     def _setup_input_mode(self):
         ptl_enabled = get_config(PUSH_TO_LISTEN_ENABLED_CONFIG)
+        ptl_enabled = bool(ptl_enabled)
         self.ui.rbAlways.setChecked(not ptl_enabled)
         self.ui.rbPushToListen.setChecked(ptl_enabled)
         self._on_input_mode_changed(ptl_enabled, save_to_config=False)
