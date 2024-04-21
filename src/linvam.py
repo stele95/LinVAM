@@ -6,6 +6,7 @@ import sys
 from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessageBox, QLineEdit, QFileDialog
 
 import keyboard
+import mouse
 from profileeditwnd import ProfileEditWnd
 from profileexecutor import ProfileExecutor
 from soundfiles import SoundFiles
@@ -70,10 +71,10 @@ class MainWnd(QWidget):
         else:
             self.stop_keyboard_listener()
             self.ui.btnEditKeybind.setText('Edit keybind')
-        # if self.mouse_listener is None:
-        #     self.mouse_listener = mouse.hook(callback=self._on_mouse_key_event)
-        # else:
-        #     self.stop_mouse_listener()
+        if self.mouse_listener is None:
+            self.mouse_listener = mouse.hook(callback=self._on_mouse_key_event)
+        else:
+            self.stop_mouse_listener()
 
     def stop_keyboard_listener(self):
         # noinspection PyBroadException

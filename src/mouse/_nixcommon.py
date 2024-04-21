@@ -164,8 +164,3 @@ def aggregate_devices(type_name):
 
     # If no keyboards were found we can only use the fake device to send keys.
     return fake_device
-
-
-def ensure_root():
-    if os.geteuid() != 0:
-        raise ImportError('You must be root to use this library on linux.')
