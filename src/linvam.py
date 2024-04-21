@@ -10,13 +10,12 @@ import mouse
 from mouse import ButtonEvent
 from profileeditwnd import ProfileEditWnd
 from profileexecutor import ProfileExecutor
-from soundfiles import SoundFiles
 from ui_mainwnd import Ui_MainWidget
 from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
                   CONST_VERSION, init_config_folder, setup_mangohud, read_profiles, save_profiles,
                   copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name,
-                  update_profiles_for_new_version, handle_args, PUSH_TO_LISTEN_ENABLED_CONFIG,
-                  PUSH_TO_LISTEN_HOTKEY_CONFIG, KEYS_SPLITTER, MOUSE_KEY_PTL_PREFIX)
+                  update_profiles_for_new_version, handle_args, is_push_to_listen, get_push_to_listen_hotkey,
+                  save_push_to_listen_hotkey, save_is_push_to_listen)
 
 
 class MainWnd(QWidget):
@@ -37,7 +36,6 @@ class MainWnd(QWidget):
         self._setup_input_mode()
         handle_args(self.m_config)
         init_config_folder()
-        self.m_sound = SoundFiles()
         self.m_profile_executor = ProfileExecutor(self)
 
         self.ui.addBut.clicked.connect(self.slot_add_new_profile)
@@ -48,7 +46,9 @@ class MainWnd(QWidget):
         self.ui.importBtn.clicked.connect(self._import_profile)
         self.ui.mergeBtn.clicked.connect(self._merge_profiles)
         self.ui.listeningChk.stateChanged.connect(self.slot_listening_enabled)
-        self.ui.sliderVolume.valueChanged.connect(lambda: self.m_sound.set_volume(self.ui.sliderVolume.value()))
+        self.ui.sliderVolume.valueChanged.connect(
+            lambda: self.m_profile_executor.set_sound_playback_volume(self.ui.sliderVolume.value())
+        )
         self.ui.rbAlways.clicked.connect(lambda: self._on_input_mode_changed(ptl_enabled=False))
         self.ui.rbPushToListen.clicked.connect(lambda: self._on_input_mode_changed(ptl_enabled=True))
         self.ui.btnEditKeybind.clicked.connect(self._edit_ptl_keybind)
@@ -103,32 +103,30 @@ class MainWnd(QWidget):
         self._edit_ptl_keybind()
         event_code = event.scan_code
         event_name = event.name
-        self.ui.pushToListenHotkey.setText(event_name.upper())
-        save_config(PUSH_TO_LISTEN_HOTKEY_CONFIG, str(event_name) + KEYS_SPLITTER + str(event_code))
+        name = save_push_to_listen_hotkey(event_name, event_code, False)
+        self.ui.pushToListenHotkey.setText(name.upper())
 
     def _on_mouse_key_event(self, event):
         if not isinstance(event, ButtonEvent):
             return
         self._edit_ptl_keybind()
-        button = event.button
-        event_name = MOUSE_KEY_PTL_PREFIX + button
-        self.ui.pushToListenHotkey.setText(event_name.upper())
-        save_config(PUSH_TO_LISTEN_HOTKEY_CONFIG, str(event_name))
+        name = save_push_to_listen_hotkey(event.button, '', True)
+        self.ui.pushToListenHotkey.setText(name.upper())
 
     def _setup_input_mode(self):
-        ptl_enabled = get_config(PUSH_TO_LISTEN_ENABLED_CONFIG)
+        ptl_enabled = is_push_to_listen()
         ptl_enabled = bool(ptl_enabled)
         self.ui.rbAlways.setChecked(not ptl_enabled)
         self.ui.rbPushToListen.setChecked(ptl_enabled)
         self._on_input_mode_changed(ptl_enabled, save_to_config=False)
 
     def _on_input_mode_changed(self, ptl_enabled, save_to_config=True):
-        ptl_hotkey = get_config(PUSH_TO_LISTEN_HOTKEY_CONFIG)
-        self.ui.pushToListenHotkey.setText(str(ptl_hotkey.split(KEYS_SPLITTER)[0]).upper())
+        ptl_hotkey = get_push_to_listen_hotkey()
+        self.ui.pushToListenHotkey.setText(str(ptl_hotkey.name).upper())
         self.ui.pushToListenHotkey.setVisible(ptl_enabled)
         self.ui.btnEditKeybind.setVisible(ptl_enabled)
         if save_to_config:
-            save_config(PUSH_TO_LISTEN_ENABLED_CONFIG, ptl_enabled)
+            save_is_push_to_listen(ptl_enabled)
 
     def _init_profiles(self):
         self.ui.profileCbx.clear()

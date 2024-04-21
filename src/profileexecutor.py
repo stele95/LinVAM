@@ -9,10 +9,11 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
-from mouse import nixmouse as _os_mouse
 from keyboard import nixkeyboard as _os_keyboard
+from mouse import nixmouse as _os_mouse
+from soundfiles import SoundFiles
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
-                  KEYS_SPLITTER, save_to_commands_file)
+                  KEYS_SPLITTER, save_to_commands_file, is_push_to_listen)
 
 
 class ProfileExecutor(threading.Thread):
@@ -21,6 +22,7 @@ class ProfileExecutor(threading.Thread):
 
         super().__init__()
         self.m_profile = None
+        self.listening = False
         self.commands_list = []
         self.m_cmd_threads = {}
         self.p_parent = p_parent
@@ -36,8 +38,10 @@ class ProfileExecutor(threading.Thread):
 
         self.recognizer = None
 
-        if self.p_parent is not None:
-            self.m_sound = self.p_parent.m_sound
+        self.m_sound = SoundFiles()
+
+    def set_sound_playback_volume(self, volume):
+        self.m_sound.set_volume(volume)
 
     def start_ydotoold(self):
         command = 'ydotoold -p ' + YDOTOOLD_SOCKET_PATH + ' -P 0666'
@@ -90,8 +94,8 @@ class ProfileExecutor(threading.Thread):
         return result_string
 
     def set_language(self, language):
-        listening = self.m_stream is not None
-        self.stop()
+        listening = self.listening
+        self._stop()
         language_code = get_language_code(language)
         if language_code is None:
             print('Unsupported language: ' + language)
@@ -99,17 +103,29 @@ class ProfileExecutor(threading.Thread):
         print('Language: ' + get_language_name(language))
         self.recognizer = KaldiRecognizer(Model(lang=language_code), self.samplerate)
         if listening:
-            self.start_stream()
-
-    def start_stream(self):
+            if is_push_to_listen():
+                self._start_stream()
+            else:
+                self._init_stream()
+            
+    def _init_stream(self):
         if self.recognizer is None:
             return
         if self.p_parent.m_config['debug']:
             callback = self.listen_callback_debug
         else:
             callback = self.listen_callback
-        self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
-                                                   blocksize=4000, callback=callback)
+        self.m_stream = sounddevice.RawInputStream(
+            samplerate=self.samplerate,
+            dtype="int16", 
+            channels=1,
+            blocksize=4000, 
+            callback=callback
+        )
+
+    def _start_stream(self):
+        if self.m_stream is None:
+            self._init_stream()
         self.m_stream.start()
 
     def set_profile(self, p_profile):
@@ -128,26 +144,33 @@ class ProfileExecutor(threading.Thread):
         # this is a dirty fix until the whole keywords recognition is refactored
         self.commands_list.sort(key=len, reverse=True)
 
+    def reset_listening(self):
+        if self.listening:
+            self.set_enable_listening(False)
+            self.set_enable_listening(True)
+
     def set_enable_listening(self, p_enable):
         if self.recognizer is None:
             return
-        if self.m_stream is None and p_enable:
-            self.start_stream()
-            print("Detection started")
-        elif self.m_stream is not None and not p_enable:
-            self.stop()
+        if not self.listening and p_enable:
 
-    def stop(self):
+            self._start_stream()
+            print("Detection started")
+        elif self.listening and not p_enable:
+            self._stop()
+
+    def _stop(self):
         if self.m_stream is not None:
             self.m_stream.stop()
             self.m_stream.close()
             self.m_stream = None
             self.recognizer.FinalResult()
+            self.listening = False
             print("Detection stopped")
 
     def shutdown(self):
         self.m_sound.stop()
-        self.stop()
+        self._stop()
         if self.ydotoold is not None:
             try:
                 os.kill(self.ydotoold.pid, signal.SIGKILL)
