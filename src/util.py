@@ -15,6 +15,8 @@ KEYS_SPLITTER = '->'
 OLD_KEYS_SPLITTER = '+'
 DEFAULT_KEY_DELAY_IN_MILLISECONDS = 60
 PROFILES_FILE_NAME = 'profiles.json'
+PUSH_TO_LISTEN_ENABLED_CONFIG = 'ptl_enabled'
+PUSH_TO_LISTEN_HOTKEY_CONFIG = 'ptl_hotkey'
 
 
 def handle_args(config):

@@ -12,7 +12,8 @@ from ui_mainwnd import Ui_MainWidget
 from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
                   CONST_VERSION, init_config_folder, setup_mangohud, read_profiles, save_profiles,
                   copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name,
-                  update_profiles_for_new_version, handle_args)
+                  update_profiles_for_new_version, handle_args, PUSH_TO_LISTEN_ENABLED_CONFIG,
+                  PUSH_TO_LISTEN_HOTKEY_CONFIG)
 
 
 class MainWnd(QWidget):
@@ -28,6 +29,7 @@ class MainWnd(QWidget):
         self.m_active_profile = None
         self.ui = Ui_MainWidget()
         self.ui.setupUi(self)
+        self._setup_input_mode()
         handle_args(self.m_config)
         init_config_folder()
         self.m_sound = SoundFiles()
@@ -37,14 +39,16 @@ class MainWnd(QWidget):
         self.ui.editBut.clicked.connect(self.slot_edit_profile)
         self.ui.copyBut.clicked.connect(self.slot_copy_profile)
         self.ui.removeBut.clicked.connect(self.slot_remove_profile)
-        self.ui.exportBtn.clicked.connect(self.export_profile)
-        self.ui.importBtn.clicked.connect(self.import_profile)
-        self.ui.mergeBtn.clicked.connect(self.merge_profiles)
+        self.ui.exportBtn.clicked.connect(self._export_profile)
+        self.ui.importBtn.clicked.connect(self._import_profile)
+        self.ui.mergeBtn.clicked.connect(self._merge_profiles)
         self.ui.listeningChk.stateChanged.connect(self.slot_listening_enabled)
         self.ui.sliderVolume.valueChanged.connect(lambda: self.m_sound.set_volume(self.ui.sliderVolume.value()))
+        self.ui.rbAlways.clicked.connect(lambda: self._on_input_mode_changed(ptl_enabled=False))
+        self.ui.rbPushToListen.clicked.connect(lambda: self._on_input_mode_changed(ptl_enabled=True))
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-        self.init_profiles()
+        self._init_profiles()
 
         language_position = self.load_languages()
         self.ui.languageCbx.currentIndexChanged.connect(self.language_changed)
@@ -53,9 +57,23 @@ class MainWnd(QWidget):
         elif language_position == 0:
             self.language_changed(language_position)
 
-        self.check_buttons_states()
+        self._check_buttons_states()
 
-    def init_profiles(self):
+    def _setup_input_mode(self):
+        ptl_enabled = get_config(PUSH_TO_LISTEN_ENABLED_CONFIG)
+        self.ui.rbAlways.setChecked(not ptl_enabled)
+        self.ui.rbPushToListen.setChecked(ptl_enabled)
+        self._on_input_mode_changed(ptl_enabled, save_to_config=False)
+
+    def _on_input_mode_changed(self, ptl_enabled, save_to_config=True):
+        ptl_hotkey = get_config(PUSH_TO_LISTEN_HOTKEY_CONFIG)
+        self.ui.pushToListenHotkey.setText(ptl_hotkey)
+        self.ui.pushToListenHotkey.setVisible(ptl_enabled)
+        self.ui.btnEditKeybind.setVisible(ptl_enabled)
+        if save_to_config:
+            save_config(PUSH_TO_LISTEN_ENABLED_CONFIG, ptl_enabled)
+
+    def _init_profiles(self):
         self.ui.profileCbx.clear()
         position = self.load_from_database()
         self.ui.profileCbx.currentIndexChanged.connect(self.slot_profile_changed)
@@ -64,29 +82,29 @@ class MainWnd(QWidget):
         elif position == 0:
             self.slot_profile_changed(position)
 
-    def export_profile(self):
+    def _export_profile(self):
         path = QFileDialog.getExistingDirectory(self, 'Select a location for extracting profiles', HOME_DIR)
         if not path:
             return
         copy_profiles_to_dir(path)
 
-    def import_profile(self):
+    def _import_profile(self):
         (path, _) = QFileDialog.getOpenFileName(self, 'Select a file for importing profiles from', HOME_DIR,
                                                 "Profiles json file (*.json)")
         if not path:
             return
         import_profiles_from_file(path)
-        self.init_profiles()
+        self._init_profiles()
 
-    def merge_profiles(self):
+    def _merge_profiles(self):
         (path, _) = QFileDialog.getOpenFileName(self, 'Select a file for merging profiles with', HOME_DIR,
                                                 "Profiles json file (*.json)")
         if not path:
             return
         merge_profiles(path)
-        self.init_profiles()
+        self._init_profiles()
 
-    def check_buttons_states(self):
+    def _check_buttons_states(self):
         enabled = self.ui.profileCbx.count() > 0
         self.ui.editBut.setEnabled(enabled)
         self.ui.copyBut.setEnabled(enabled)
@@ -171,7 +189,7 @@ class MainWnd(QWidget):
             self.ui.profileCbx.addItem(w_profile['name'], w_json_profile)
             self.ui.profileCbx.setCurrentIndex(self.ui.profileCbx.count() - 1)
             self.save_to_database()
-            self.check_buttons_states()
+            self._check_buttons_states()
 
     def slot_edit_profile(self):
         w_idx = self.ui.profileCbx.currentIndex()
@@ -226,7 +244,7 @@ class MainWnd(QWidget):
             self.ui.profileCbx.removeItem(w_cur_idx)
 
         self.save_to_database()
-        self.check_buttons_states()
+        self._check_buttons_states()
 
     def slot_listening_enabled(self, p_enabled):
         if p_enabled:
