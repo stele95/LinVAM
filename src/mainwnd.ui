@@ -357,7 +357,7 @@ CAUTION! This will override all existing profiles.</string>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>20</width>
+         <width>10</width>
          <height>20</height>
         </size>
        </property>
@@ -380,7 +380,7 @@ CAUTION! This will override all existing profiles.</string>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
+         <width>20</width>
          <height>20</height>
         </size>
        </property>
@@ -417,6 +417,12 @@ CAUTION! This will override all existing profiles.</string>
      </item>
      <item>
       <widget class="QPushButton" name="btnEditKeybind">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>Edit keybind for push to listen input mode</string>
        </property>
