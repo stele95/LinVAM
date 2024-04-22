@@ -12,9 +12,9 @@ from vosk import Model, KaldiRecognizer
 import keyboard
 import mouse
 from keyboard import nixkeyboard as _os_keyboard
+from mouse import DOWN, UP
 from mouse import nixmouse as _os_mouse
 from soundfiles import SoundFiles
-from mouse import DOWN, UP
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
                   KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey)
 
@@ -25,6 +25,8 @@ class ProfileExecutor(threading.Thread):
 
         super().__init__()
         self.m_profile = None
+        self.ptl_press_listener = None
+        self.ptl_release_listener = None
         self.listening = False
         self.commands_list = []
         self.m_cmd_threads = {}
@@ -104,7 +106,7 @@ class ProfileExecutor(threading.Thread):
             return
         print('Language: ' + get_language_name(language))
         self.recognizer = KaldiRecognizer(Model(lang=language_code), self.samplerate)
-            
+
     def _init_stream(self):
         if self.recognizer is None:
             return
@@ -114,9 +116,9 @@ class ProfileExecutor(threading.Thread):
             callback = self.listen_callback
         self.m_stream = sounddevice.RawInputStream(
             samplerate=self.samplerate,
-            dtype="int16", 
+            dtype="int16",
             channels=1,
-            blocksize=4000, 
+            blocksize=4000,
             callback=callback
         )
 
@@ -153,17 +155,19 @@ class ProfileExecutor(threading.Thread):
             if is_push_to_listen():
                 self._init_stream()
                 ptl_hotkey = get_push_to_listen_hotkey()
-                print('Stream initialized, press ' + ptl_hotkey.name + ' to listen for commands')
+                print('Stream initialized, press ' + ptl_hotkey.name.upper() + ' to listen for commands')
+                self.listening = True
                 self._start_ptl(ptl_hotkey)
             else:
                 self._start_stream()
                 print('Detection started')
-            self.listening = True
+                self.listening = True
         elif self.listening and not p_enable:
             self._stop()
 
     def _start_ptl(self, ptl_hotkey):
         if ptl_hotkey.is_mouse_key:
+            # todo optimize this for not using while loop
             while self.listening:
                 button = ptl_hotkey.button
                 mouse.wait(button, target_types=DOWN)
@@ -171,15 +175,17 @@ class ProfileExecutor(threading.Thread):
                 mouse.wait(button, target_types=UP)
                 self.m_stream.stop()
         else:
-            while self.listening:
-                button = ptl_hotkey.code
-                keyboard.wait(button)
-                self.m_stream.start()
-                keyboard.wait(button, trigger_on_release=True)
-                self.m_stream.stop()
+            button = ptl_hotkey.code
+            self.ptl_press_listener = keyboard.add_hotkey(button, lambda: self.m_stream.start())
+            self.ptl_release_listener = keyboard.add_hotkey(
+                button,
+                lambda: self.m_stream.stop(),
+                trigger_on_release=True
+            )
 
     def _stop(self):
         if self.m_stream is not None:
+            self._unhook_listeners()
             self.m_stream.stop()
             self.m_stream.close()
             self.m_stream = None
@@ -196,6 +202,12 @@ class ProfileExecutor(threading.Thread):
                 self.ydotoold = None
             except OSError:
                 pass
+
+    def _unhook_listeners(self):
+        if self.ptl_press_listener is not None:
+            self.ptl_press_listener()
+        if self.ptl_release_listener is not None:
+            self.ptl_release_listener()
 
     def do_action(self, p_action):
         # {'name': 'key action', 'key': 'left', 'type': 0}
