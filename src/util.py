@@ -6,7 +6,7 @@ import subprocess
 import sys
 from collections import namedtuple
 
-CONST_VERSION = '0.6.4-git'
+CONST_VERSION = '0.6.4'
 HOME_DIR = os.path.expanduser('~')
 LINVAM_SETTINGS_FOLDER = HOME_DIR + '/.local/share/LinVAM/'
 COMMANDS_LIST_FILE = 'commands.list'
