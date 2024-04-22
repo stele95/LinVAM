@@ -115,7 +115,7 @@ Backup options:
 ### Input mode
 You can choose between two input modes for LinVAM to listen to your commands (``linvamrun`` will use the option selected in the GUI before starting ``linvamrun``):
 - ``Always on`` - LinVAM is always listening to what you are saying
-- ``Push to listen`` - LinVAM is only listening when you hold the set keybind. If this mode in selected and no keybind is set, listening will be always active as if ``Always on`` was selected
+- ``Push to listen`` - LinVAM is only listening when you hold the set keybind. If this mode is selected and no keybind is set, listening will be always active as if ``Always on`` was selected
 
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/main-gui.png)
 ### Key combinations
