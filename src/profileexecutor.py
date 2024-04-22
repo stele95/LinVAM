@@ -175,7 +175,7 @@ class ProfileExecutor(threading.Thread):
                 mouse.wait(button, target_types=UP)
                 self.m_stream.stop()
         else:
-            button = ptl_hotkey.code
+            button = int(ptl_hotkey.code)
             self.ptl_press_listener = keyboard.add_hotkey(button, lambda: self.m_stream.start())
             self.ptl_release_listener = keyboard.add_hotkey(
                 button,
