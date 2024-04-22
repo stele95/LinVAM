@@ -92,7 +92,7 @@ class MainWnd(QWidget):
         # pylint: disable=bare-except
         try:
             if self.mouse_listener is not None:
-                mouse.unhook_all()
+                mouse.unhook(self.mouse_listener)
                 self.mouse_listener = None
         except Exception as ex:
             print(str(ex))
