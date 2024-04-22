@@ -180,9 +180,13 @@ class ProfileExecutor(threading.Thread):
             if event.event_type == mouse.DOWN and not self.m_stream.active:
                 self.m_stream.start()
             elif event.event_type == mouse.UP and self.m_stream.active:
-                time.sleep(1)
-                self.recognizer.Result()
-                self.m_stream.stop()
+                self._stop_ptl_stream()
+
+    def _stop_ptl_stream(self):
+        # sleep for 1 second to allow said commands to be processed correctly
+        time.sleep(1)
+        self.recognizer.Result()
+        self.m_stream.stop()
 
     def _on_keyboard_key_event(self, event):
         if event.name == 'unknown':
@@ -191,9 +195,7 @@ class ProfileExecutor(threading.Thread):
             if event.event_type == keyboard.KEY_DOWN and not self.m_stream.active:
                 self.m_stream.start()
             elif event.event_type == keyboard.KEY_UP and self.m_stream.active:
-                time.sleep(1)
-                self.recognizer.Result()
-                self.m_stream.stop()
+                self._stop_ptl_stream()
 
     def _stop(self):
         if self.m_stream is not None:
