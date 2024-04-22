@@ -184,9 +184,9 @@ class ProfileExecutor(threading.Thread):
 
     def _stop_ptl_stream(self):
         # sleep for 1 second to allow said commands to be processed correctly
-        time.sleep(1)
-        self.recognizer.Result()
+        time.sleep(0.5)
         self.m_stream.stop()
+        self.recognizer.Result()
 
     def _on_keyboard_key_event(self, event):
         if event.name == 'unknown':
