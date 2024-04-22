@@ -168,19 +168,20 @@ class ProfileExecutor(threading.Thread):
     def _start_ptl(self, ptl_hotkey):
         self.ptl_key = ptl_hotkey
         if ptl_hotkey.is_mouse_key:
-            # todo optimize this for not using while loop
-            while self.listening:
-                button = ptl_hotkey.button
-                mouse.wait(button, target_types=DOWN)
-                self.m_stream.start()
-                mouse.wait(button, target_types=UP)
-                self.m_stream.stop()
+            self.ptl_key_listener = mouse.hook(self._on_mouse_key_event)
         else:
             self.ptl_key_listener = keyboard.hook(self._on_keyboard_key_event)
 
     def _on_mouse_key_event(self, event):
         if not isinstance(event, ButtonEvent):
             return
+        if str(event.button) == str(self.ptl_key.button):
+            if event.event_type == mouse.DOWN and not self.m_stream.active:
+                self.m_stream.start()
+            elif event.event_type == mouse.UP and self.m_stream.active:
+                time.sleep(1)
+                self.recognizer.Result()
+                self.m_stream.stop()
 
     def _on_keyboard_key_event(self, event):
         if event.name == 'unknown':
@@ -195,7 +196,7 @@ class ProfileExecutor(threading.Thread):
 
     def _stop(self):
         if self.m_stream is not None:
-            self._stop_keyboard_listener()
+            self._stop_ptl_listener()
             self.m_stream.stop()
             self.m_stream.close()
             self.m_stream = None
@@ -213,7 +214,7 @@ class ProfileExecutor(threading.Thread):
             except OSError:
                 pass
 
-    def _stop_keyboard_listener(self):
+    def _stop_ptl_listener(self):
         # noinspection PyBroadException
         # pylint: disable=bare-except,R0801
         try:
