@@ -33,10 +33,10 @@ class MainWnd(QWidget):
         self.mouse_listener = None
         self.ui = Ui_MainWidget()
         self.ui.setupUi(self)
-        self._setup_input_mode()
         handle_args(self.m_config)
         init_config_folder()
         self.m_profile_executor = ProfileExecutor(self)
+        self._setup_input_mode()
 
         self.ui.addBut.clicked.connect(self.slot_add_new_profile)
         self.ui.editBut.clicked.connect(self.slot_edit_profile)
@@ -127,9 +127,9 @@ class MainWnd(QWidget):
         self.ui.pushToListenHotkey.setText(str(ptl_hotkey.name).upper())
         self.ui.pushToListenHotkey.setVisible(ptl_enabled)
         self.ui.btnEditKeybind.setVisible(ptl_enabled)
-        self.m_profile_executor.reset_listening()
         if save_to_config:
             save_is_push_to_listen(ptl_enabled)
+        self.m_profile_executor.reset_listening()
 
     def _init_profiles(self):
         self.ui.profileCbx.clear()

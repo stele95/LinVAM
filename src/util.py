@@ -267,13 +267,15 @@ def get_push_to_listen_hotkey():
     hotkey = get_config(PUSH_TO_LISTEN_HOTKEY_CONFIG)
     is_mouse_key = MOUSE_KEY_PTL_PREFIX in hotkey
     if is_mouse_key:
+        name = hotkey
         button = hotkey.replace(MOUSE_KEY_PTL_PREFIX, '')
         code = ''
     else:
         split = hotkey.split(KEYS_SPLITTER)
         button = split[0]
+        name = button
         code = split[1]
-    return PTLHotkey(hotkey, button, code, is_mouse_key)
+    return PTLHotkey(name, button, code, is_mouse_key)
 
 
 def get_configs():

@@ -9,9 +9,12 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
+import keyboard
+import mouse
 from keyboard import nixkeyboard as _os_keyboard
 from mouse import nixmouse as _os_mouse
 from soundfiles import SoundFiles
+from mouse import DOWN, UP
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
                   KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey)
 
@@ -75,7 +78,7 @@ class ProfileExecutor(threading.Thread):
             if command in result_string:
                 self.recognizer.Result()
                 print('Detected: ' + command)
-                self._do_command(command)
+                # TODO self._do_command(command)
                 break
 
     def get_listen_result(self, in_data):
@@ -148,14 +151,32 @@ class ProfileExecutor(threading.Thread):
             return
         if not self.listening and p_enable:
             if is_push_to_listen():
-                self._start_stream()
-                print('Detection started')
-            else:
                 self._init_stream()
                 ptl_hotkey = get_push_to_listen_hotkey()
                 print('Stream initialized, press ' + ptl_hotkey.name + ' to listen for commands')
+                self._start_ptl(ptl_hotkey)
+            else:
+                self._start_stream()
+                print('Detection started')
+            self.listening = True
         elif self.listening and not p_enable:
             self._stop()
+
+    def _start_ptl(self, ptl_hotkey):
+        if ptl_hotkey.is_mouse_key:
+            while self.listening:
+                button = ptl_hotkey.button
+                mouse.wait(button, target_types=DOWN)
+                self.m_stream.start()
+                mouse.wait(button, target_types=UP)
+                self.m_stream.stop()
+        else:
+            while self.listening:
+                button = ptl_hotkey.code
+                keyboard.wait(button)
+                self.m_stream.start()
+                keyboard.wait(button, trigger_on_release=True)
+                self.m_stream.stop()
 
     def _stop(self):
         if self.m_stream is not None:
