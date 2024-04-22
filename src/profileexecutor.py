@@ -9,10 +9,14 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
-from keyboard import nixmouse as _os_mouse
+import keyboard
+import mouse
 from keyboard import nixkeyboard as _os_keyboard
+from mouse import ButtonEvent
+from mouse import nixmouse as _os_mouse
+from soundfiles import SoundFiles
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
-                  KEYS_SPLITTER, save_to_commands_file)
+                  KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey)
 
 
 class ProfileExecutor(threading.Thread):
@@ -21,6 +25,10 @@ class ProfileExecutor(threading.Thread):
 
         super().__init__()
         self.m_profile = None
+        self.ptl_key = None
+        self.ptl_keyboard_listener = None
+        self.ptl_mouse_listener = None
+        self.listening = False
         self.commands_list = []
         self.m_cmd_threads = {}
         self.p_parent = p_parent
@@ -36,8 +44,10 @@ class ProfileExecutor(threading.Thread):
 
         self.recognizer = None
 
-        if self.p_parent is not None:
-            self.m_sound = self.p_parent.m_sound
+        self.m_sound = SoundFiles()
+
+    def set_sound_playback_volume(self, volume):
+        self.m_sound.set_volume(volume)
 
     def start_ydotoold(self):
         command = 'ydotoold -p ' + YDOTOOLD_SOCKET_PATH + ' -P 0666'
@@ -90,26 +100,32 @@ class ProfileExecutor(threading.Thread):
         return result_string
 
     def set_language(self, language):
-        listening = self.m_stream is not None
-        self.stop()
+        self._stop()
         language_code = get_language_code(language)
         if language_code is None:
             print('Unsupported language: ' + language)
             return
         print('Language: ' + get_language_name(language))
         self.recognizer = KaldiRecognizer(Model(lang=language_code), self.samplerate)
-        if listening:
-            self.start_stream()
 
-    def start_stream(self):
+    def _init_stream(self):
         if self.recognizer is None:
             return
         if self.p_parent.m_config['debug']:
             callback = self.listen_callback_debug
         else:
             callback = self.listen_callback
-        self.m_stream = sounddevice.RawInputStream(samplerate=self.samplerate, dtype="int16", channels=1,
-                                                   blocksize=4000, callback=callback)
+        self.m_stream = sounddevice.RawInputStream(
+            samplerate=self.samplerate,
+            dtype="int16",
+            channels=1,
+            blocksize=4000,
+            callback=callback
+        )
+
+    def _start_stream(self):
+        if self.m_stream is None:
+            self._init_stream()
         self.m_stream.start()
 
     def set_profile(self, p_profile):
@@ -128,32 +144,91 @@ class ProfileExecutor(threading.Thread):
         # this is a dirty fix until the whole keywords recognition is refactored
         self.commands_list.sort(key=len, reverse=True)
 
+    def reset_listening(self):
+        if self.listening:
+            self.set_enable_listening(False)
+            self.set_enable_listening(True)
+
     def set_enable_listening(self, p_enable):
         if self.recognizer is None:
             return
-        if self.m_stream is None and p_enable:
-            self.start_stream()
-            print("Detection started")
-        elif self.m_stream is not None and not p_enable:
-            self.stop()
+        if not self.listening and p_enable:
+            ptl_hotkey = get_push_to_listen_hotkey()
+            if is_push_to_listen() and ptl_hotkey:
+                self._init_stream()
+                print('Stream initialized, press ' + ptl_hotkey.name.upper() + ' to listen for commands')
+                self.listening = True
+                self._start_ptl(ptl_hotkey)
+            else:
+                self._start_stream()
+                print('Detection started')
+                self.listening = True
+        elif self.listening and not p_enable:
+            self._stop()
 
-    def stop(self):
+    def _start_ptl(self, ptl_hotkey):
+        self.ptl_key = ptl_hotkey
+        if ptl_hotkey.is_mouse_key:
+            self.ptl_keyboard_listener = mouse.hook(self._on_mouse_key_event)
+        else:
+            self.ptl_keyboard_listener = keyboard.hook(self._on_keyboard_key_event)
+
+    def _on_mouse_key_event(self, event):
+        if not isinstance(event, ButtonEvent):
+            return
+        if str(event.button) == str(self.ptl_key.button):
+            if event.event_type == mouse.DOWN and not self.m_stream.active:
+                self.m_stream.start()
+            elif event.event_type == mouse.UP and self.m_stream.active:
+                self._stop_ptl_stream()
+
+    def _stop_ptl_stream(self):
+        # sleep for 1 second to allow said commands to be processed correctly
+        time.sleep(1)
+        self.recognizer.Result()
+        self.m_stream.stop()
+
+    def _on_keyboard_key_event(self, event):
+        if event.name == 'unknown':
+            return
+        if int(event.scan_code) == int(self.ptl_key.code):
+            if event.event_type == keyboard.KEY_DOWN and not self.m_stream.active:
+                self.m_stream.start()
+            elif event.event_type == keyboard.KEY_UP and self.m_stream.active:
+                self._stop_ptl_stream()
+
+    def _stop(self):
         if self.m_stream is not None:
-            print("Detection stopped")
+            self._stop_ptl_listener()
             self.m_stream.stop()
             self.m_stream.close()
             self.m_stream = None
             self.recognizer.FinalResult()
+            self.listening = False
+            print('Detection stopped')
 
     def shutdown(self):
         self.m_sound.stop()
-        self.stop()
+        self._stop()
         if self.ydotoold is not None:
             try:
                 os.kill(self.ydotoold.pid, signal.SIGKILL)
                 self.ydotoold = None
             except OSError:
                 pass
+
+    def _stop_ptl_listener(self):
+        # noinspection PyBroadException
+        # pylint: disable=bare-except,R0801
+        try:
+            if self.ptl_keyboard_listener is not None:
+                self.ptl_keyboard_listener()
+                self.ptl_keyboard_listener = None
+            if self.ptl_mouse_listener is not None:
+                mouse.unhook_all()
+                self.ptl_mouse_listener = None
+        except Exception as ex:
+            print(str(ex))
 
     def do_action(self, p_action):
         # {'name': 'key action', 'key': 'left', 'type': 0}
@@ -209,7 +284,7 @@ class ProfileExecutor(threading.Thread):
 
     @staticmethod
     def _scroll_mouse_mouse(p_action):
-        _os_mouse.wheel(p_action('delta'))
+        _os_mouse.wheel(p_action['delta'])
 
     def _scroll_mouse_ydotool(self, p_action):
         command = 'mousemove --wheel -x 0 -y' + str(p_action['delta'])

@@ -5,7 +5,6 @@ import subprocess
 import sys
 
 from profileexecutor import ProfileExecutor
-from soundfiles import SoundFiles
 from util import (get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file, CONST_VERSION,
                   init_config_folder, LINVAM_COMMANDS_FILE_PATH, read_profiles, update_profiles_for_new_version,
                   handle_args)
@@ -24,7 +23,6 @@ class LinVAMRun:
             'mouse': 0
         }
         init_config_folder()
-        self.m_sound = SoundFiles()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     def start_listening(self):

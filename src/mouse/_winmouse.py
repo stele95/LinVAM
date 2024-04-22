@@ -9,7 +9,6 @@ import atexit
 
 from ._mouse_event import ButtonEvent, WheelEvent, MoveEvent, LEFT, RIGHT, MIDDLE, X, X2, UP, DOWN, DOUBLE, WHEEL, HORIZONTAL, VERTICAL
 
-#https://github.com/boppreh/mouse/issues/1
 #user32 = ctypes.windll.user32
 user32 = ctypes.WinDLL('user32', use_last_error = True)
 
@@ -46,6 +45,8 @@ TranslateMessage.restype = BOOL
 
 DispatchMessage = user32.DispatchMessageA
 DispatchMessage.argtypes = [LPMSG]
+
+GetDoubleClickTime = user32.GetDoubleClickTime
 
 # Beware, as of 2016-01-30 the official docs have a very incomplete list.
 # This one was compiled from experience and may be incomplete.
@@ -129,8 +130,12 @@ WHEEL_DELTA = 120
 
 init = lambda: None
 
+previous_button_event = None # defined in global scope
 def listen(queue):
+
     def low_level_mouse_handler(nCode, wParam, lParam):
+        global previous_button_event
+
         struct = lParam.contents
         # Can't use struct.time because it's usually zero.
         t = time.time()
@@ -144,6 +149,16 @@ def listen(queue):
             if wParam >= WM_XBUTTONDOWN:
                 button = {0x10000: X, 0x20000: X2}[struct.data]
             event = ButtonEvent(type, button, t)
+
+            if (event.event_type == DOWN) and previous_button_event is not None:
+                # https://msdn.microsoft.com/en-us/library/windows/desktop/gg153548%28v=vs.85%29.aspx?f=255&MSPPError=-2147217396
+                if event.time - previous_button_event.time <= GetDoubleClickTime() / 1000.0:
+                    event = ButtonEvent(DOUBLE, event.button, event.time)
+
+            previous_button_event = event
+        else:
+            # Unknown event type.
+            return CallNextHookEx(NULL, nCode, wParam, lParam)
 
         queue.put(event)
         return CallNextHookEx(NULL, nCode, wParam, lParam)
@@ -162,8 +177,8 @@ def listen(queue):
         DispatchMessage(msg)
 
 def _translate_button(button):
-    if button == X or button == X2:
-        return X, {X: 0x10000, X2: 0x20000}[button]
+    if button.startswith(X):
+        return X, 1 if X == button else 2
     else:
         return button, 0
 

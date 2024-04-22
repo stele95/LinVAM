@@ -5,14 +5,17 @@ import sys
 
 from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessageBox, QLineEdit, QFileDialog
 
+import keyboard
+import mouse
+from mouse import ButtonEvent
 from profileeditwnd import ProfileEditWnd
 from profileexecutor import ProfileExecutor
-from soundfiles import SoundFiles
 from ui_mainwnd import Ui_MainWidget
 from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
                   CONST_VERSION, init_config_folder, setup_mangohud, read_profiles, save_profiles,
                   copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name,
-                  update_profiles_for_new_version, handle_args)
+                  update_profiles_for_new_version, handle_args, is_push_to_listen, get_push_to_listen_hotkey,
+                  save_push_to_listen_hotkey, save_is_push_to_listen)
 
 
 class MainWnd(QWidget):
@@ -26,25 +29,32 @@ class MainWnd(QWidget):
             'mouse': 0
         }
         self.m_active_profile = None
+        self.keyboard_listener = None
+        self.mouse_listener = None
         self.ui = Ui_MainWidget()
         self.ui.setupUi(self)
         handle_args(self.m_config)
         init_config_folder()
-        self.m_sound = SoundFiles()
         self.m_profile_executor = ProfileExecutor(self)
+        self._setup_input_mode()
 
         self.ui.addBut.clicked.connect(self.slot_add_new_profile)
         self.ui.editBut.clicked.connect(self.slot_edit_profile)
         self.ui.copyBut.clicked.connect(self.slot_copy_profile)
         self.ui.removeBut.clicked.connect(self.slot_remove_profile)
-        self.ui.exportBtn.clicked.connect(self.export_profile)
-        self.ui.importBtn.clicked.connect(self.import_profile)
-        self.ui.mergeBtn.clicked.connect(self.merge_profiles)
+        self.ui.exportBtn.clicked.connect(self._export_profile)
+        self.ui.importBtn.clicked.connect(self._import_profile)
+        self.ui.mergeBtn.clicked.connect(self._merge_profiles)
         self.ui.listeningChk.stateChanged.connect(self.slot_listening_enabled)
-        self.ui.sliderVolume.valueChanged.connect(lambda: self.m_sound.set_volume(self.ui.sliderVolume.value()))
+        self.ui.sliderVolume.valueChanged.connect(
+            lambda: self.m_profile_executor.set_sound_playback_volume(self.ui.sliderVolume.value())
+        )
+        self.ui.rbAlways.clicked.connect(lambda: self._on_input_mode_changed(ptl_enabled=False))
+        self.ui.rbPushToListen.clicked.connect(lambda: self._on_input_mode_changed(ptl_enabled=True))
+        self.ui.btnEditKeybind.clicked.connect(self._edit_ptl_keybind)
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-        self.init_profiles()
+        self._init_profiles()
 
         language_position = self.load_languages()
         self.ui.languageCbx.currentIndexChanged.connect(self.language_changed)
@@ -53,9 +63,76 @@ class MainWnd(QWidget):
         elif language_position == 0:
             self.language_changed(language_position)
 
-        self.check_buttons_states()
+        self._check_buttons_states()
 
-    def init_profiles(self):
+    def _edit_ptl_keybind(self):
+        if self.keyboard_listener is None:
+            self.keyboard_listener = keyboard.hook(callback=self._on_keyboard_key_event)
+            self.ui.btnEditKeybind.setText('Stop recording')
+        else:
+            self._stop_keyboard_listener()
+            self.ui.btnEditKeybind.setText('Edit keybind')
+        if self.mouse_listener is None:
+            self.mouse_listener = mouse.hook(callback=self._on_mouse_key_event)
+        else:
+            self._stop_mouse_listener()
+
+    def _stop_keyboard_listener(self):
+        # noinspection PyBroadException
+        # pylint: disable=bare-except,R0801
+        try:
+            if self.keyboard_listener is not None:
+                self.keyboard_listener()
+                self.keyboard_listener = None
+        except Exception as ex:
+            print(str(ex))
+
+    def _stop_mouse_listener(self):
+        # noinspection PyBroadException
+        # pylint: disable=bare-except
+        try:
+            if self.mouse_listener is not None:
+                mouse.unhook_all()
+                self.mouse_listener = None
+        except Exception as ex:
+            print(str(ex))
+
+    def _on_keyboard_key_event(self, event):
+        if event.name == 'unknown':
+            return
+        self._edit_ptl_keybind()
+        event_code = event.scan_code
+        event_name = event.name
+        name = save_push_to_listen_hotkey(event_name, event_code, False)
+        self.ui.pushToListenHotkey.setText(name.upper())
+        self.m_profile_executor.reset_listening()
+
+    def _on_mouse_key_event(self, event):
+        if not isinstance(event, ButtonEvent):
+            return
+        self._edit_ptl_keybind()
+        name = save_push_to_listen_hotkey(event.button, '', True)
+        self.ui.pushToListenHotkey.setText(name.upper())
+        self.m_profile_executor.reset_listening()
+
+    def _setup_input_mode(self):
+        ptl_enabled = is_push_to_listen()
+        ptl_enabled = bool(ptl_enabled)
+        self.ui.rbAlways.setChecked(not ptl_enabled)
+        self.ui.rbPushToListen.setChecked(ptl_enabled)
+        self._on_input_mode_changed(ptl_enabled, save_to_config=False)
+
+    def _on_input_mode_changed(self, ptl_enabled, save_to_config=True):
+        ptl_hotkey = get_push_to_listen_hotkey()
+        if ptl_hotkey:
+            self.ui.pushToListenHotkey.setText(str(ptl_hotkey.name).upper())
+        self.ui.pushToListenHotkey.setVisible(ptl_enabled)
+        self.ui.btnEditKeybind.setVisible(ptl_enabled)
+        if save_to_config:
+            save_is_push_to_listen(ptl_enabled)
+        self.m_profile_executor.reset_listening()
+
+    def _init_profiles(self):
         self.ui.profileCbx.clear()
         position = self.load_from_database()
         self.ui.profileCbx.currentIndexChanged.connect(self.slot_profile_changed)
@@ -64,29 +141,29 @@ class MainWnd(QWidget):
         elif position == 0:
             self.slot_profile_changed(position)
 
-    def export_profile(self):
+    def _export_profile(self):
         path = QFileDialog.getExistingDirectory(self, 'Select a location for extracting profiles', HOME_DIR)
         if not path:
             return
         copy_profiles_to_dir(path)
 
-    def import_profile(self):
+    def _import_profile(self):
         (path, _) = QFileDialog.getOpenFileName(self, 'Select a file for importing profiles from', HOME_DIR,
                                                 "Profiles json file (*.json)")
         if not path:
             return
         import_profiles_from_file(path)
-        self.init_profiles()
+        self._init_profiles()
 
-    def merge_profiles(self):
+    def _merge_profiles(self):
         (path, _) = QFileDialog.getOpenFileName(self, 'Select a file for merging profiles with', HOME_DIR,
                                                 "Profiles json file (*.json)")
         if not path:
             return
         merge_profiles(path)
-        self.init_profiles()
+        self._init_profiles()
 
-    def check_buttons_states(self):
+    def _check_buttons_states(self):
         enabled = self.ui.profileCbx.count() > 0
         self.ui.editBut.setEnabled(enabled)
         self.ui.copyBut.setEnabled(enabled)
@@ -171,7 +248,7 @@ class MainWnd(QWidget):
             self.ui.profileCbx.addItem(w_profile['name'], w_json_profile)
             self.ui.profileCbx.setCurrentIndex(self.ui.profileCbx.count() - 1)
             self.save_to_database()
-            self.check_buttons_states()
+            self._check_buttons_states()
 
     def slot_edit_profile(self):
         w_idx = self.ui.profileCbx.currentIndex()
@@ -226,7 +303,7 @@ class MainWnd(QWidget):
             self.ui.profileCbx.removeItem(w_cur_idx)
 
         self.save_to_database()
-        self.check_buttons_states()
+        self._check_buttons_states()
 
     def slot_listening_enabled(self, p_enabled):
         if p_enabled:
@@ -238,6 +315,8 @@ class MainWnd(QWidget):
     # pylint: disable=invalid-name
     def closeEvent(self, event):
         self.m_profile_executor.shutdown()
+        self._stop_keyboard_listener()
+        self._stop_mouse_listener()
         delete_linvam_run_file()
         event.accept()
 

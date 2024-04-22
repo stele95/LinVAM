@@ -4,6 +4,7 @@ import os
 import re
 import subprocess
 import sys
+from collections import namedtuple
 
 CONST_VERSION = '0.6.4-git'
 HOME_DIR = os.path.expanduser('~')
@@ -12,9 +13,12 @@ COMMANDS_LIST_FILE = 'commands.list'
 LINVAM_COMMANDS_FILE_PATH = LINVAM_SETTINGS_FOLDER + COMMANDS_LIST_FILE
 YDOTOOLD_SOCKET_PATH = LINVAM_SETTINGS_FOLDER + '.ydotoold_socket'
 KEYS_SPLITTER = '->'
+MOUSE_KEY_PTL_PREFIX = 'Mouse: '
 OLD_KEYS_SPLITTER = '+'
 DEFAULT_KEY_DELAY_IN_MILLISECONDS = 60
 PROFILES_FILE_NAME = 'profiles.json'
+PUSH_TO_LISTEN_ENABLED_CONFIG = 'ptl_enabled'
+PUSH_TO_LISTEN_HOTKEY_CONFIG = 'ptl_hotkey'
 
 
 def handle_args(config):
@@ -236,6 +240,44 @@ def get_linvamrun_run_configs():
         config_text = f.read()
         f.close()
     return json.loads(config_text)
+
+
+def is_push_to_listen():
+    return bool(get_config(PUSH_TO_LISTEN_ENABLED_CONFIG))
+
+
+def save_is_push_to_listen(is_ptl):
+    save_config(PUSH_TO_LISTEN_ENABLED_CONFIG, is_ptl)
+
+
+PTLHotkey = namedtuple('PTLHotkey', ['name', 'button', 'code', 'is_mouse_key'])
+
+
+def save_push_to_listen_hotkey(button, code, is_mouse_key):
+    if is_mouse_key:
+        name = MOUSE_KEY_PTL_PREFIX + button
+        save_config(PUSH_TO_LISTEN_HOTKEY_CONFIG, str(name))
+    else:
+        name = button
+        save_config(PUSH_TO_LISTEN_HOTKEY_CONFIG, str(button) + KEYS_SPLITTER + str(code))
+    return name
+
+
+def get_push_to_listen_hotkey():
+    hotkey = get_config(PUSH_TO_LISTEN_HOTKEY_CONFIG)
+    if not hotkey:
+        return ''
+    is_mouse_key = MOUSE_KEY_PTL_PREFIX in hotkey
+    if is_mouse_key:
+        name = hotkey
+        button = hotkey.replace(MOUSE_KEY_PTL_PREFIX, '')
+        code = ''
+    else:
+        split = hotkey.split(KEYS_SPLITTER)
+        button = split[0]
+        name = button
+        code = split[1]
+    return PTLHotkey(name, button, code, is_mouse_key)
 
 
 def get_configs():

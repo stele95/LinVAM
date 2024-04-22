@@ -1,8 +1,12 @@
 import os
 import datetime
 import threading
+import time
+
 import Quartz
+
 from ._mouse_event import ButtonEvent, WheelEvent, MoveEvent, LEFT, RIGHT, MIDDLE, X, X2, UP, DOWN
+
 
 _button_mapping = {
     LEFT: (Quartz.kCGMouseButtonLeft, Quartz.kCGEventLeftMouseDown, Quartz.kCGEventLeftMouseUp, Quartz.kCGEventLeftMouseDragged),
@@ -20,6 +24,16 @@ _last_click = {
     "position": None,
     "click_count": 0
 }
+_mouse_button_mapping = {
+    Quartz.kCGEventLeftMouseDown: LEFT,
+    Quartz.kCGEventLeftMouseUp: LEFT,
+    Quartz.kCGEventRightMouseDown: RIGHT,
+    Quartz.kCGEventRightMouseUp: RIGHT,
+    1026: MIDDLE
+}
+_click_down_events = [Quartz.kCGEventLeftMouseDown, Quartz.kCGEventRightMouseDown, Quartz.kCGEventOtherMouseDown]
+_click_up_events = [Quartz.kCGEventLeftMouseUp, Quartz.kCGEventRightMouseUp, Quartz.kCGEventOtherMouseUp]
+
 
 class MouseEventListener(object):
     def __init__(self, callback, blocking=False):
@@ -52,35 +66,55 @@ class MouseEventListener(object):
         while self.listening:
             Quartz.CFRunLoopRunInMode(Quartz.kCFRunLoopDefaultMode, 5, False)
 
-    def handler(self, proxy, e_type, event, refcon):
-        # TODO Separate event types by button/wheel/move
-        scan_code = Quartz.CGEventGetIntegerValueField(event, Quartz.kCGKeyboardEventKeycode)
-        key_name = name_from_scancode(scan_code)
-        flags = Quartz.CGEventGetFlags(event)
-        event_type = ""
-        is_keypad = (flags & Quartz.kCGEventFlagMaskNumericPad)
-        if e_type == Quartz.kCGEventKeyDown:
-            event_type = "down"
-        elif e_type == Quartz.kCGEventKeyUp:
-            event_type = "up"
+    def handler(self, proxy, event_type, event, *args):
+        if event_type in (_click_down_events + _click_up_events):
+            direction = DOWN if event_type in _click_down_events else UP
 
-        if self.blocking:
-            return None
+            x, y = [int(i) for i in Quartz.CGEventGetLocation(event)]
 
-        self.callback(KeyboardEvent(event_type, scan_code, name=key_name, is_keypad=is_keypad))
+            if event_type in _mouse_button_mapping:
+                button = _mouse_button_mapping[event_type]
+            else:
+                button_number = Quartz.CGEventGetIntegerValueField(event, Quartz.kCGMouseEventButtonNumber)
+
+                if (button_number + 1024) in _mouse_button_mapping:
+                    button = _mouse_button_mapping[button_number + 1024]
+                else:
+                    return event
+
+            mouse_event = ButtonEvent(event_type=direction, button=button, time=time.time())
+
+        elif event_type == Quartz.kCGEventScrollWheel:
+            x, y = [int(i) for i in Quartz.CGEventGetLocation(event)]
+
+            velocity = Quartz.CGEventGetIntegerValueField(event, Quartz.kCGScrollWheelEventDeltaAxis1)
+            #direction = UP if velocity > 0 else DOWN
+
+            mouse_event = WheelEvent(delta=velocity, time=time.time())
+
+        elif event_type == Quartz.kCGEventMouseMoved:
+            x, y = [int(i) for i in Quartz.CGEventGetLocation(event)]
+
+            mouse_event = MoveEvent(x=x, y=y, time=time.time())
+
+        else:
+            return event
+
+        self.callback(mouse_event)
         return event
 
-# Exports
 
+# Exports
 def init():
     """ Initializes mouse state """
     pass
 
 def listen(queue):
     """ Appends events to the queue (ButtonEvent, WheelEvent, and MoveEvent). """
-    if not os.geteuid() == 0:
-        raise OSError("Error 13 - Must be run as administrator")
-    listener = MouseEventListener(lambda e: queue.put(e) or is_allowed(e.name, e.event_type == KEY_UP))
+    # if not os.geteuid() == 0:3
+    #    raise OSError("Error 13 - Must be run as administrator")
+    # root is not required, just grant accessibility permissions to terminal/python (System Preferences -> Security)
+    listener = MouseEventListener(lambda e: queue.put(e))
     t = threading.Thread(target=listener.run, args=())
     t.daemon = True
     t.start()
@@ -147,6 +181,29 @@ def wheel(delta=1):
         delta)
     Quartz.CGEventPost(Quartz.kCGHIDEventTap, e)
     Quartz.CGEventPost(Quartz.kCGHIDEventTap, e2)
+
+def __wheel(self, dy=1, dx=0):
+    #print('alternative scroll ..')
+    dx = int(dx)
+    dy = int(dy)
+    speed = 5
+
+    while dx != 0 or dy != 0:
+        xval = 1 if dx > 0 else -1 if dx < 0 else 0
+        dx -= xval
+        yval = 1 if dy > 0 else -1 if dy < 0 else 0
+        dy -= yval
+
+        Quartz.CGEventPost(
+            Quartz.kCGHIDEventTap,
+            Quartz.CGEventCreateScrollWheelEvent(
+                None,
+                Quartz.kCGScrollEventUnitPixel,
+                2,
+                yval * speed,
+                xval * speed
+            )
+        )
 
 def move_to(x, y):
     """ Sets the mouse's location to the specified coordinates. """
