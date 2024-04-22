@@ -143,7 +143,7 @@ def aggregate_devices(type_name):
     # send events, we create a fake device and send all events through there.
     try:
         uinput = make_uinput()
-        fake_device = EventDevice('uinput Fake Device')
+        fake_device = EventDevice('uinput Fake Keyboard Device')
         fake_device._input_file = uinput
         fake_device._output_file = uinput
     except IOError as e:
