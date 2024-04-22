@@ -12,7 +12,7 @@ from vosk import Model, KaldiRecognizer
 import keyboard
 import mouse
 from keyboard import nixkeyboard as _os_keyboard
-from mouse import DOWN, UP, ButtonEvent
+from mouse import ButtonEvent
 from mouse import nixmouse as _os_mouse
 from soundfiles import SoundFiles
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
@@ -81,7 +81,7 @@ class ProfileExecutor(threading.Thread):
             if command in result_string:
                 self.recognizer.Result()
                 print('Detected: ' + command)
-                # TODO self._do_command(command)
+                self._do_command(command)
                 break
 
     def get_listen_result(self, in_data):
