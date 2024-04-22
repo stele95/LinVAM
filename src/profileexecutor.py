@@ -284,10 +284,10 @@ class ProfileExecutor(threading.Thread):
 
     @staticmethod
     def _scroll_mouse_mouse(p_action):
-        _os_mouse.wheel(p_action['delta'])
+        _os_mouse.wheel(int(p_action['delta']))
 
     def _scroll_mouse_ydotool(self, p_action):
-        command = 'mousemove --wheel -x 0 -y' + str(p_action['delta'])
+        command = 'mousemove --wheel -x 0 -y ' + str(p_action['delta'])
         self._execute_ydotool_command(command)
 
     def _click_mouse_key(self, action):
@@ -299,7 +299,7 @@ class ProfileExecutor(threading.Thread):
     @staticmethod
     def _click_mouse_key_mouse(p_action):
         w_type = p_action['type']
-        w_button = p_action['button']
+        w_button = str(p_action['button'])
         match w_type:
             case 1:
                 _os_mouse.press(w_button)

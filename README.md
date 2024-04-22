@@ -149,4 +149,4 @@ https://alphacephei.com/vosk/adaptation
 You can use the following arguments with ``linvam`` or ``linvamrun`` for debugging when something isn't working:
 - ``--debug`` - prints additional info while running
 - ``--use-keyboard`` - LinVAM will try and input keyboard events directly to ``input`` instead of through ``ydotool``
-- ``--use-mouse`` - LinVAM will try and input mouse events directly to ``input`` instead of through ``ydotool`` (works on X11 only for now)
+- ``--use-mouse`` - LinVAM will try and input mouse events directly to ``input`` instead of through ``ydotool``

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-import struct
-import os
 import atexit
-from time import time as now
-from threading import Thread
+import struct
 from glob import glob
+from threading import Thread
+from time import time as now
+
 try:
     from queue import Queue
 except ImportError:
@@ -22,18 +22,56 @@ EV_MSC = 0x04
 
 INVALID_ARGUMENT_ERRNO = 22
 
+
 def make_uinput():
     import fcntl, struct
 
     # Requires uinput driver, but it's usually available.
     uinput = open("/dev/uinput", 'wb')
     UI_SET_EVBIT = 0x40045564
-    fcntl.ioctl(uinput, UI_SET_EVBIT, EV_KEY)
 
     UI_SET_KEYBIT = 0x40045565
+    UI_SET_RELBIT = 0x40045566
+    UI_SET_ABSBIT = 0x40045567
+
+    BTN_MOUSE = 0x110
+    BTN_LEFT = 0x110
+    BTN_RIGHT = 0x111
+    BTN_MIDDLE = 0x112
+    BTN_SIDE = 0x113
+    BTN_EXTRA = 0x114
+    BTN_FORWARD = 0x115
+    BTN_BACK = 0x116
+    BTN_TASK = 0x117
+    X = 0x00
+    Y = 0x01
+    WHEEL = 0x08
+
     try:
-        for i in range(0x300):
-            fcntl.ioctl(uinput, UI_SET_KEYBIT, i)
+        # mouse buttons
+        fcntl.ioctl(uinput, UI_SET_EVBIT, EV_KEY)
+        fcntl.ioctl(uinput, UI_SET_KEYBIT, BTN_MOUSE)
+        fcntl.ioctl(uinput, UI_SET_KEYBIT, BTN_LEFT)
+        fcntl.ioctl(uinput, UI_SET_KEYBIT, BTN_RIGHT)
+        fcntl.ioctl(uinput, UI_SET_KEYBIT, BTN_MIDDLE)
+        fcntl.ioctl(uinput, UI_SET_KEYBIT, BTN_SIDE)
+        fcntl.ioctl(uinput, UI_SET_KEYBIT, BTN_EXTRA)
+        fcntl.ioctl(uinput, UI_SET_KEYBIT, BTN_FORWARD)
+        fcntl.ioctl(uinput, UI_SET_KEYBIT, BTN_BACK)
+        fcntl.ioctl(uinput, UI_SET_KEYBIT, BTN_TASK)
+
+        # mouse relative movement
+        fcntl.ioctl(uinput, UI_SET_EVBIT, EV_REL)
+        fcntl.ioctl(uinput, UI_SET_RELBIT, X)
+        fcntl.ioctl(uinput, UI_SET_RELBIT, Y)
+        fcntl.ioctl(uinput, UI_SET_RELBIT, WHEEL)
+
+        # TODO for some reason mouse inputs don't work when EV_ABS is set
+        # mouse absolute movement
+        # fcntl.ioctl(uinput, UI_SET_EVBIT, EV_ABS)
+        # fcntl.ioctl(uinput, UI_SET_ABSBIT, X)
+        # fcntl.ioctl(uinput, UI_SET_ABSBIT, Y)
+        # fcntl.ioctl(uinput, UI_SET_ABSBIT, WHEEL)
     except OSError as e:
         if e.errno != INVALID_ARGUMENT_ERRNO:
             raise e
@@ -41,15 +79,16 @@ def make_uinput():
     BUS_USB = 0x03
     uinput_user_dev = "80sHHHHi64i64i64i64i"
     axis = [0] * 64 * 4
-    uinput.write(struct.pack(uinput_user_dev, b"Virtual Keyboard", BUS_USB, 1, 1, 1, 0, *axis))
-    uinput.flush() # Without this you may get Errno 22: Invalid argument.
+    uinput.write(struct.pack(uinput_user_dev, b"Virtual Mouse", BUS_USB, 1, 1, 1, 0, *axis))
+    uinput.flush()  # Without this you may get Errno 22: Invalid argument.
 
     UI_DEV_CREATE = 0x5501
     fcntl.ioctl(uinput, UI_DEV_CREATE)
     UI_DEV_DESTROY = 0x5502
-    #fcntl.ioctl(uinput, UI_DEV_DESTROY)
+    # fcntl.ioctl(uinput, UI_DEV_DESTROY)
 
     return uinput
+
 
 class EventDevice(object):
     def __init__(self, path):
@@ -64,7 +103,9 @@ class EventDevice(object):
                 self._input_file = open(self.path, 'rb')
             except IOError as e:
                 if e.strerror == 'Permission denied':
-                    print('Permission denied ({}). You must be sudo to access global events.'.format(self.path))
+                    print(
+                        "# ERROR: Failed to read device '{}'. You must be in the 'input' group to access global events. Use 'sudo usermod -a -G input USERNAME' to add user to the required group.".format(
+                            self.path))
                     exit()
 
             def try_close():
@@ -72,6 +113,7 @@ class EventDevice(object):
                     self._input_file.close
                 except:
                     pass
+
             atexit.register(try_close)
         return self._input_file
 
@@ -99,14 +141,17 @@ class EventDevice(object):
         self.output_file.write(data_event + sync_event)
         self.output_file.flush()
 
+
 class AggregatedEventDevice(object):
     def __init__(self, devices, output=None):
         self.event_queue = Queue()
         self.devices = devices
         self.output = output or self.devices[0]
+
         def start_reading(device):
             while True:
                 self.event_queue.put(device.read_event())
+
         for device in self.devices:
             thread = Thread(target=start_reading, args=[device])
             thread.setDaemon(True)
@@ -118,10 +163,14 @@ class AggregatedEventDevice(object):
     def write_event(self, type, code, value):
         self.output.write_event(type, code, value)
 
+
 import re
 from collections import namedtuple
+
 DeviceDescription = namedtuple('DeviceDescription', 'event_file is_mouse is_keyboard')
 device_pattern = r"""N: Name="([^"]+?)".+?H: Handlers=([^\n]+)"""
+
+
 def list_devices_from_proc(type_name):
     try:
         with open('/proc/bus/input/devices') as f:
@@ -135,9 +184,11 @@ def list_devices_from_proc(type_name):
         if type_name in handlers:
             yield EventDevice(path)
 
+
 def list_devices_from_by_id(type_name):
     for path in glob('/dev/input/by-id/*-event-' + type_name):
         yield EventDevice(path)
+
 
 def aggregate_devices(type_name):
     # Some systems have multiple keyboards with different range of allowed keys
@@ -145,7 +196,7 @@ def aggregate_devices(type_name):
     # power button. Instead of figuring out which keyboard allows which key to
     # send events, we create a fake device and send all events through there.
     uinput = make_uinput()
-    fake_device = EventDevice('uinput Fake Device')
+    fake_device = EventDevice('uinput Fake Mouse Device')
     fake_device._input_file = uinput
     fake_device._output_file = uinput
 
