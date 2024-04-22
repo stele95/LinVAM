@@ -26,7 +26,8 @@ class ProfileExecutor(threading.Thread):
         super().__init__()
         self.m_profile = None
         self.ptl_key = None
-        self.ptl_key_listener = None
+        self.ptl_keyboard_listener = None
+        self.ptl_mouse_listener = None
         self.listening = False
         self.commands_list = []
         self.m_cmd_threads = {}
@@ -168,9 +169,9 @@ class ProfileExecutor(threading.Thread):
     def _start_ptl(self, ptl_hotkey):
         self.ptl_key = ptl_hotkey
         if ptl_hotkey.is_mouse_key:
-            self.ptl_key_listener = mouse.hook(self._on_mouse_key_event)
+            self.ptl_keyboard_listener = mouse.hook(self._on_mouse_key_event)
         else:
-            self.ptl_key_listener = keyboard.hook(self._on_keyboard_key_event)
+            self.ptl_keyboard_listener = keyboard.hook(self._on_keyboard_key_event)
 
     def _on_mouse_key_event(self, event):
         if not isinstance(event, ButtonEvent):
@@ -218,9 +219,12 @@ class ProfileExecutor(threading.Thread):
         # noinspection PyBroadException
         # pylint: disable=bare-except,R0801
         try:
-            if self.ptl_key_listener is not None:
-                self.ptl_key_listener()
-                self.ptl_key_listener = None
+            if self.ptl_keyboard_listener is not None:
+                self.ptl_keyboard_listener()
+                self.ptl_keyboard_listener = None
+            if self.ptl_mouse_listener is not None:
+                mouse.unhook_all()
+                self.ptl_mouse_listener = None
         except Exception as ex:
             print(str(ex))
 
