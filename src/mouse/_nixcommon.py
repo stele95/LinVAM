@@ -41,10 +41,10 @@ def make_uinput():
     BTN_FORWARD = 0x115
     BTN_BACK = 0x116
     BTN_TASK = 0x117
-    REL_X = 0x00
-    REL_Y = 0x01
-    ABS_X = 0x00
-    ABS_Y = 0x01
+    BTN_WHEEL = 0x150
+    X = 0x00
+    Y = 0x01
+    WHEEL = 0x08
 
     try:
         # mouse buttons
@@ -58,14 +58,19 @@ def make_uinput():
         fcntl.ioctl(uinput, UI_SET_KEYBIT, BTN_FORWARD)
         fcntl.ioctl(uinput, UI_SET_KEYBIT, BTN_BACK)
         fcntl.ioctl(uinput, UI_SET_KEYBIT, BTN_TASK)
+        fcntl.ioctl(uinput, UI_SET_KEYBIT, BTN_WHEEL)
 
         # mouse absolute movement
         fcntl.ioctl(uinput, UI_SET_EVBIT, EV_ABS)
+        # fcntl.ioctl(uinput, UI_SET_ABSBIT, X)
+        # fcntl.ioctl(uinput, UI_SET_ABSBIT, Y)
+        # fcntl.ioctl(uinput, UI_SET_ABSBIT, WHEEL)
 
         # mouse relative movement
         fcntl.ioctl(uinput, UI_SET_EVBIT, EV_REL)
-        # fcntl.ioctl(uinput, UI_SET_RELBIT, REL_X)
-        # fcntl.ioctl(uinput, UI_SET_RELBIT, REL_Y)
+        # fcntl.ioctl(uinput, UI_SET_RELBIT, X)
+        # fcntl.ioctl(uinput, UI_SET_RELBIT, Y)
+        # fcntl.ioctl(uinput, UI_SET_RELBIT, WHEEL)
     except OSError as e:
         if e.errno != INVALID_ARGUMENT_ERRNO:
             raise e
