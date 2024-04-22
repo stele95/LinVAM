@@ -169,7 +169,7 @@ class ProfileExecutor(threading.Thread):
     def _start_ptl(self, ptl_hotkey):
         self.ptl_key = ptl_hotkey
         if ptl_hotkey.is_mouse_key:
-            self.ptl_keyboard_listener = mouse.hook(self._on_mouse_key_event)
+            self.ptl_mouse_listener = mouse.hook(self._on_mouse_key_event)
         else:
             self.ptl_keyboard_listener = keyboard.hook(self._on_keyboard_key_event)
 
@@ -225,7 +225,7 @@ class ProfileExecutor(threading.Thread):
                 self.ptl_keyboard_listener()
                 self.ptl_keyboard_listener = None
             if self.ptl_mouse_listener is not None:
-                mouse.unhook_all()
+                mouse.unhook(self.ptl_mouse_listener)
                 self.ptl_mouse_listener = None
         except Exception as ex:
             print(str(ex))
