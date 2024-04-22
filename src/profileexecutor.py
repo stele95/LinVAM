@@ -12,7 +12,7 @@ from vosk import Model, KaldiRecognizer
 import keyboard
 import mouse
 from keyboard import nixkeyboard as _os_keyboard
-from mouse import DOWN, UP
+from mouse import DOWN, UP, ButtonEvent
 from mouse import nixmouse as _os_mouse
 from soundfiles import SoundFiles
 from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
@@ -25,8 +25,8 @@ class ProfileExecutor(threading.Thread):
 
         super().__init__()
         self.m_profile = None
-        self.ptl_press_listener = None
-        self.ptl_release_listener = None
+        self.ptl_key = None
+        self.ptl_key_listener = None
         self.listening = False
         self.commands_list = []
         self.m_cmd_threads = {}
@@ -166,6 +166,7 @@ class ProfileExecutor(threading.Thread):
             self._stop()
 
     def _start_ptl(self, ptl_hotkey):
+        self.ptl_key = ptl_hotkey
         if ptl_hotkey.is_mouse_key:
             # todo optimize this for not using while loop
             while self.listening:
@@ -175,17 +176,26 @@ class ProfileExecutor(threading.Thread):
                 mouse.wait(button, target_types=UP)
                 self.m_stream.stop()
         else:
-            button = int(ptl_hotkey.code)
-            self.ptl_press_listener = keyboard.add_hotkey(button, lambda: self.m_stream.start())
-            self.ptl_release_listener = keyboard.add_hotkey(
-                button,
-                lambda: self.m_stream.stop(),
-                trigger_on_release=True
-            )
+            self.ptl_key_listener = keyboard.hook(self._on_keyboard_key_event)
+
+    def _on_mouse_key_event(self, event):
+        if not isinstance(event, ButtonEvent):
+            return
+
+    def _on_keyboard_key_event(self, event):
+        if event.name == 'unknown':
+            return
+        if int(event.scan_code) == int(self.ptl_key.code):
+            if event.event_type == keyboard.KEY_DOWN and not self.m_stream.active:
+                self.m_stream.start()
+            elif event.event_type == keyboard.KEY_UP and self.m_stream.active:
+                time.sleep(1)
+                self.recognizer.Result()
+                self.m_stream.stop()
 
     def _stop(self):
         if self.m_stream is not None:
-            self._unhook_listeners()
+            self._stop_keyboard_listener()
             self.m_stream.stop()
             self.m_stream.close()
             self.m_stream = None
@@ -203,11 +213,15 @@ class ProfileExecutor(threading.Thread):
             except OSError:
                 pass
 
-    def _unhook_listeners(self):
-        if self.ptl_press_listener is not None:
-            self.ptl_press_listener()
-        if self.ptl_release_listener is not None:
-            self.ptl_release_listener()
+    def _stop_keyboard_listener(self):
+        # noinspection PyBroadException
+        # pylint: disable=bare-except,R0801
+        try:
+            if self.ptl_key_listener is not None:
+                self.ptl_key_listener()
+                self.ptl_key_listener = None
+        except Exception as ex:
+            print(str(ex))
 
     def do_action(self, p_action):
         # {'name': 'key action', 'key': 'left', 'type': 0}

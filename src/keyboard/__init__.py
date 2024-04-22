@@ -771,7 +771,8 @@ def add_hotkey(hotkey, callback, args=(), suppress=False, timeout=1, trigger_on_
             _hotkeys.pop(hotkey, None)
             _hotkeys.pop(remove_, None)
             _hotkeys.pop(callback, None)
-        _save_hotkey(hotkey, remove_, callback, trigger_on_release)
+        # TODO: allow multiple callbacks for each hotkey without overwriting the remover.
+        _hotkeys[hotkey] = _hotkeys[remove_] = _hotkeys[callback] = remove_
         return remove_
 
     state = _State()
@@ -853,15 +854,10 @@ def add_hotkey(hotkey, callback, args=(), suppress=False, timeout=1, trigger_on_
         _hotkeys.pop(hotkey, None)
         _hotkeys.pop(remove_, None)
         _hotkeys.pop(callback, None)
-    _save_hotkey(hotkey, remove_, callback, trigger_on_release)
+    # TODO: allow multiple callbacks for each hotkey without overwriting the remover.
+    _hotkeys[hotkey] = _hotkeys[remove_] = _hotkeys[callback] = remove_
     return remove_
 register_hotkey = add_hotkey
-
-def _save_hotkey(hotkey, remove, callback, on_release_action):
-    # TODO: allow multiple callbacks for each hotkey without overwriting the remover.
-    action = 'RELEASE' if on_release_action else 'PRESS'
-    _hotkeys[str(hotkey) + ' ' + action] = _hotkeys[remove] = _hotkeys[callback] = remove
-    print(str(_hotkeys))
 
 def remove_hotkey(hotkey_or_callback):
     """
