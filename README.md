@@ -111,6 +111,12 @@ Backup options:
 - Use ``Import`` to import profiles from ``profiles.json`` file when restoring backup. CAUTION! This overrides any existing profiles.
 - Use ``Merge`` to add profiles from ``profiles.json`` file you selected. This doesn't delete existing profiles, it adds new ones alongside existing ones.
 
+![Main GUI Profiles](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/main-gui-profiles.png)
+### Input mode
+You can choose between two input modes for LinVAM to listen to your commands:
+- ``Always on`` - LinVAM is always listening to what you are saying
+- ``Push to listen`` - LinVAM is only listening when you hold the set keybind. If this mode in selected and no keybind is set, listening will be always active as if ``Always on`` was selected
+
 ![Main GUI](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/main-gui.png)
 ### Key combinations
 For inputting combinations, press the ``Start recording`` button and then enter the desired combination by pressing keys on the keyboard in the desired order. Once finished, press ``Stop recording``.
