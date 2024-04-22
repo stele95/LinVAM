@@ -153,9 +153,9 @@ class ProfileExecutor(threading.Thread):
         if self.recognizer is None:
             return
         if not self.listening and p_enable:
-            if is_push_to_listen():
+            ptl_hotkey = get_push_to_listen_hotkey()
+            if is_push_to_listen() and ptl_hotkey:
                 self._init_stream()
-                ptl_hotkey = get_push_to_listen_hotkey()
                 print('Stream initialized, press ' + ptl_hotkey.name.upper() + ' to listen for commands')
                 self.listening = True
                 self._start_ptl(ptl_hotkey)

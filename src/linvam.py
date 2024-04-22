@@ -124,7 +124,8 @@ class MainWnd(QWidget):
 
     def _on_input_mode_changed(self, ptl_enabled, save_to_config=True):
         ptl_hotkey = get_push_to_listen_hotkey()
-        self.ui.pushToListenHotkey.setText(str(ptl_hotkey.name).upper())
+        if ptl_hotkey:
+            self.ui.pushToListenHotkey.setText(str(ptl_hotkey.name).upper())
         self.ui.pushToListenHotkey.setVisible(ptl_enabled)
         self.ui.btnEditKeybind.setVisible(ptl_enabled)
         if save_to_config:

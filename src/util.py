@@ -265,6 +265,8 @@ def save_push_to_listen_hotkey(button, code, is_mouse_key):
 
 def get_push_to_listen_hotkey():
     hotkey = get_config(PUSH_TO_LISTEN_HOTKEY_CONFIG)
+    if not hotkey:
+        return ''
     is_mouse_key = MOUSE_KEY_PTL_PREFIX in hotkey
     if is_mouse_key:
         name = hotkey
