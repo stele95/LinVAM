@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-echo "Setting up python virtual environment"
+echo "Setting up python virtual environment at ~/.local/share/LinVAM/venv"
 mkdir -p ~/.local/share/LinVAM
 python -m venv ~/.local/share/LinVAM/venv
 source ~/.local/share/LinVAM/venv/bin/activate

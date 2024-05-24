@@ -52,13 +52,6 @@ If a package is available for your distribution, that's the recommended way for 
 After installing from AUR, run ``sudo usermod -aG tty,input $USER`` to allow [uinput access without sudo](#udev-rule-for-input)
 
 ### Install manually
-Since ``LinVAM`` relies on ``python`` to run, there are two ways of installing it:
-- [Using system python packages](#installing-by-using-system-python-packages-linvam-should-use-the-system-qt-theme-if-installed-this-way) (e.g. Arch Linux manages python packages through pacman, not through pip)
-- [Installing by creating a virtual environment for ``LinVAM`` python packages](#installing-by-creating-a-virtual-environment-for-linvam-python-packages-linvam-will-have-a-default-theme-that-doesnt-use-the-system-qt-theme-settings)
-
-Both ways require that ``python3`` is installed. 
-
-The steps for installing will change in the future to better support the recommended ways of installing python apps.
 
 #### Requirements
 - python packages:
@@ -70,6 +63,18 @@ The steps for installing will change in the future to better support the recomme
   - vosk
 - ffmpeg
 - [ydotool](https://github.com/ReimuNotMoe/ydotool)
+
+#### Installation steps
+<details>
+<summary>PC</summary>
+
+Since ``LinVAM`` relies on ``python`` to run, there are two ways of installing it:
+- [Using system python packages](#installing-by-using-system-python-packages-linvam-should-use-the-system-qt-theme-if-installed-this-way) (e.g. Arch Linux manages python packages through pacman, not through pip)
+- [Installing by creating a virtual environment for ``LinVAM`` python packages](#installing-by-creating-a-virtual-environment-for-linvam-python-packages-linvam-will-have-a-default-theme-that-doesnt-use-the-system-qt-theme-settings)
+
+Both ways require that ``python3`` is installed. 
+
+The steps for installing will change in the future to better support the recommended ways of installing python apps.
 
 #### Installing by using system python packages (``LinVAM`` should use the system Qt theme if installed this way)
 - install all [required packages](#requirements) using your system package manager
@@ -83,6 +88,21 @@ The steps for installing will change in the future to better support the recomme
       source setup-python-virtual-environment.sh && source build-and-install.sh
 
 - Don't forget to restart your device after finishing installation steps
+</details>
+
+<details>
+<summary>Steam Deck</summary>
+
+You will have to use the desktop mode on the Steam Deck for installing and setting up ``LinVAM``
+
+- Install ``python``
+- Download the source code zip file from the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it, enter scripts folder, open terminal in that folder and execute the following command:
+
+      source steam-deck-build-and-install.sh
+
+- Don't forget to restart your device after finishing installation steps
+
+</details>
 
 ## Build
 - install ``python3`` and ``nuitka`` using you preferred method of installation (system packages or python virtual environment)
@@ -114,11 +134,24 @@ You will need to restart your computer for the change to take effect.
 Start LinVAM from your list of applications or by typing ``linvam`` in the terminal. This works on both X11 and Wayland, but prior uinput access setup is required, read [Configuring uinput access](#configuring-uinput-access)
 
 ### Usage with Steam
+
+<details>
+<summary>PC</summary>
+
 After setting up profiles in the GUI app, you can add ``linvamrun --profile='Profile name' -- %command%`` to the game launch options for starting the console app for listening when opening games.
 
 You can also use ``--language='languageName'`` for specifying a language. If ``--language`` argument is not used, app defaults to language selected in the GUI app.
 
 ![Steam launch options](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/steam.png)
+</details>
+<details>
+<summary>Steam Deck</summary>
+
+After setting up profiles in the GUI app in the desktop mode, you can add ``/home/{username}/.local/bin/linvamrun --profile='Profile name' -- %command%`` to the game launch options for starting the app in the background for listening when opening games.
+Make sure to replace ``{username}`` with your username.
+
+You can also use ``--language='languageName'`` for specifying a language. If ``--language`` argument is not used, app defaults to language selected in the GUI app.
+</details>
 
 ### Display LinVAM profile and language in MangoHud
 If you are using [MangoHud](https://github.com/flightlessmango/MangoHud), you can set it up for displaying selected LinVAM profile and language.

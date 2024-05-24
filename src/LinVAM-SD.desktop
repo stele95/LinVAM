@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=LinVAM
+Comment=Linux Voice Activated Macros
+GenericName=Linux Voice Activated Macros
+Exec=~/.local/bin/linvam
+Type=Application
+Categories=Game;Utilities;
+StartupWMClass=linvam
+Terminal=false
