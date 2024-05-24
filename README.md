@@ -10,8 +10,6 @@ Linux Voice Activated Macro
   * [Install manually](#install-manually)
     * [Requirements](#requirements)
     * [Installation steps](#installation-steps)
-    * [Installing by using system python packages (``LinVAM`` should use the system Qt theme if installed this way)](#installing-by-using-system-python-packages-linvam-should-use-the-system-qt-theme-if-installed-this-way)
-    * [Installing by creating a virtual environment for ``LinVAM`` python packages (``LinVAM`` will have a default theme that doesn't use the system Qt theme settings)](#installing-by-creating-a-virtual-environment-for-linvam-python-packages-linvam-will-have-a-default-theme-that-doesnt-use-the-system-qt-theme-settings)
 * [Build](#build)
 * [Configuring uinput access](#configuring-uinput-access)
   * [TL/DR](#tldr)
