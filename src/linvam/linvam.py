@@ -321,7 +321,7 @@ class MainWnd(QWidget):
         event.accept()
 
 
-if __name__ == "__main__":
+def linvam():
     if len(sys.argv) == 2:
         match sys.argv[1]:
             case '--version':
@@ -345,7 +345,11 @@ if __name__ == "__main__":
                   " e.g. --path='/home/user/.config/MangoHud/")
         sys.exit()
     app = QApplication(sys.argv)
-    mainWnd = MainWnd()
-    mainWnd.setWindowTitle("LinVAM v" + CONST_VERSION)
-    mainWnd.show()
+    main_wnd = MainWnd()
+    main_wnd.setWindowTitle("LinVAM v" + CONST_VERSION)
+    main_wnd.show()
     sys.exit(app.exec())
+
+
+if __name__ == "__main__":
+    linvam()

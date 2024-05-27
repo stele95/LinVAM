@@ -4,4 +4,3 @@ requests
 tqdm
 sounddevice
 vosk
-Nuitka

@@ -80,11 +80,11 @@ class LinVAMRun:
             return 'en'
 
 
-if __name__ == "__main__":
+def linvamrun():
     if len(sys.argv) == 2 and sys.argv[1] == '--version':
         print("Version: " + str(CONST_VERSION))
         sys.exit()
-    linvamrun = LinVAMRun()
+    run = LinVAMRun()
     RUN_COMMANDS = []
     IS_ARGS = True
     if len(sys.argv) > 1:
@@ -96,18 +96,22 @@ if __name__ == "__main__":
             else:
                 RUN_COMMANDS.append(arg)
             i += 1
-    linvamrun.start_listening()
+    run.start_listening()
     if len(RUN_COMMANDS) > 0:
         try:
             result = subprocess.run(RUN_COMMANDS, check=False)
         except subprocess.CalledProcessError as e:
             print('linvamrun: Command failed with return code ' + str(e.returncode))
-        linvamrun.shut_down()
+        run.shut_down()
         sys.exit()
     else:
         print('linvamrun: Close the app with Ctrl + C')
-        signal.signal(signal.SIGTERM, linvamrun.signal_handler)
-        signal.signal(signal.SIGHUP, linvamrun.signal_handler)
-        signal.signal(signal.SIGINT, linvamrun.signal_handler)
+        signal.signal(signal.SIGTERM, run.signal_handler)
+        signal.signal(signal.SIGHUP, run.signal_handler)
+        signal.signal(signal.SIGINT, run.signal_handler)
         signal.pause()
         sys.exit()
+
+
+if __name__ == "__main__":
+    linvamrun()
