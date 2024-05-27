@@ -84,7 +84,7 @@ The steps for installing will change in the future to better support the recomme
 - install [ydotool](https://github.com/ReimuNotMoe/ydotool) and ffmpeg
 - Download the source code zip file from the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it, enter scripts folder, open terminal in that folder and execute the following command:
 
-      source setup-python-virtual-environment.sh && source build-and-install.sh
+      sh setup-python-virtual-environment.sh && sh build-and-install.sh
 
 - Don't forget to restart your device after finishing installation steps
 </details>
@@ -97,7 +97,7 @@ You will have to use the desktop mode on the Steam Deck for installing and setti
 - Install ``python``
 - Download the source code zip file from the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it, enter scripts folder, open terminal in that folder and execute the following command:
 
-      source steam-deck-build-and-install.sh
+      sh steam-deck-build-and-install.sh
 
 - Don't forget to restart your device after finishing installation steps
 
