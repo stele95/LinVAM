@@ -3,9 +3,9 @@ import re
 from PyQt6.QtGui import QStandardItemModel, QStandardItem
 from PyQt6.QtWidgets import QDialog
 
-from ui_soundactioneditwnd import Ui_SoundSelect
+from src.linvam.ui_soundactioneditwnd import Ui_SoundSelect
 
-from util import get_voice_packs_folder_path
+from src.linvam.util import get_voice_packs_folder_path
 
 
 class SoundActionEditWnd(QDialog):

@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QDialog
 
-from ui_pauseactioneditwnd import Ui_PauseActionEditDialog
+from src.linvam.ui_pauseactioneditwnd import Ui_PauseActionEditDialog
 
 
 class PauseActionEditWnd(QDialog):

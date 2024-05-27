@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QDialog
 
-from ui_mouseactioneditwnd import Ui_MouseActionEditDialog
+from src.linvam.ui_mouseactioneditwnd import Ui_MouseActionEditDialog
 
 
 class MouseActionEditWnd(QDialog):

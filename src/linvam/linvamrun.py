@@ -4,10 +4,10 @@ import signal
 import subprocess
 import sys
 
-from profileexecutor import ProfileExecutor
-from util import (get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file, CONST_VERSION,
-                  init_config_folder, LINVAM_COMMANDS_FILE_PATH, read_profiles, update_profiles_for_new_version,
-                  handle_args)
+from src.linvam.profileexecutor import ProfileExecutor
+from src.linvam.util import (get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file,
+                             CONST_VERSION, init_config_folder, LINVAM_COMMANDS_FILE_PATH, read_profiles,
+                             update_profiles_for_new_version, handle_args)
 
 
 class LinVAMRun:
@@ -85,21 +85,22 @@ def linvamrun():
         print("Version: " + str(CONST_VERSION))
         sys.exit()
     run = LinVAMRun()
-    RUN_COMMANDS = []
-    IS_ARGS = True
+    run_commands = []
+    is_args = True
     if len(sys.argv) > 1:
         for i in range(1, len(sys.argv)):
             arg = sys.argv[i]
-            if IS_ARGS:
+            if is_args:
                 if arg == '--':
-                    IS_ARGS = False
+                    is_args = False
             else:
-                RUN_COMMANDS.append(arg)
+                run_commands.append(arg)
             i += 1
     run.start_listening()
-    if len(RUN_COMMANDS) > 0:
+    if len(run_commands) > 0:
         try:
-            result = subprocess.run(RUN_COMMANDS, check=False)
+            # pylint: disable=unused-variable
+            result = subprocess.run(run_commands, check=False)
         except subprocess.CalledProcessError as e:
             print('linvamrun: Command failed with return code ' + str(e.returncode))
         run.shut_down()

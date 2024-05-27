@@ -3,11 +3,11 @@ import json
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog, QMenu, QListWidgetItem, QInputDialog, QLineEdit
 
-from keyactioneditwnd import KeyActionEditWnd
-from mouseactioneditwnd import MouseActionEditWnd
-from pauseactioneditwnd import PauseActionEditWnd
-from soundactioneditwnd import SoundActionEditWnd
-from ui_commandeditwnd import Ui_CommandEditDialog
+from src.linvam.keyactioneditwnd import KeyActionEditWnd
+from src.linvam.mouseactioneditwnd import MouseActionEditWnd
+from src.linvam.pauseactioneditwnd import PauseActionEditWnd
+from src.linvam.soundactioneditwnd import SoundActionEditWnd
+from src.linvam.ui_commandeditwnd import Ui_CommandEditDialog
 
 
 class CommandEditWnd(QDialog):

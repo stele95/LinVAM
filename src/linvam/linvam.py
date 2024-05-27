@@ -5,17 +5,17 @@ import sys
 
 from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessageBox, QLineEdit, QFileDialog
 
-import keyboard
-import mouse
-from mouse import ButtonEvent
-from profileeditwnd import ProfileEditWnd
-from profileexecutor import ProfileExecutor
-from ui_mainwnd import Ui_MainWidget
-from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
-                  CONST_VERSION, init_config_folder, setup_mangohud, read_profiles, save_profiles,
-                  copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name,
-                  update_profiles_for_new_version, handle_args, is_push_to_listen, get_push_to_listen_hotkey,
-                  save_push_to_listen_hotkey, save_is_push_to_listen)
+from src.linvam import keyboard
+from src.linvam import mouse
+from src.linvam.mouse import ButtonEvent
+from src.linvam.profileeditwnd import ProfileEditWnd
+from src.linvam.profileexecutor import ProfileExecutor
+from src.linvam.ui_mainwnd import Ui_MainWidget
+from src.linvam.util import (get_supported_languages, get_config, save_config, save_linvam_run_config,
+                             delete_linvam_run_file, CONST_VERSION, init_config_folder, setup_mangohud, read_profiles,
+                             save_profiles, copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles,
+                             get_safe_name, update_profiles_for_new_version, handle_args, is_push_to_listen,
+                             get_push_to_listen_hotkey, save_push_to_listen_hotkey, save_is_push_to_listen)
 
 
 class MainWnd(QWidget):
