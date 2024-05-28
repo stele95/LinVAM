@@ -10,13 +10,14 @@ Linux Voice Activated Macro
   * [Install manually](#install-manually)
     * [Requirements](#requirements)
     * [Installation steps](#installation-steps)
-* [Build](#build)
+
 * [Configuring uinput access](#configuring-uinput-access)
   * [TL/DR](#tldr)
   * [Manual configuration](#manual-configuration)
     * [Udev rule for input](#udev-rule-for-input)
 * [Usage](#usage)
   * [Usage with Steam](#usage-with-steam)
+
   * [Display LinVAM profile and language in MangoHud](#display-linvam-profile-and-language-in-mangohud)
   * [Profiles](#profiles)
   * [Input mode](#input-mode)
@@ -44,7 +45,7 @@ Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice 
 
 ## Install
 ### Available packages
-If a package is available for your distribution, that's the recommended way for installing. If not, install by choosing one of the [manual installation options](#install-manually)
+If a package is available for your distribution, that's the recommended way for installing. If not, install by following the [manual installation steps](#install-manually)
 #### AUR
 [![AUR](https://img.shields.io/aur/version/linvam)](https://aur.archlinux.org/packages/linvam)
 
@@ -67,45 +68,33 @@ After installing from AUR, run ``sudo usermod -aG tty,input $USER`` to allow [ui
 <details>
 <summary>PC</summary>
 
-Since ``LinVAM`` relies on ``python`` to run, there are two ways of installing it:
-- [Using system python packages](#installing-by-using-system-python-packages-linvam-should-use-the-system-qt-theme-if-installed-this-way) (e.g. Arch Linux manages python packages through pacman, not through pip)
-- [Installing by creating a virtual environment for ``LinVAM`` python packages](#installing-by-creating-a-virtual-environment-for-linvam-python-packages-linvam-will-have-a-default-theme-that-doesnt-use-the-system-qt-theme-settings)
+The recommended way for the manual installation is by using [`pipx`](https://pypa.github.io/pipx/) to benefit from isolated environments
+- Download the latest release source code from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it, enter scripts folder, open terminal in that folder and execute the following command:
 
-Both ways require that ``python3`` is installed. 
+      sh install.sh
 
-The steps for installing will change in the future to better support the recommended ways of installing python apps.
+- Restart your device when finished
 
-#### Installing by using system python packages (``LinVAM`` should use the system Qt theme if installed this way)
-- install all [required packages](#requirements) using your system package manager
-- Download the source code zip file from the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it and run ``source build-and-install.sh`` from the ``scripts`` folder in the extracted files
-- Don't forget to restart your device after finishing installation steps
-
-#### Installing by creating a virtual environment for ``LinVAM`` python packages (``LinVAM`` will have a default theme that doesn't use the system Qt theme settings)
-- install [ydotool](https://github.com/ReimuNotMoe/ydotool) and ffmpeg
-- Download the source code zip file from the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it, enter scripts folder, open terminal in that folder and execute the following command:
-
-      sh setup-python-virtual-environment.sh && sh build-and-install.sh
-
-- Don't forget to restart your device after finishing installation steps
 </details>
+
+####
 
 <details>
 <summary>Steam Deck</summary>
 
 You will have to use the desktop mode on the Steam Deck for installing and setting up ``LinVAM``
 
-- Install ``python``
-- Download the source code zip file from the latest release from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it, enter scripts folder, open terminal in that folder and execute the following command:
+- Install [`pipx`](https://pypa.github.io/pipx/) to benefit from isolated environments by running in the terminal:
 
-      sh steam-deck-build-and-install.sh
+      python3 -m pip install --user pipx && python3 -m pipx ensurepath
 
-- Don't forget to restart your device after finishing installation steps
+- Download the latest release source code from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it, enter scripts folder, open terminal in that folder and execute the following command:
+
+      sh steam-deck-install.sh
+
+- Restart your device when finished
 
 </details>
-
-## Build
-- install ``python3`` and ``nuitka`` using you preferred method of installation (system packages or python virtual environment)
-- Run the ``build.sh`` script
 
 ## Configuring uinput access
 ### TL/DR
@@ -143,19 +132,23 @@ You can also use ``--language='languageName'`` for specifying a language. If ``-
 
 ![Steam launch options](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/steam.png)
 </details>
+
+####
+
 <details>
 <summary>Steam Deck</summary>
 
-After setting up profiles in the GUI app in the desktop mode, you can add ``/home/{username}/.local/bin/linvamrun --profile='Profile name' -- %command%`` to the game launch options for starting the app in the background for listening when opening games.
-Make sure to replace ``{username}`` with your username.
+After setting up profiles in the GUI app, you can add ``linvamrun --use-keyboard --use-mouse --profile='Profile name' -- %command%`` to the game launch options for starting the console app for listening when opening games.
 
 You can also use ``--language='languageName'`` for specifying a language. If ``--language`` argument is not used, app defaults to language selected in the GUI app.
+
+![Steam launch options](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/steam.png)
 </details>
 
 ### Display LinVAM profile and language in MangoHud
 If you are using [MangoHud](https://github.com/flightlessmango/MangoHud), you can set it up for displaying selected LinVAM profile and language.
 
-If you are installing using the ``build-and-install.sh`` script, it will ask for setting up MangoHud. If installing by another way, run the following command in the terminal after installing ``LinVAM``:
+Run the following command in the terminal after installing ``LinVAM``:
 
     linvam --setup-mangohud
 
