@@ -84,9 +84,9 @@ The recommended way for the manual installation is by using [`pipx`](https://pyp
 
 You will have to use the desktop mode on the Steam Deck for installing and setting up ``LinVAM``
 
-- Install [`pipx`](https://pypa.github.io/pipx/) to benefit from isolated environments by running in the terminal:
+- Install `pip` and [`pipx`](https://pypa.github.io/pipx/) to benefit from isolated environments by running in the terminal:
 
-      python3 -m pip install --user pipx && python3 -m pipx ensurepath
+      python -m ensurepip --upgrade && python3 -m pip install --user pipx && python3 -m pipx ensurepath
 
 - Download the latest release source code from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it, enter scripts folder, open terminal in that folder and execute the following command:
 
