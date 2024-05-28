@@ -1,6 +1,6 @@
 [MASTER]
 extension-pkg-whitelist=PyQt6
-ignore-paths=^src/linvam/keyboard/.*$,^src/linvam/mouse/.*$
+ignore-paths=^linvam/keyboard/.*$,^linvam/mouse/.*$
 
 [MESSAGES CONTROL]
 disable=C0116,C0115,C0114,W0718,R0902
