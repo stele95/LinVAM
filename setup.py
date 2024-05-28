@@ -3,18 +3,18 @@ from setuptools import setup, find_packages
 setup(
     name='LinVAM',
     version='0.6.4',
-    packages=find_packages(where='src'),
+    packages=find_packages(where='.'),
     url='https://github.com/stele95/LinVAM',
     license='GPL-3.0',
     author='stele',
     author_email='stefanstele95@hotmail.com',
     description='Linux Voice Activated Macros',
     install_requires=[
-        'PyQt6'
-        'srt'
-        'requests'
-        'tqdm'
-        'sounddevice'
+        'PyQt6',
+        'srt',
+        'requests',
+        'tqdm',
+        'sounddevice',
         'vosk'
     ],
     keywords='macros voice linvam linvamrun',
