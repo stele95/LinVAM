@@ -106,7 +106,19 @@ Since SteamOS is built around the read-only root partition, you will have to do 
 
 ## Configuring uinput access
 ### TL/DR
-- Run ``configure-uinput-access.sh`` if you didn't install by running ``install.sh`` or ``steam-deck-install.sh``, this will set up [Udev rule for input](#udev-rule-for-input)
+<details>
+<summary>PC</summary>
+
+- Run ``configure-uinput-access.sh`` from the scripts folder if you didn't install by running ``install.sh``, this will set up [Udev rule for input](#udev-rule-for-input)
+
+</details>
+
+<details>
+<summary>Steam Deck</summary>
+
+- Run ``steam-deck-configure-uinput-access.sh`` from the scripts folder if you didn't install by running ``steam-deck-install.sh``, this will set up [Udev rule for input](#udev-rule-for-input)
+
+</details>
 
 ### Manual configuration
 #### Udev rule for input
