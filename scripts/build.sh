@@ -38,7 +38,7 @@ python3 -m nuitka \
 #    --output-filename=linvam \
 #    --standalone \
 #    --onefile \
-#    ../src/linvam.py
+#    ../src/main.py
 #
 #python3 -m nuitka \
 #    --output-dir=../build \

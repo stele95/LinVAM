@@ -3,8 +3,8 @@ import json
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QMessageBox, QAbstractItemView, QHeaderView
 
-from src.linvam.commandeditwnd import CommandEditWnd
-from src.linvam.ui_profileeditwnd import Ui_ProfileEditDialog
+from linvam.commandeditwnd import CommandEditWnd
+from linvam.ui_profileeditwnd import Ui_ProfileEditDialog
 
 
 class ProfileEditWnd(QDialog):
