@@ -150,7 +150,6 @@ After setting up profiles in the GUI app, you can add ``linvamrun --use-keyboard
 
 You can also use ``--language='languageName'`` for specifying a language. If ``--language`` argument is not used, app defaults to language selected in the GUI app.
 
-![Steam launch options](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/steam.png)
 </details>
 
 ### Display LinVAM profile and language in MangoHud
