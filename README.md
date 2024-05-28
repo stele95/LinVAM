@@ -94,6 +94,14 @@ You will have to use the desktop mode on the Steam Deck for installing and setti
 
 - Restart your device when finished
 
+Since SteamOS is built around the read-only root partition, you will have to do the following steps after every SteamOS update:
+- Update SteamOS and restart your Steam Deck
+- Run the following command from the scripts folder
+
+      sh steam-deck-configure-uinput-access.sh
+
+- Restart your Steam Deck
+
 </details>
 
 ## Configuring uinput access
