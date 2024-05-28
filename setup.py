@@ -20,8 +20,8 @@ setup(
     keywords='macros voice linvam linvamrun',
     entry_points={
         'console_scripts': [
-            'linvam = linvam:linvam',
-            'linvamrun = linvam:linvamrun'
+            'linvam = linvam:start_linvam',
+            'linvamrun = linvam:start_linvamrun'
         ]
     },
     classifiers=[

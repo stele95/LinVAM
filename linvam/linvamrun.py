@@ -104,15 +104,15 @@ def start_linvamrun():
         except subprocess.CalledProcessError as e:
             print('linvamrun: Command failed with return code ' + str(e.returncode))
         run.shut_down()
-        sys.exit()
+        return sys.exit()
     else:
         print('linvamrun: Close the app with Ctrl + C')
         signal.signal(signal.SIGTERM, run.signal_handler)
         signal.signal(signal.SIGHUP, run.signal_handler)
         signal.signal(signal.SIGINT, run.signal_handler)
         signal.pause()
-        sys.exit()
+        return sys.exit()
 
 
 if __name__ == "__main__":
-    start_linvamrun()
+    sys.exit(start_linvamrun())

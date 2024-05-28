@@ -321,15 +321,15 @@ class MainWnd(QWidget):
         event.accept()
 
 
-def linvam():
+def start_linvam():
     if len(sys.argv) == 2:
         match sys.argv[1]:
             case '--version':
                 print("Version: " + str(CONST_VERSION))
-                sys.exit()
+                return sys.exit()
             case '--setup-mangohud':
                 setup_mangohud()
-                sys.exit()
+                return sys.exit()
     elif len(sys.argv) == 3 and sys.argv[1] == '--setup-mangohud':
         # noinspection PyBroadException
         # pylint: disable=bare-except
@@ -343,13 +343,13 @@ def linvam():
         except:
             print("Unexpected second argument, expecting --path='path/to/file'," +
                   " e.g. --path='/home/user/.config/MangoHud/")
-        sys.exit()
+        return sys.exit()
     app = QApplication(sys.argv)
     main_wnd = MainWnd()
     main_wnd.setWindowTitle("LinVAM v" + CONST_VERSION)
     main_wnd.show()
-    sys.exit(app.exec())
+    return sys.exit(app.exec())
 
 
 if __name__ == "__main__":
-    linvam()
+    sys.exit(start_linvam())
