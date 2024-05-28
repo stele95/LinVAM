@@ -105,13 +105,12 @@ def start_linvamrun():
             print('linvamrun: Command failed with return code ' + str(e.returncode))
         run.shut_down()
         return sys.exit()
-    else:
-        print('linvamrun: Close the app with Ctrl + C')
-        signal.signal(signal.SIGTERM, run.signal_handler)
-        signal.signal(signal.SIGHUP, run.signal_handler)
-        signal.signal(signal.SIGINT, run.signal_handler)
-        signal.pause()
-        return sys.exit()
+    print('linvamrun: Close the app with Ctrl + C')
+    signal.signal(signal.SIGTERM, run.signal_handler)
+    signal.signal(signal.SIGHUP, run.signal_handler)
+    signal.signal(signal.SIGINT, run.signal_handler)
+    signal.pause()
+    return sys.exit()
 
 
 if __name__ == "__main__":
