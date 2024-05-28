@@ -9,14 +9,13 @@ import time
 import sounddevice
 from vosk import Model, KaldiRecognizer
 
-import keyboard
-import mouse
-from keyboard import nixkeyboard as _os_keyboard
-from mouse import ButtonEvent
-from mouse import nixmouse as _os_mouse
-from soundfiles import SoundFiles
-from util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
-                  KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey)
+from linvam import keyboard, mouse
+from linvam.keyboard import nixkeyboard as _os_keyboard
+from linvam.mouse import ButtonEvent
+from linvam.mouse import nixmouse as _os_mouse
+from linvam.soundfiles import SoundFiles
+from linvam.util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
+                         KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey)
 
 
 class ProfileExecutor(threading.Thread):

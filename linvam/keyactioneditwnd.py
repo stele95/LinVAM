@@ -2,9 +2,9 @@ import re
 
 from PyQt6.QtWidgets import QDialog
 
-import keyboard
-from ui_keyactioneditwnd import Ui_KeyActionEditDialog
-from util import KEYS_SPLITTER, DEFAULT_KEY_DELAY_IN_MILLISECONDS
+from linvam import keyboard
+from linvam.ui_keyactioneditwnd import Ui_KeyActionEditDialog
+from linvam.util import KEYS_SPLITTER, DEFAULT_KEY_DELAY_IN_MILLISECONDS
 
 
 class KeyActionEditWnd(QDialog):

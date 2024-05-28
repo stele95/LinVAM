@@ -3,19 +3,19 @@ import json
 import signal
 import sys
 
-from PyQt6.QtWidgets import QWidget, QApplication, QDialog, QInputDialog, QMessageBox, QLineEdit, QFileDialog
+from PyQt6.QtWidgets import QWidget, QDialog, QInputDialog, QMessageBox, QLineEdit, QFileDialog, QApplication
 
-import keyboard
-import mouse
-from mouse import ButtonEvent
-from profileeditwnd import ProfileEditWnd
-from profileexecutor import ProfileExecutor
-from ui_mainwnd import Ui_MainWidget
-from util import (get_supported_languages, get_config, save_config, save_linvam_run_config, delete_linvam_run_file,
-                  CONST_VERSION, init_config_folder, setup_mangohud, read_profiles, save_profiles,
-                  copy_profiles_to_dir, HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name,
-                  update_profiles_for_new_version, handle_args, is_push_to_listen, get_push_to_listen_hotkey,
-                  save_push_to_listen_hotkey, save_is_push_to_listen)
+from linvam import keyboard, mouse
+from linvam.mouse import ButtonEvent
+from linvam.profileeditwnd import ProfileEditWnd
+from linvam.profileexecutor import ProfileExecutor
+from linvam.ui_mainwnd import Ui_MainWidget
+from linvam.util import (get_supported_languages, get_config, save_config, save_linvam_run_config,
+                         delete_linvam_run_file, init_config_folder, read_profiles, save_profiles, copy_profiles_to_dir,
+                         HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name,
+                         update_profiles_for_new_version, handle_args, is_push_to_listen, get_push_to_listen_hotkey,
+                         save_push_to_listen_hotkey, save_is_push_to_listen, CONST_VERSION,
+                         setup_mangohud)
 
 
 class MainWnd(QWidget):
@@ -321,15 +321,15 @@ class MainWnd(QWidget):
         event.accept()
 
 
-if __name__ == "__main__":
+def start_linvam():
     if len(sys.argv) == 2:
         match sys.argv[1]:
             case '--version':
                 print("Version: " + str(CONST_VERSION))
-                sys.exit()
+                return sys.exit()
             case '--setup-mangohud':
                 setup_mangohud()
-                sys.exit()
+                return sys.exit()
     elif len(sys.argv) == 3 and sys.argv[1] == '--setup-mangohud':
         # noinspection PyBroadException
         # pylint: disable=bare-except
@@ -343,9 +343,13 @@ if __name__ == "__main__":
         except:
             print("Unexpected second argument, expecting --path='path/to/file'," +
                   " e.g. --path='/home/user/.config/MangoHud/")
-        sys.exit()
+        return sys.exit()
     app = QApplication(sys.argv)
-    mainWnd = MainWnd()
-    mainWnd.setWindowTitle("LinVAM v" + CONST_VERSION)
-    mainWnd.show()
-    sys.exit(app.exec())
+    main_wnd = MainWnd()
+    main_wnd.setWindowTitle("LinVAM v" + CONST_VERSION)
+    main_wnd.show()
+    return sys.exit(app.exec())
+
+
+if __name__ == "__main__":
+    sys.exit(start_linvam())

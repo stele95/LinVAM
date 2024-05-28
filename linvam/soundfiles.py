@@ -4,7 +4,7 @@ import signal
 import subprocess
 from os import path
 
-from util import get_voice_packs_folder_path
+from linvam.util import get_voice_packs_folder_path
 
 
 # I've tried a couple of libs that are capable of playing mp3:

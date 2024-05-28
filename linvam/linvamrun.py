@@ -4,10 +4,10 @@ import signal
 import subprocess
 import sys
 
-from profileexecutor import ProfileExecutor
-from util import (get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file, CONST_VERSION,
-                  init_config_folder, LINVAM_COMMANDS_FILE_PATH, read_profiles, update_profiles_for_new_version,
-                  handle_args)
+from linvam.profileexecutor import ProfileExecutor
+from linvam.util import (get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file,
+                         init_config_folder, LINVAM_COMMANDS_FILE_PATH, read_profiles,
+                         update_profiles_for_new_version, handle_args, CONST_VERSION)
 
 
 class LinVAMRun:
@@ -80,34 +80,38 @@ class LinVAMRun:
             return 'en'
 
 
-if __name__ == "__main__":
+def start_linvamrun():
     if len(sys.argv) == 2 and sys.argv[1] == '--version':
         print("Version: " + str(CONST_VERSION))
         sys.exit()
-    linvamrun = LinVAMRun()
-    RUN_COMMANDS = []
-    IS_ARGS = True
+    run = LinVAMRun()
+    run_commands = []
+    is_args = True
     if len(sys.argv) > 1:
         for i in range(1, len(sys.argv)):
             arg = sys.argv[i]
-            if IS_ARGS:
+            if is_args:
                 if arg == '--':
-                    IS_ARGS = False
+                    is_args = False
             else:
-                RUN_COMMANDS.append(arg)
+                run_commands.append(arg)
             i += 1
-    linvamrun.start_listening()
-    if len(RUN_COMMANDS) > 0:
+    run.start_listening()
+    if len(run_commands) > 0:
         try:
-            result = subprocess.run(RUN_COMMANDS, check=False)
+            # pylint: disable=unused-variable
+            result = subprocess.run(run_commands, check=False)
         except subprocess.CalledProcessError as e:
             print('linvamrun: Command failed with return code ' + str(e.returncode))
-        linvamrun.shut_down()
-        sys.exit()
-    else:
-        print('linvamrun: Close the app with Ctrl + C')
-        signal.signal(signal.SIGTERM, linvamrun.signal_handler)
-        signal.signal(signal.SIGHUP, linvamrun.signal_handler)
-        signal.signal(signal.SIGINT, linvamrun.signal_handler)
-        signal.pause()
-        sys.exit()
+        run.shut_down()
+        return sys.exit()
+    print('linvamrun: Close the app with Ctrl + C')
+    signal.signal(signal.SIGTERM, run.signal_handler)
+    signal.signal(signal.SIGHUP, run.signal_handler)
+    signal.signal(signal.SIGINT, run.signal_handler)
+    signal.pause()
+    return sys.exit()
+
+
+if __name__ == "__main__":
+    sys.exit(start_linvamrun())
