@@ -1,5 +1,5 @@
 # LinVAM
-Linux Voice Activated Macro
+Linux Voice Activated Macros
 
 ### Table of contents
 * [Status](#status)
