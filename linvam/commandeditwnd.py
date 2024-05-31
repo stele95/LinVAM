@@ -82,8 +82,13 @@ class CommandEditWnd(QDialog):
             self.add_action(w_command_do_action)
 
     def slot_do_play_sound(self):
-        text, ok_pressed = QInputDialog.getItem(self, "Set sound to play", "Enter sound file:",
-                                                list(self.m_parent.m_parent.m_profile_executor.m_sound.m_sounds), 0, False)
+        text, ok_pressed = QInputDialog.getItem(
+            self,
+            "Set sound to play", "Enter sound file:",
+            list(self.m_parent.m_parent.m_profile_executor.m_sound.m_sounds),
+            0,
+            False
+        )
         if ok_pressed and text != '':
             w_command_do_action = {'name': 'command play sound', 'command name': text}
             self.add_action(w_command_do_action)
