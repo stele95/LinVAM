@@ -83,7 +83,7 @@ class CommandEditWnd(QDialog):
 
     def slot_do_play_sound(self):
         text, ok_pressed = QInputDialog.getItem(self, "Set sound to play", "Enter sound file:",
-                                                list(self.m_parent.m_parent.m_sound.m_sounds), 0, False)
+                                                list(self.m_parent.m_parent.m_profile_executor.m_sound.m_sounds), 0, False)
         if ok_pressed and text != '':
             w_command_do_action = {'name': 'command play sound', 'command name': text}
             self.add_action(w_command_do_action)
@@ -104,7 +104,7 @@ class CommandEditWnd(QDialog):
             self.add_action(w_pause_edit_wnd.m_pause_action)
 
     def slot_new_sound_edit(self):
-        w_sound_edit_wnd = SoundActionEditWnd(self.m_parent.m_parent.m_sound, None, self)
+        w_sound_edit_wnd = SoundActionEditWnd(self.m_parent.m_parent.m_profile_executor.m_sound, None, self)
         if w_sound_edit_wnd.exec() == QDialog.DialogCode.Accepted:
             self.add_action(w_sound_edit_wnd.m_sound_action)
 
@@ -152,7 +152,7 @@ class CommandEditWnd(QDialog):
                 w_action['command name'] = text
                 w_json_action = json.dumps(w_action, ensure_ascii=False)
         elif w_action['name'] == 'play sound':
-            w_sound_edit_wnd = SoundActionEditWnd(self.m_parent.m_parent.m_sound, w_action, self)
+            w_sound_edit_wnd = SoundActionEditWnd(self.m_parent.m_parent.m_profile_executor.m_sound, w_action, self)
             if w_sound_edit_wnd.exec() == QDialog.DialogCode.Accepted:
                 w_json_action = json.dumps(w_sound_edit_wnd.m_sound_action, ensure_ascii=False)
 
