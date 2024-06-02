@@ -5,7 +5,7 @@ import sys
 
 from PyQt6.QtWidgets import QWidget, QDialog, QInputDialog, QMessageBox, QLineEdit, QFileDialog, QApplication
 
-from linvam import keyboard, mouse
+from linvam import keyboard, mouse, __version__
 from linvam.mouse import ButtonEvent
 from linvam.profileeditwnd import ProfileEditWnd
 from linvam.profileexecutor import ProfileExecutor
@@ -14,8 +14,7 @@ from linvam.util import (get_supported_languages, get_config, save_config, save_
                          delete_linvam_run_file, init_config_folder, read_profiles, save_profiles, copy_profiles_to_dir,
                          HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name,
                          update_profiles_for_new_version, handle_args, is_push_to_listen, get_push_to_listen_hotkey,
-                         save_push_to_listen_hotkey, save_is_push_to_listen, CONST_VERSION,
-                         setup_mangohud)
+                         save_push_to_listen_hotkey, save_is_push_to_listen, setup_mangohud)
 
 
 class MainWnd(QWidget):
@@ -325,7 +324,7 @@ def start_linvam():
     if len(sys.argv) == 2:
         match sys.argv[1]:
             case '--version':
-                print("Version: " + str(CONST_VERSION))
+                print("Version: " + str(__version__))
                 return sys.exit()
             case '--setup-mangohud':
                 setup_mangohud()
@@ -346,7 +345,7 @@ def start_linvam():
         return sys.exit()
     app = QApplication(sys.argv)
     main_wnd = MainWnd()
-    main_wnd.setWindowTitle("LinVAM v" + CONST_VERSION)
+    main_wnd.setWindowTitle("LinVAM v" + __version__)
     main_wnd.show()
     return sys.exit(app.exec())
 

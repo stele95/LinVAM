@@ -1,8 +1,9 @@
 from setuptools import setup, find_packages
+from linvam import __version__
 
 setup(
     name='LinVAM',
-    version='0.6.4',
+    version=__version__,
     packages=find_packages(where='.'),
     url='https://github.com/stele95/LinVAM',
     license='GPL-3.0',

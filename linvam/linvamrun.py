@@ -4,10 +4,11 @@ import signal
 import subprocess
 import sys
 
+from linvam import __version__
 from linvam.profileexecutor import ProfileExecutor
 from linvam.util import (get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file,
-                         init_config_folder, LINVAM_COMMANDS_FILE_PATH, read_profiles,
-                         update_profiles_for_new_version, handle_args, CONST_VERSION)
+                         init_config_folder, LINVAM_COMMANDS_FILE_PATH, read_profiles, handle_args,
+                         update_profiles_for_new_version)
 
 
 class LinVAMRun:
@@ -82,7 +83,7 @@ class LinVAMRun:
 
 def start_linvamrun():
     if len(sys.argv) == 2 and sys.argv[1] == '--version':
-        print("Version: " + str(CONST_VERSION))
+        print("Version: " + str(__version__))
         sys.exit()
     run = LinVAMRun()
     run_commands = []
