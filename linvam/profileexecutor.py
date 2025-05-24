@@ -237,23 +237,26 @@ class ProfileExecutor(threading.Thread):
         # {'name': 'mouse click action', 'button': 'left', 'type': 0}
         # {'name': 'mouse wheel action', 'delta':10}
         w_action_name = p_action['name']
-        if w_action_name == 'key action':
-            self._press_key(p_action)
-        elif w_action_name == 'pause action':
-            print("Sleep ", p_action['time'])
-            time.sleep(p_action['time'])
-        elif w_action_name == 'command stop action':
-            self._stop_command(p_action['command name'])
-        elif w_action_name in ['command play sound', 'play sound']:
-            self._play_sound(p_action)
-        elif w_action_name == 'stop sound':
-            self.m_sound.stop()
-        elif w_action_name == 'mouse move action':
-            self._move_mouse(p_action)
-        elif w_action_name == 'mouse click action':
-            self._click_mouse_key(p_action)
-        elif w_action_name == 'mouse scroll action':
-            self._scroll_mouse(p_action)
+        match w_action_name:
+            case 'key action':
+                self._press_key(p_action)
+            case 'pause action':
+                print("Sleep ", p_action['time'])
+                time.sleep(p_action['time'])
+            case 'command stop action':
+                self._stop_command(p_action['command name'])
+            case 'command execute action':
+                self._execute_command(p_action['command_name'])
+            case 'command play sound' | 'play sound':
+                self._play_sound(p_action)
+            case 'stop sound':
+                self.m_sound.stop()
+            case 'mouse move action':
+                self._move_mouse(p_action)
+            case 'mouse click action':
+                self._click_mouse_key(p_action)
+            case 'mouse scroll action':
+                self._scroll_mouse(p_action)
 
     def _move_mouse(self, action):
         if self.p_parent.m_config['mouse']:
@@ -409,6 +412,10 @@ class ProfileExecutor(threading.Thread):
             if command is not None:
                 break
         return command
+
+    def _execute_command(self, cmd_name):
+        # todo execute another voice command
+        return
 
     def _stop_command(self, p_cmd_name):
         if p_cmd_name in self.m_cmd_threads:
