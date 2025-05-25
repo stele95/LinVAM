@@ -15,7 +15,11 @@ from linvam.mouse import ButtonEvent
 from linvam.mouse import nixmouse as _os_mouse
 from linvam.soundfiles import SoundFiles
 from linvam.util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
-                         KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey)
+                         KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey, Command)
+
+
+def _execute_external_command(cmd_name):
+    subprocess.Popen(cmd_name, shell=True)
 
 
 class ProfileExecutor(threading.Thread):
@@ -238,24 +242,26 @@ class ProfileExecutor(threading.Thread):
         # {'name': 'mouse wheel action', 'delta':10}
         w_action_name = p_action['name']
         match w_action_name:
-            case 'key action':
+            case Command.KEY_ACTION:
                 self._press_key(p_action)
-            case 'pause action':
+            case Command.PAUSE_ACTION:
                 print("Sleep ", p_action['time'])
                 time.sleep(p_action['time'])
-            case 'command stop action':
+            case Command.COMMAND_STOP_ACTION:
                 self._stop_command(p_action['command name'])
-            case 'command execute action':
-                self._execute_command(p_action['command_name'])
-            case 'command play sound' | 'play sound':
+            case Command.EXECUTE_VOICE_COMMAND_ACTION:
+                self._execute_voice_command(p_action['command name'])
+            case Command.EXECUTE_EXTERNAL_COMMAND_ACTION:
+                _execute_external_command(p_action['command'])
+            case Command.COMMAND_PLAY_SOUND | Command.PLAY_SOUND:
                 self._play_sound(p_action)
-            case 'stop sound':
+            case Command.STOP_SOUND:
                 self.m_sound.stop()
-            case 'mouse move action':
+            case Command.MOUSE_MOVE_ACTION:
                 self._move_mouse(p_action)
-            case 'mouse click action':
+            case Command.MOUSE_CLICK_ACTION:
                 self._click_mouse_key(p_action)
-            case 'mouse scroll action':
+            case Command.MOUSE_SCROLL_ACTION:
                 self._scroll_mouse(p_action)
 
     def _move_mouse(self, action):
@@ -413,9 +419,8 @@ class ProfileExecutor(threading.Thread):
                 break
         return command
 
-    def _execute_command(self, cmd_name):
-        # todo execute another voice command
-        return
+    def _execute_voice_command(self, cmd_name):
+        self._do_command(cmd_name)
 
     def _stop_command(self, p_cmd_name):
         if p_cmd_name in self.m_cmd_threads:

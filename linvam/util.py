@@ -5,6 +5,7 @@ import re
 import subprocess
 import sys
 from collections import namedtuple
+from enum import StrEnum
 
 HOME_DIR = os.path.expanduser('~')
 LINVAM_SETTINGS_FOLDER = HOME_DIR + '/.local/share/LinVAM/'
@@ -19,6 +20,18 @@ PROFILES_FILE_NAME = 'profiles.json'
 PUSH_TO_LISTEN_ENABLED_CONFIG = 'ptl_enabled'
 PUSH_TO_LISTEN_HOTKEY_CONFIG = 'ptl_hotkey'
 
+class Command(StrEnum):
+    KEY_ACTION = 'key action'
+    PAUSE_ACTION = 'pause action'
+    COMMAND_STOP_ACTION = 'command stop action'
+    EXECUTE_EXTERNAL_COMMAND_ACTION = 'execute external command action'
+    EXECUTE_VOICE_COMMAND_ACTION = 'execute voice command action'
+    COMMAND_PLAY_SOUND = 'command play sound'
+    PLAY_SOUND = 'play sound'
+    STOP_SOUND = 'stop sound'
+    MOUSE_MOVE_ACTION = 'mouse move action'
+    MOUSE_CLICK_ACTION = 'mouse click action'
+    MOUSE_SCROLL_ACTION = 'mouse scroll action'
 
 def handle_args(config):
     if len(sys.argv) == 1:
@@ -66,7 +79,7 @@ def update_profiles_for_new_version():
             for profile in profiles:
                 for command in profile['commands']:
                     for action in command['actions']:
-                        if action['name'] == 'key action':
+                        if action['name'] == Command.KEY_ACTION:
                             if 'key_events' not in action:
                                 commands = create_commands_list(action['key'])
                                 action['key_events'] = commands

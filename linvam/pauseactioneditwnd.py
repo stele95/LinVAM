@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 
 from linvam.ui_pauseactioneditwnd import Ui_PauseActionEditDialog
+from linvam.util import Command
 
 
 class PauseActionEditWnd(QDialog):
@@ -20,6 +21,6 @@ class PauseActionEditWnd(QDialog):
         self.ui.secondEdit.setText(str(p_pause_action['time']))
 
     def slot_ok(self):
-        self.m_pause_action['name'] = 'pause action'
+        self.m_pause_action['name'] = Command.PAUSE_ACTION
         self.m_pause_action['time'] = float(self.ui.secondEdit.text())
         super().accept()
