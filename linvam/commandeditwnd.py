@@ -165,6 +165,12 @@ class CommandEditWnd(QDialog):
                 if ok_pressed and text != '':
                     w_action['command name'] = text
                     w_json_action = json.dumps(w_action, ensure_ascii=False)
+            case Command.EXECUTE_EXTERNAL_COMMAND_ACTION:
+                text, ok_pressed = QInputDialog.getText(self, "Get Command Name", "Enter external command or script path:",
+                                                        QLineEdit.EchoMode.Normal, w_action['command'])
+                if ok_pressed and text != '':
+                    w_action['command'] = text
+                    w_json_action = json.dumps(w_action, ensure_ascii=False)
             case Command.PLAY_SOUND:
                 w_sound_edit_wnd = SoundActionEditWnd(self.m_parent.m_parent.m_profile_executor.m_sound, w_action, self)
                 if w_sound_edit_wnd.exec() == QDialog.DialogCode.Accepted:
