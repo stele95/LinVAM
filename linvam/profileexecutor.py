@@ -256,7 +256,7 @@ class ProfileExecutor(threading.Thread):
             case Command.EXECUTE_VOICE_COMMAND_ACTION:
                 self._execute_voice_command(p_action['command name'])
             case Command.EXECUTE_EXTERNAL_COMMAND_ACTION:
-                _execute_external_command(p_action['command'], True)
+                _execute_external_command(p_action['command'], False)
             case Command.COMMAND_PLAY_SOUND | Command.PLAY_SOUND:
                 self._play_sound(p_action)
             case Command.STOP_SOUND:
