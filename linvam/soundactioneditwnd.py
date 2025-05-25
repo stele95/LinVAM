@@ -4,7 +4,6 @@ from PyQt6.QtGui import QStandardItemModel, QStandardItem
 from PyQt6.QtWidgets import QDialog
 
 from linvam.ui_soundactioneditwnd import Ui_SoundSelect
-
 from linvam.util import get_voice_packs_folder_path, Command
 
 
@@ -64,8 +63,12 @@ class SoundActionEditWnd(QDialog):
         self.select_old_entries()
 
     def slot_ok(self):
-        self.m_sound_action = {'name': Command.PLAY_SOUND, 'pack': self.selected_voice_pack, 'cat': self.selected_category,
-                               'file': self.selected_file}
+        self.m_sound_action = {
+            'name': Command.PLAY_SOUND,
+            'pack': self.selected_voice_pack,
+            'cat': self.selected_category,
+            'file': self.selected_file
+        }
         super().accept()
 
     def slot_cancel(self):
