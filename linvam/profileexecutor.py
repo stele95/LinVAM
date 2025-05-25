@@ -18,9 +18,12 @@ from linvam.util import (get_language_code, get_voice_packs_folder_path, get_lan
                          KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey, Command)
 
 
-def _execute_external_command(cmd_name):
-    # pylint: disable=consider-using-with
-    subprocess.Popen(cmd_name, shell=True)
+def _execute_external_command(cmd_name, is_async):
+    if is_async:
+        # pylint: disable=consider-using-with
+        subprocess.Popen(cmd_name, shell=True)
+    else:
+        subprocess.run(cmd_name, shell=True)
 
 
 class ProfileExecutor(threading.Thread):
@@ -253,7 +256,7 @@ class ProfileExecutor(threading.Thread):
             case Command.EXECUTE_VOICE_COMMAND_ACTION:
                 self._execute_voice_command(p_action['command name'])
             case Command.EXECUTE_EXTERNAL_COMMAND_ACTION:
-                _execute_external_command(p_action['command'])
+                _execute_external_command(p_action['command'], True)
             case Command.COMMAND_PLAY_SOUND | Command.PLAY_SOUND:
                 self._play_sound(p_action)
             case Command.STOP_SOUND:
