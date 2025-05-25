@@ -23,7 +23,7 @@ def _execute_external_command(cmd_name, is_async):
         # pylint: disable=consider-using-with
         subprocess.Popen(cmd_name, shell=True)
     else:
-        subprocess.run(cmd_name, shell=True)
+        subprocess.run(cmd_name, shell=True, check=False)
 
 
 class ProfileExecutor(threading.Thread):
