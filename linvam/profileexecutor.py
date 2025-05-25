@@ -19,6 +19,7 @@ from linvam.util import (get_language_code, get_voice_packs_folder_path, get_lan
 
 
 def _execute_external_command(cmd_name):
+    # pylint: disable=consider-using-with
     subprocess.Popen(cmd_name, shell=True)
 
 
