@@ -43,7 +43,7 @@ class LinVAMRun:
             self.m_profile_executor.set_enable_listening(True)
             if self.m_config[Config.OPEN_COMMANDS_FILE]:
                 # pylint: disable=consider-using-with
-                subprocess.Popen(['xdg-open', LINVAM_COMMANDS_FILE_PATH], shell=True)
+                subprocess.Popen('xdg-open ' + LINVAM_COMMANDS_FILE_PATH, shell=True)
         else:
             print('linvamrun: Profile not found, not listening...')
 
