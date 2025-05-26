@@ -14,7 +14,7 @@ from linvam.util import (get_supported_languages, get_config, save_config, save_
                          delete_linvam_run_file, init_config_folder, read_profiles, save_profiles, copy_profiles_to_dir,
                          HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name,
                          update_profiles_for_new_version, handle_args, is_push_to_listen, get_push_to_listen_hotkey,
-                         save_push_to_listen_hotkey, save_is_push_to_listen, setup_mangohud)
+                         save_push_to_listen_hotkey, save_is_push_to_listen, setup_mangohud, Config)
 
 
 class MainWnd(QWidget):
@@ -23,9 +23,8 @@ class MainWnd(QWidget):
         update_profiles_for_new_version()
 
         self.m_config = {
-            'debug': 0,
-            'keyboard': 0,
-            'mouse': 0
+            Config.DEBUG: 0,
+            Config.USE_YDOTOOL: 0
         }
         self.m_active_profile = None
         self.keyboard_listener = None
@@ -209,7 +208,7 @@ class MainWnd(QWidget):
         return selected_profile_position
 
     def load_languages(self):
-        selected_language = get_config('language')
+        selected_language = get_config(Config.LANGUAGE)
         selected_language_position = 0
         languages = get_supported_languages()
         for position, language in enumerate(languages):
@@ -235,8 +234,8 @@ class MainWnd(QWidget):
             return
         language = self.ui.languageCbx.itemText(index)
         self.m_profile_executor.set_language(language)
-        save_config('language', language)
-        save_linvam_run_config('language', language)
+        save_config(Config.LANGUAGE, language)
+        save_linvam_run_config(Config.LANGUAGE, language)
 
     def slot_add_new_profile(self):
         w_profile_edit_wnd = ProfileEditWnd(None, self)

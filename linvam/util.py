@@ -33,6 +33,13 @@ class Command(StrEnum):
     MOUSE_CLICK_ACTION = 'mouse click action'
     MOUSE_SCROLL_ACTION = 'mouse scroll action'
 
+class Config(StrEnum):
+    PROFILE_NAME = 'profile_name'
+    LANGUAGE = 'language'
+    OPEN_COMMANDS_FILE = 'open_commands_file'
+    DEBUG = 'debug'
+    USE_YDOTOOL = 'use_ydotool'
+
 def handle_args(config):
     if len(sys.argv) == 1:
         return
@@ -43,17 +50,15 @@ def handle_args(config):
             arg_split = argument.split('=')
             match arg_split[0]:
                 case '--debug':
-                    config['debug'] = 1
-                case '--use-keyboard':
-                    config['keyboard'] = 1
-                case '--use-mouse':
-                    config['mouse'] = 1
+                    config[Config.DEBUG] = 1
+                case '--use-ydotool':
+                    config[Config.USE_YDOTOOL] = 1
                 case '--profile':
-                    config['profileName'] = arg_split[1]
+                    config[Config.PROFILE_NAME] = arg_split[1]
                 case '--language':
-                    config['language'] = arg_split[1]
+                    config[Config.LANGUAGE] = arg_split[1]
                 case '--open-commands':
-                    config['openCommandsFile'] = 1
+                    config[Config.OPEN_COMMANDS_FILE] = 1
         except Exception as ex:
             print('Error parsing argument ' + str(argument) + ": " + str(ex))
 
@@ -317,11 +322,11 @@ def save_config(config_name, value):
 
 
 def get_default_config_values():
-    return json.dumps({'profile': '', 'language': 'English'}, indent=4, ensure_ascii=False)
+    return json.dumps({'profile': '', Config.LANGUAGE: 'English'}, indent=4, ensure_ascii=False)
 
 
 def get_default_run_config_values():
-    return json.dumps({'profile': '', 'language': ''}, indent=4, ensure_ascii=False)
+    return json.dumps({'profile': '', Config.LANGUAGE: ''}, indent=4, ensure_ascii=False)
 
 
 def get_voice_packs_folder_path():
