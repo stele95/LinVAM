@@ -15,7 +15,8 @@ from linvam.mouse import ButtonEvent
 from linvam.mouse import nixmouse as _os_mouse
 from linvam.soundfiles import SoundFiles
 from linvam.util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
-                         KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey, Command)
+                         KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey, Command,
+                         Config)
 
 
 def _execute_external_command(cmd_name, is_async):
@@ -40,7 +41,7 @@ class ProfileExecutor(threading.Thread):
         self.m_cmd_threads = {}
         self.p_parent = p_parent
         self.ydotoold = None
-        if not self.p_parent.m_config['keyboard'] or not self.p_parent.m_config['mouse']:
+        if self.p_parent.m_config[Config.USE_YDOTOOL]:
             self.start_ydotoold()
 
         self.m_stream = None
@@ -118,7 +119,7 @@ class ProfileExecutor(threading.Thread):
     def _init_stream(self):
         if self.recognizer is None:
             return
-        if self.p_parent.m_config['debug']:
+        if self.p_parent.m_config[Config.DEBUG]:
             callback = self.listen_callback_debug
         else:
             callback = self.listen_callback
@@ -269,10 +270,10 @@ class ProfileExecutor(threading.Thread):
                 self._scroll_mouse(p_action)
 
     def _move_mouse(self, action):
-        if self.p_parent.m_config['mouse']:
-            self._move_mouse_mouse(action)
-        else:
+        if self.p_parent.m_config[Config.USE_YDOTOOL]:
             self._move_mouse_ydotool(action)
+        else:
+            self._move_mouse_mouse(action)
 
     @staticmethod
     def _move_mouse_mouse(p_action):
@@ -289,10 +290,10 @@ class ProfileExecutor(threading.Thread):
         self._execute_ydotool_command(command)
 
     def _scroll_mouse(self, action):
-        if self.p_parent.m_config['mouse']:
-            self._scroll_mouse_mouse(action)
-        else:
+        if self.p_parent.m_config[Config.USE_YDOTOOL]:
             self._scroll_mouse_ydotool(action)
+        else:
+            self._scroll_mouse_mouse(action)
 
     @staticmethod
     def _scroll_mouse_mouse(p_action):
@@ -303,10 +304,10 @@ class ProfileExecutor(threading.Thread):
         self._execute_ydotool_command(command)
 
     def _click_mouse_key(self, action):
-        if self.p_parent.m_config['mouse']:
-            self._click_mouse_key_mouse(action)
-        else:
+        if self.p_parent.m_config[Config.USE_YDOTOOL]:
             self._click_mouse_key_ydotool(action)
+        else:
+            self._click_mouse_key_mouse(action)
 
     @staticmethod
     def _click_mouse_key_mouse(p_action):
@@ -364,7 +365,7 @@ class ProfileExecutor(threading.Thread):
     def _execute_ydotool_command(self, command):
         if self.ydotoold is not None:
             os.system('env YDOTOOL_SOCKET=' + YDOTOOLD_SOCKET_PATH + ' ydotool ' + command)
-            if self.p_parent.m_config['debug']:
+            if self.p_parent.m_config[Config.DEBUG]:
                 print('Executed ydotool command: ' + command)
         else:
             print('ydotoold daemon not running')
@@ -437,10 +438,10 @@ class ProfileExecutor(threading.Thread):
         self.m_sound.play(sound_file)
 
     def _press_key(self, action):
-        if self.p_parent.m_config['keyboard']:
-            self._press_key_keyboard(action)
-        else:
+        if self.p_parent.m_config[Config.USE_YDOTOOL]:
             self._press_key_ydotool(action)
+        else:
+            self._press_key_keyboard(action)
 
     def _press_key_ydotool(self, action):
         events = str(action['key_events']).replace(KEYS_SPLITTER, ' ')

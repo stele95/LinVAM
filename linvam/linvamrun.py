@@ -8,7 +8,7 @@ from linvam import __version__
 from linvam.profileexecutor import ProfileExecutor
 from linvam.util import (get_config, get_language_name, save_linvamrun_run_config, delete_linvamrun_run_file,
                          init_config_folder, LINVAM_COMMANDS_FILE_PATH, read_profiles, handle_args,
-                         update_profiles_for_new_version)
+                         update_profiles_for_new_version, Config)
 
 
 class LinVAMRun:
@@ -16,12 +16,11 @@ class LinVAMRun:
         update_profiles_for_new_version()
         self.m_profile_executor = None
         self.m_config = {
-            'profileName': '',
-            'language': self.get_language_from_database(),
-            'openCommandsFile': 0,
-            'debug': 0,
-            'keyboard': 0,
-            'mouse': 0
+            Config.PROFILE_NAME: '',
+            Config.LANGUAGE: self.get_language_from_database(),
+            Config.OPEN_COMMANDS_FILE: 0,
+            Config.DEBUG: 0,
+            Config.USE_YDOTOOL: 0
         }
         init_config_folder()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -29,11 +28,11 @@ class LinVAMRun:
     def start_listening(self):
         handle_args(self.m_config)
         self.m_profile_executor = ProfileExecutor(self)
-        language = self.m_config['language']
+        language = self.m_config[Config.LANGUAGE]
         self.m_profile_executor.set_language(language)
         language_name = get_language_name(language)
-        save_linvamrun_run_config('language', language_name)
-        profile_name = self.m_config['profileName']
+        save_linvamrun_run_config(Config.LANGUAGE, language_name)
+        profile_name = self.m_config[Config.PROFILE_NAME]
         if len(profile_name) == 0:
             print('linvamrun: No profile specified, not listening...')
             return
@@ -42,9 +41,9 @@ class LinVAMRun:
             self.m_profile_executor.set_profile(profile)
             save_linvamrun_run_config('profile', profile['name'])
             self.m_profile_executor.set_enable_listening(True)
-            if self.m_config['openCommandsFile']:
+            if self.m_config[Config.OPEN_COMMANDS_FILE]:
                 # pylint: disable=consider-using-with
-                subprocess.Popen(['xdg-open', LINVAM_COMMANDS_FILE_PATH], shell=True)
+                subprocess.Popen('xdg-open ' + LINVAM_COMMANDS_FILE_PATH, shell=True)
         else:
             print('linvamrun: Profile not found, not listening...')
 
@@ -75,7 +74,7 @@ class LinVAMRun:
     @staticmethod
     def get_language_from_database():
         try:
-            return get_config('language')
+            return get_config(Config.LANGUAGE)
         except Exception as ex:
             print("linvamrun: failed to load selected language file: " + str(ex))
             return 'en'

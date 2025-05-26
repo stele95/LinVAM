@@ -62,7 +62,7 @@ After installing from AUR, run ``sudo usermod -aG tty,input $USER`` to allow [ui
   - tqdm
   - vosk
 - ffmpeg
-- [ydotool](https://github.com/ReimuNotMoe/ydotool)
+- [ydotool](https://github.com/ReimuNotMoe/ydotool) (optional)
 
 #### Installation steps
 <details>
@@ -132,7 +132,7 @@ Udev is the Linux system that detects and reacts to devices getting plugged or u
 It also works with virtual devices like ``ydotool``.
 
 You also need to define new udev rules that will give needed groups permanent write access to the uinput device
-(this will give ``ydotoold`` write access and ``LinVAM`` read access).
+(this will give ``LinVAM`` and ``ydotoold`` write and read access).
 
 For easy setup, execute the ``configure-uinput-access.sh`` script from the ``scripts`` folder.
 
@@ -158,7 +158,7 @@ You can also use ``--language='languageName'`` for specifying a language. If ``-
 <details>
 <summary>Steam Deck</summary>
 
-After setting up profiles in the GUI app, you can add ``linvamrun --use-keyboard --use-mouse --profile='Profile name' -- %command%`` to the game launch options for starting the console app for listening when opening games.
+After setting up profiles in the GUI app, you can add ``linvamrun --profile='Profile name' -- %command%`` to the game launch options for starting the console app for listening when opening games.
 
 You can also use ``--language='languageName'`` for specifying a language. If ``--language`` argument is not used, app defaults to language selected in the GUI app.
 
@@ -223,5 +223,4 @@ https://alphacephei.com/vosk/adaptation
 ## Debugging if something isn't working
 You can use the following arguments with ``linvam`` or ``linvamrun`` for debugging when something isn't working:
 - ``--debug`` - prints additional info while running
-- ``--use-keyboard`` - LinVAM will try and input keyboard events directly to ``input`` instead of through ``ydotool``
-- ``--use-mouse`` - LinVAM will try and input mouse events directly to ``input`` instead of through ``ydotool``
+- ``--use-ydotool`` - LinVAM will try and input keyboard and mouse events through ``ydotool`` instead of directly to ``input`` 
