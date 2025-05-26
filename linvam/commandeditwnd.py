@@ -140,6 +140,8 @@ class CommandEditWnd(QDialog):
 
     def slot_action_duplicate(self):
         current_index = self.ui.actionsListWidget.currentRow()
+        if current_index < 0:
+            return
         current_item = self.ui.actionsListWidget.item(current_index)
         self.ui.actionsListWidget.insertItem(current_index + 1, current_item.clone())
 
