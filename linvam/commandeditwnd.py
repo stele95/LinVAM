@@ -29,6 +29,7 @@ class CommandEditWnd(QDialog):
         self.ui.upBut.clicked.connect(self.slot_action_up)
         self.ui.downBut.clicked.connect(self.slot_action_down)
         self.ui.editBut.clicked.connect(self.slot_action_edit)
+        self.ui.duplicateBtn.clicked.connect(self.slot_action_duplicate)
         self.ui.actionsListWidget.doubleClicked.connect(self.slot_action_edit)
 
         w_other_menu = QMenu()
@@ -136,6 +137,11 @@ class CommandEditWnd(QDialog):
         current_item = self.ui.actionsListWidget.takeItem(current_index)
         self.ui.actionsListWidget.insertItem(current_index + 1, current_item)
         self.ui.actionsListWidget.setCurrentRow(current_index + 1)
+
+    def slot_action_duplicate(self):
+        current_index = self.ui.actionsListWidget.currentRow()
+        current_item = self.ui.actionsListWidget.item(current_index)
+        self.ui.actionsListWidget.insertItem(current_index + 1, current_item.clone())
 
     def slot_action_edit(self):
         w_list_items = self.ui.actionsListWidget.selectedItems()
