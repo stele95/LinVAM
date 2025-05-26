@@ -356,9 +356,9 @@ class ProfileExecutor(threading.Thread):
 
         args = ""
         if w_type == 11:
-            args = "--repeat 2"
+            args = "--repeat 2 "
 
-        command = 'click ' + args + " --next-delay 25 " + click_command
+        command = ('click --next-delay 100 ' + args + click_command)
         self._execute_ydotool_command(command)
 
     def _execute_ydotool_command(self, command):
