@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QDialog
 
 from linvam import keyboard
 from linvam.ui_keyactioneditwnd import Ui_KeyActionEditDialog
-from linvam.util import KEYS_SPLITTER, DEFAULT_KEY_DELAY_IN_MILLISECONDS
+from linvam.util import KEYS_SPLITTER, DEFAULT_KEY_DELAY_IN_MILLISECONDS, Command
 
 
 class KeyActionEditWnd(QDialog):
@@ -61,7 +61,7 @@ class KeyActionEditWnd(QDialog):
             else:
                 events += KEYS_SPLITTER + event
 
-        self.m_key_action = {'name': 'key action', 'key': w_hot_key, 'delay': self.ui.sbDelay.value(),
+        self.m_key_action = {'name': Command.KEY_ACTION, 'key': w_hot_key, 'delay': self.ui.sbDelay.value(),
                              'key_events': events}
         self._stop_keyboard_listener()
         super().accept()

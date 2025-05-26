@@ -8,6 +8,7 @@ from linvam.mouseactioneditwnd import MouseActionEditWnd
 from linvam.pauseactioneditwnd import PauseActionEditWnd
 from linvam.soundactioneditwnd import SoundActionEditWnd
 from linvam.ui_commandeditwnd import Ui_CommandEditDialog
+from linvam.util import Command
 
 
 class CommandEditWnd(QDialog):
@@ -31,8 +32,9 @@ class CommandEditWnd(QDialog):
         self.ui.actionsListWidget.doubleClicked.connect(self.slot_action_edit)
 
         w_other_menu = QMenu()
-        w_other_menu.addAction('Execute another command', self.slot_do_another_command)
+        w_other_menu.addAction('Execute another voice command', self.slot_do_another_voice_command)
         w_other_menu.addAction('Stop another command', self.slot_stop_another_command)
+        w_other_menu.addAction('Execute external script or command', self.slot_do_external_command)
         self.ui.otherBtn.setMenu(w_other_menu)
 
         self.m_command = {}
@@ -71,14 +73,21 @@ class CommandEditWnd(QDialog):
         text, ok_pressed = QInputDialog.getText(self, "Get Command Name", "Another command name:",
                                                 QLineEdit.EchoMode.Normal, "")
         if ok_pressed and text != '':
-            w_command_stop_action = {'name': 'command stop action', 'command name': text}
+            w_command_stop_action = {'name': Command.COMMAND_STOP_ACTION, 'command name': text}
             self.add_action(w_command_stop_action)
 
-    def slot_do_another_command(self):
-        text, ok_pressed = QInputDialog.getText(self, "Get Command Name", "Another command name:",
+    def slot_do_another_voice_command(self):
+        text, ok_pressed = QInputDialog.getText(self, "Get Command Name", "Another voice command name:",
                                                 QLineEdit.EchoMode.Normal, "")
         if ok_pressed and text != '':
-            w_command_do_action = {'name': 'command execute action', 'command name': text}
+            w_command_do_action = {'name': Command.EXECUTE_VOICE_COMMAND_ACTION, 'command name': text}
+            self.add_action(w_command_do_action)
+
+    def slot_do_external_command(self):
+        text, ok_pressed = QInputDialog.getText(self, "Get Command Name", "Enter external command or script path:",
+                                                QLineEdit.EchoMode.Normal, "")
+        if ok_pressed and text != '':
+            w_command_do_action = {'name': Command.EXECUTE_EXTERNAL_COMMAND_ACTION, 'command': text}
             self.add_action(w_command_do_action)
 
     def slot_do_play_sound(self):
@@ -90,7 +99,7 @@ class CommandEditWnd(QDialog):
             False
         )
         if ok_pressed and text != '':
-            w_command_do_action = {'name': 'command play sound', 'command name': text}
+            w_command_do_action = {'name': Command.COMMAND_PLAY_SOUND, 'command name': text}
             self.add_action(w_command_do_action)
 
     def slot_new_key_edit(self):
@@ -114,7 +123,7 @@ class CommandEditWnd(QDialog):
             self.add_action(w_sound_edit_wnd.m_sound_action)
 
     def slot_stop_sound(self):
-        self.add_action({'name': 'stop sound'})
+        self.add_action({'name': Command.STOP_SOUND})
 
     def slot_action_up(self):
         current_index = self.ui.actionsListWidget.currentRow()
@@ -137,29 +146,40 @@ class CommandEditWnd(QDialog):
         w_json_action = w_item.data(Qt.ItemDataRole.UserRole)
         w_action = json.loads(w_json_action)
 
-        if w_action['name'] == 'key action':
-            w_key_edit_wnd = KeyActionEditWnd(w_action, self)
-            if w_key_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-                w_json_action = json.dumps(w_key_edit_wnd.m_key_action, ensure_ascii=False)
-        elif (w_action['name'] == 'mouse click action' or w_action['name'] == 'mouse move action' or w_action['name']
-              == 'mouse scroll action'):
-            w_mouse_edit_wnd = MouseActionEditWnd(w_action, self)
-            if w_mouse_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-                w_json_action = json.dumps(w_mouse_edit_wnd.m_mouse_action, ensure_ascii=False)
-        elif w_action['name'] == 'pause action':
-            w_pause_edit_wnd = PauseActionEditWnd(w_action, self)
-            if w_pause_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-                w_json_action = json.dumps(w_pause_edit_wnd.m_pause_action, ensure_ascii=False)
-        elif w_action['name'] == 'command stop action' or w_action['name'] == 'command execute action':
-            text, ok_pressed = QInputDialog.getText(self, "Get Command Name", "Another command name:",
-                                                    QLineEdit.EchoMode.Normal, w_action['command name'])
-            if ok_pressed and text != '':
-                w_action['command name'] = text
-                w_json_action = json.dumps(w_action, ensure_ascii=False)
-        elif w_action['name'] == 'play sound':
-            w_sound_edit_wnd = SoundActionEditWnd(self.m_parent.m_parent.m_profile_executor.m_sound, w_action, self)
-            if w_sound_edit_wnd.exec() == QDialog.DialogCode.Accepted:
-                w_json_action = json.dumps(w_sound_edit_wnd.m_sound_action, ensure_ascii=False)
+        match w_action['name']:
+            case Command.KEY_ACTION:
+                w_key_edit_wnd = KeyActionEditWnd(w_action, self)
+                if w_key_edit_wnd.exec() == QDialog.DialogCode.Accepted:
+                    w_json_action = json.dumps(w_key_edit_wnd.m_key_action, ensure_ascii=False)
+            case Command.MOUSE_CLICK_ACTION | Command.MOUSE_MOVE_ACTION | Command.MOUSE_SCROLL_ACTION:
+                w_mouse_edit_wnd = MouseActionEditWnd(w_action, self)
+                if w_mouse_edit_wnd.exec() == QDialog.DialogCode.Accepted:
+                    w_json_action = json.dumps(w_mouse_edit_wnd.m_mouse_action, ensure_ascii=False)
+            case Command.PAUSE_ACTION:
+                w_pause_edit_wnd = PauseActionEditWnd(w_action, self)
+                if w_pause_edit_wnd.exec() == QDialog.DialogCode.Accepted:
+                    w_json_action = json.dumps(w_pause_edit_wnd.m_pause_action, ensure_ascii=False)
+            case Command.COMMAND_STOP_ACTION | Command.EXECUTE_VOICE_COMMAND_ACTION:
+                text, ok_pressed = QInputDialog.getText(self, "Get Command Name", "Another command name:",
+                                                        QLineEdit.EchoMode.Normal, w_action['command name'])
+                if ok_pressed and text != '':
+                    w_action['command name'] = text
+                    w_json_action = json.dumps(w_action, ensure_ascii=False)
+            case Command.EXECUTE_EXTERNAL_COMMAND_ACTION:
+                text, ok_pressed = QInputDialog.getText(
+                    self,
+                    "Get Command Name",
+                    "Enter external command or script path:",
+                    QLineEdit.EchoMode.Normal,
+                    w_action['command']
+                )
+                if ok_pressed and text != '':
+                    w_action['command'] = text
+                    w_json_action = json.dumps(w_action, ensure_ascii=False)
+            case Command.PLAY_SOUND:
+                w_sound_edit_wnd = SoundActionEditWnd(self.m_parent.m_parent.m_profile_executor.m_sound, w_action, self)
+                if w_sound_edit_wnd.exec() == QDialog.DialogCode.Accepted:
+                    w_json_action = json.dumps(w_sound_edit_wnd.m_sound_action, ensure_ascii=False)
 
         w_item.setText(w_json_action)
         w_item.setData(Qt.ItemDataRole.UserRole, w_json_action)
