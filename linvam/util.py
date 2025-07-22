@@ -7,6 +7,8 @@ import sys
 from collections import namedtuple
 from enum import StrEnum
 
+from PyQt6.QtGui import QImage, QIcon, QPixmap
+
 HOME_DIR = os.path.expanduser('~')
 LINVAM_SETTINGS_FOLDER = HOME_DIR + '/.local/share/LinVAM/'
 COMMANDS_LIST_FILE = 'commands.list'
@@ -39,6 +41,16 @@ class Config(StrEnum):
     OPEN_COMMANDS_FILE = 'open_commands_file'
     DEBUG = 'debug'
     USE_YDOTOOL = 'use_ydotool'
+
+def get_linvam_icon(scaled_height=128):
+    with open(get_asset(f"icons/linvam.svg"), 'rb') as svg_file:
+        svg_str = svg_file.read()
+    svg_img = QImage.fromData(svg_str).scaledToHeight(scaled_height)
+    return QIcon(QPixmap(svg_img))
+
+def get_asset(path):
+    bundle_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
+    return os.path.join(bundle_dir, path)
 
 def handle_args(config):
     if len(sys.argv) == 1:

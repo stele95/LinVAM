@@ -14,7 +14,7 @@ from linvam.util import (get_supported_languages, get_config, save_config, save_
                          delete_linvam_run_file, init_config_folder, read_profiles, save_profiles, copy_profiles_to_dir,
                          HOME_DIR, import_profiles_from_file, merge_profiles, get_safe_name,
                          update_profiles_for_new_version, handle_args, is_push_to_listen, get_push_to_listen_hotkey,
-                         save_push_to_listen_hotkey, save_is_push_to_listen, setup_mangohud, Config)
+                         save_push_to_listen_hotkey, save_is_push_to_listen, setup_mangohud, Config, get_linvam_icon)
 
 
 class MainWnd(QWidget):
@@ -345,6 +345,7 @@ def start_linvam():
     app = QApplication(sys.argv)
     app.setApplicationName("LinVAM")
     app.setApplicationVersion(__version__)
+    app.setWindowIcon(get_linvam_icon())
     app.setApplicationDisplayName("LinVAM v" + __version__)
     main_wnd = MainWnd()
     main_wnd.show()
