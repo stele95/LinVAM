@@ -343,8 +343,10 @@ def start_linvam():
                   " e.g. --path='/home/user/.config/MangoHud/")
         return sys.exit()
     app = QApplication(sys.argv)
+    app.setApplicationName("LinVAM")
+    app.setApplicationVersion(__version__)
+    app.setApplicationDisplayName("LinVAM v" + __version__)
     main_wnd = MainWnd()
-    main_wnd.setWindowTitle("LinVAM v" + __version__)
     main_wnd.show()
     return sys.exit(app.exec())
 
