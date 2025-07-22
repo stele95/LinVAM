@@ -8,7 +8,7 @@
    version="1.1"
    id="svg1"
    inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
-   sodipodi:docname="drawing-white.svg"
+   sodipodi:docname="drawing.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +39,7 @@
      id="layer4"
      inkscape:label="Layer 2">
     <circle
-       style="fill:#fafafa;stroke:none;fill-opacity:1"
+       style="fill:#34c759;stroke:none;fill-opacity:1"
        id="path2"
        cx="256"
        cy="256"
