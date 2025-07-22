@@ -43,7 +43,7 @@ class Config(StrEnum):
     USE_YDOTOOL = 'use_ydotool'
 
 def get_linvam_icon(scaled_height=128):
-    with open(get_asset(f"icons/linvam.svg"), 'rb') as svg_file:
+    with open(get_asset("icons/linvam.svg"), 'rb') as svg_file:
         svg_str = svg_file.read()
     svg_img = QImage.fromData(svg_str).scaledToHeight(scaled_height)
     return QIcon(QPixmap(svg_img))
