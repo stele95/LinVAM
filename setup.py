@@ -5,6 +5,7 @@ setup(
     name='LinVAM',
     version=__version__,
     packages=find_packages(where='.'),
+    include_package_data=True,
     url='https://github.com/stele95/LinVAM',
     license='GPL-3.0',
     author='stele',
