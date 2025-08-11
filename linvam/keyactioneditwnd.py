@@ -1,5 +1,6 @@
 import re
 
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDialog
 
 from linvam import keyboard
@@ -15,6 +16,7 @@ class KeyActionEditWnd(QDialog):
         self.ui.ok.clicked.connect(self.slot_ok)
         self.ui.cancel.clicked.connect(self.slot_cancel)
         self.ui.recordingButton.clicked.connect(self.recording_click)
+        self.ui.recordingButton.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.ui.resetDelay.clicked.connect(self.reset_delay)
         self.m_key_action = {}
         self.key_events = []
@@ -47,6 +49,7 @@ class KeyActionEditWnd(QDialog):
 
     def set_buttons_enabled(self, enabled):
         self.ui.sbDelay.setEnabled(enabled)
+        self.ui.resetDelay.setEnabled(enabled)
         self.ui.ok.setEnabled(enabled)
         self.ui.cancel.setEnabled(enabled)
 
