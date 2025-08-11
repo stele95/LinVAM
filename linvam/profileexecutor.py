@@ -144,7 +144,7 @@ class ProfileExecutor(threading.Thread):
             return
         w_commands = self.m_profile['commands']
         for w_command in w_commands:
-            parts = w_command['name'].split(',')
+            parts = w_command['name'].lower().split(',')
             for part in parts:
                 self.commands_list.append(part)
         print('Profile: ' + self.m_profile['name'])
