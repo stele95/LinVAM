@@ -19,7 +19,7 @@ jobs:
         sudo apt-get update
         sudo apt-get -y install qt6-base-dev
         python -m pip install --upgrade pip
-        pip install pylint
+        pip install pylint setuptools
         pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
