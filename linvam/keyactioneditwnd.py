@@ -21,6 +21,7 @@ class KeyActionEditWnd(QDialog):
         self.m_key_action = {}
         self.key_events = []
         self.keyboard_listener = None
+        self.rejectAllowed = True
         if action is not None:
             self.ui.keyEdit.setText(action['key'])
             if 'delay' in action:
@@ -31,6 +32,12 @@ class KeyActionEditWnd(QDialog):
                 self.key_events = str(action['key_events']).split(KEYS_SPLITTER)
         else:
             self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY_IN_MILLISECONDS)
+
+    def reject(self):
+        if self.rejectAllowed:
+            super().reject()
+        else:
+            print("Reject not allowed, skipping reject")
 
     def reset_delay(self):
         self.ui.sbDelay.setValue(DEFAULT_KEY_DELAY_IN_MILLISECONDS)
@@ -52,6 +59,7 @@ class KeyActionEditWnd(QDialog):
         self.ui.resetDelay.setEnabled(enabled)
         self.ui.ok.setEnabled(enabled)
         self.ui.cancel.setEnabled(enabled)
+        self.rejectAllowed = enabled
 
     def slot_ok(self):
         w_hot_key = self.ui.keyEdit.text()
