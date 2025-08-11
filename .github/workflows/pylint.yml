@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.11"]
+        python-version: ["3.13"]
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -16,9 +16,10 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
+        sudo apt-get update
         sudo apt-get -y install qt6-base-dev
-        pip install pylint
+        python -m pip install --upgrade pip
+        pip install pylint setuptools
         pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
