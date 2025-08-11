@@ -202,7 +202,7 @@ class CommandEditWnd(QDialog):
 
     def save_command(self):
         w_action_cnt = self.ui.actionsListWidget.count()
-        self.m_command['name'] = self.ui.say.text().lower()
+        self.m_command['name'] = self.ui.say.text().strip().lower()
         w_actions = []
         for w_idx in range(w_action_cnt):
             w_json_action = self.ui.actionsListWidget.item(w_idx).data(Qt.ItemDataRole.UserRole)
