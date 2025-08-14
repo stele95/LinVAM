@@ -49,7 +49,7 @@ If a package is available for your distribution, that's the recommended way for 
 #### AUR
 [![AUR](https://img.shields.io/aur/version/linvam)](https://aur.archlinux.org/packages/linvam)
 
-After installing from AUR, run ``sudo usermod -aG tty,input $USER`` to allow [uinput access without sudo](#udev-rule-for-input)
+After installing from AUR, run ``sudo usermod -aG tty,input $USER`` to allow [uinput access without sudo](#udev-rule-for-input) and restart your PC.
 
 ### Install manually
 
