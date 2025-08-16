@@ -29,8 +29,25 @@ def cleanup_key(name):
     if name.lower().endswith('_l'):
         name = 'left ' + name[:-2]
 
-
     return normalize_name(name), is_keypad
+
+def cleanup_key_with_code(name, code):
+    name_lower = name.lower()
+    new_name = name
+    match code:
+        case 29:
+            if name_lower == "control" or name_lower == "ctrl":
+                new_name += "_l"
+        case 97:
+            if name_lower == "control" or name_lower == "ctrl":
+                new_name += "_r"
+        case 42:
+            if name_lower == "shift":
+                new_name += "_l"
+        case 54:
+            if name_lower == "shift":
+                new_name += "_r"
+    return cleanup_key(new_name)
 
 def cleanup_modifier(modifier):
     modifier = normalize_name(modifier)
@@ -82,7 +99,7 @@ def build_tables():
         scan_code = int(str_scan_code)
         for i, str_name in enumerate(str_names.strip().split()):
             modifiers = tuple(sorted(modifier for modifier, bit in modifiers_bits.items() if i & bit))
-            name, is_keypad = cleanup_key(str_name)
+            name, is_keypad = cleanup_key_with_code(str_name, scan_code)
             register_key((scan_code, modifiers), name)
             if is_keypad:
                 keypad_scan_codes.add(scan_code)
