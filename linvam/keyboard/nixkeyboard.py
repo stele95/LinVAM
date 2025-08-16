@@ -14,9 +14,9 @@ def cleanup_key(name):
     """ Formats a dumpkeys format to our standard. """
     name = name.lstrip('+')
     is_keypad = name.startswith('KP_')
-    for mod in ('Meta_', 'Control_', 'dead_', 'KP_'):
-        if name.startswith(mod):
-            name = name[len(mod):]
+    # for mod in ('Meta_', 'Control_', 'dead_', 'KP_'):
+    #     if name.startswith(mod):
+    #         name = name[len(mod):]
 
     # Dumpkeys is weird like that.
     if name == 'Remove':
@@ -24,9 +24,9 @@ def cleanup_key(name):
     elif name == 'Delete':
         name = 'Backspace'
 
-    if name.endswith('_r'):
+    if name.lower().endswith('_r'):
         name = 'right ' + name[:-2]
-    if name.endswith('_l'):
+    if name.lower().endswith('_l'):
         name = 'left ' + name[:-2]
 
 
