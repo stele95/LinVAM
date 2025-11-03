@@ -1,3 +1,4 @@
+import copy
 import json
 
 from PyQt6.QtCore import Qt, QTimer
@@ -27,6 +28,7 @@ class ProfileEditWnd(QDialog):
         self.ui.newCmd.clicked.connect(self.slot_new_cmd)
         self.ui.editCmd.clicked.connect(self.slot_edit_cmd)
         self.ui.cmdTable.doubleClicked.connect(self.slot_edit_cmd)
+        self.ui.duplicateCmd.clicked.connect(self.slot_duplicate_cmd)
         self.ui.deleteCmd.clicked.connect(self.slot_delete_cmd)
         self.ui.ok.clicked.connect(self.slot_ok)
         self.ui.cancel.clicked.connect(self.slot_cancel)
@@ -99,6 +101,25 @@ class ProfileEditWnd(QDialog):
             w_item.setData(Qt.ItemDataRole.UserRole, json.dumps(w_cmd_edit_wnd.m_command, ensure_ascii=False))
             self.ui.cmdTable.setItem(w_model_idx.row(), 1, w_item)
             self.ui.cmdTable.resizeRowsToContents()
+
+    def slot_duplicate_cmd(self):
+        w_model_indexes = self.ui.cmdTable.selectionModel().selectedRows()
+        if len(w_model_indexes) == 0:
+            return
+        w_model_idx = w_model_indexes[0]
+        w_json_command = self.ui.cmdTable.item(w_model_idx.row(), 1).data(Qt.ItemDataRole.UserRole)
+        w_command = json.loads(w_json_command)
+
+        # Create a deep copy of the command
+        w_command_copy = copy.deepcopy(w_command)
+
+        w_cmd_edit_wnd = CommandEditWnd(w_command_copy, self)
+        if w_cmd_edit_wnd.exec() == QDialog.DialogCode.Accepted:
+            if not self.import_command(w_cmd_edit_wnd.m_command, False):
+                QMessageBox.critical(None, 'Error', 'Duplicating command failed')
+                return
+            self.ui.cmdTable.selectRow(self.ui.cmdTable.rowCount() - 1)
+            self.ui.cmdTable.setFocus()
 
     def slot_delete_cmd(self):
         w_model_indexes = self.ui.cmdTable.selectionModel().selectedRows()
