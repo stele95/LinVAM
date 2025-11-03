@@ -435,7 +435,7 @@ def create_key_event(w_key):
     return str(w_key) + ":1" + KEYS_SPLITTER + str(w_key) + ":0"
 
 
-# pylint: disable=too-many-return-statements
+# pylint: disable=too-many-return-statements,too-many-branches
 def map_key(w_key):
     # ydotool has a different key mapping.
     # check /usr/include/linux/input-event-codes.h for key mappings

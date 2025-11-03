@@ -40,6 +40,7 @@ class MouseActionEditWnd(QDialog):
                     self.ui.scrollDown.setChecked(True)
                     self.ui.scrollDownEdit.setText(str(p_mouse_action['delta']))
 
+    # pylint: disable=too-many-branches
     def restore_mouse_click_action(self, p_mouse_action):
         self.ui.mouseActionTabWidget.setCurrentIndex(0)
         match p_mouse_action['button']:
