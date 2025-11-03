@@ -145,6 +145,7 @@ class CommandEditWnd(QDialog):
         current_item = self.ui.actionsListWidget.item(current_index)
         self.ui.actionsListWidget.insertItem(current_index + 1, current_item.clone())
 
+    # pylint: disable=too-many-branches
     def slot_action_edit(self):
         w_list_items = self.ui.actionsListWidget.selectedItems()
         if len(w_list_items) < 1:
