@@ -20,6 +20,7 @@ Linux Voice Activated Macros
 
   * [Display LinVAM profile and language in MangoHud](#display-linvam-profile-and-language-in-mangohud)
   * [Profiles](#profiles)
+  * [Voice command syntax](#voice-command-syntax)
   * [Input mode](#input-mode)
   * [Key combinations](#key-combinations)
   * [Complex commands](#complex-commands)
@@ -187,6 +188,48 @@ Backup options:
 - Use ``Merge`` to add profiles from ``profiles.json`` file you selected. This doesn't delete existing profiles, it adds new ones alongside existing ones.
 
 ![Main GUI Profiles](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/main-gui-profiles.png)
+
+### Voice command syntax
+When creating voice commands, you can use special syntax to create variations without typing them all out:
+
+#### Comma-separated alternatives
+Create multiple separate commands that trigger the same action:
+```
+fire, shoot, attack
+```
+Any of these three words will trigger the command.
+
+#### Optional words (square brackets)
+Make parts of a phrase optional:
+```
+power up [the ship]
+```
+This matches both "power up the ship" and "power up".
+
+#### Alternative optional words (commas in brackets)
+Provide multiple alternatives within optional brackets:
+```
+power up [the ship, the engines]
+```
+This creates three variations:
+- "power up the ship"
+- "power up the engines"
+- "power up"
+
+#### Multiple optional sections
+Use multiple brackets for more combinations:
+```
+open [the, a] menu [now, please]
+```
+This generates 9 variations covering all combinations.
+
+#### Combining features
+You can combine top-level commas with brackets:
+```
+fire [lasers, missiles], attack [now]
+```
+This creates: "fire", "fire lasers", "fire missiles", "attack", "attack now".
+
 ### Input mode
 You can choose between two input modes for LinVAM to listen to your commands (``linvamrun`` will use the option selected in the GUI before starting ``linvamrun``):
 - ``Always on`` - LinVAM is always listening to what you are saying
