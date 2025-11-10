@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
-import struct
-import traceback
-from time import time as now
-from collections import namedtuple
-from ._keyboard_event import KeyboardEvent, KEY_DOWN, KEY_UP
 from ._canonical_names import all_modifiers, normalize_name
+from ._keyboard_event import KeyboardEvent, KEY_DOWN, KEY_UP
 from ._nixcommon import EV_KEY, aggregate_devices
 
 # TODO: start by reading current keyboard state, as to not missing any already pressed keys.
@@ -62,7 +58,7 @@ Use `dumpkeys --keys-only` to list all scan codes and their names. We
 then parse the output and built a table. For each scan code and modifiers we
 have a list of names and vice-versa.
 """
-from subprocess import check_output, CalledProcessError, PIPE
+from subprocess import check_output, CalledProcessError
 from collections import defaultdict
 import re
 
@@ -86,15 +82,7 @@ def build_tables():
         'alt': 8,
     }
     keycode_template = r'^keycode\s+(\d+)\s+=(.*?)$'
-    try:
-        dump = check_output(['dumpkeys', '--keys-only'], universal_newlines=True)
-    except CalledProcessError as e:
-        if e.returncode == 1:
-            raise ValueError('Failed to run dumpkeys to get key names. Check if your user is part of the "tty" group, and if not, add it with "sudo usermod -a -G tty USER".')
-        else:
-            raise
-
-
+    dump = get_dumpkeys_output(['dumpkeys', '--keys-only'])
     for str_scan_code, str_names in re.findall(keycode_template, dump, re.MULTILINE):
         scan_code = int(str_scan_code)
         for i, str_name in enumerate(str_names.strip().split()):
@@ -124,7 +112,7 @@ def build_tables():
         register_key((127, ()), 'menu')
 
     synonyms_template = r'^(\S+)\s+for (.+)$'
-    dump = check_output(['dumpkeys', '--long-info'], universal_newlines=True)
+    dump = get_dumpkeys_output(['dumpkeys', '--long-info'])
     for synonym_str, original_str in re.findall(synonyms_template, dump, re.MULTILINE):
         synonym, _ = cleanup_key(synonym_str)
         original, _ = cleanup_key(original_str)
@@ -132,17 +120,47 @@ def build_tables():
             from_name[original].extend(from_name[synonym])
             from_name[synonym].extend(from_name[original])
 
+
+def get_dumpkeys_output(dumpkeys_command):
+    try:
+        return check_output(dumpkeys_command, universal_newlines=True)
+    except CalledProcessError as e:
+        if e.returncode == 1:
+            try:
+                # dumpkeys -k -C /dev/$(cat /sys/devices/virtual/tty/tty0/active)
+                tty = check_output(['cat', '/sys/devices/virtual/tty/tty0/active'], universal_newlines=True).strip()
+                return check_output(
+                    args=dumpkeys_command + ['--console=/dev/' + tty],
+                    universal_newlines=True
+                )
+            except CalledProcessError as er:
+                if er.returncode == 1:
+                    raise ValueError(
+                        'Failed to run dumpkeys to get key names. Check if your user is part of the "tty" group,' +
+                        ' and if not, add it with "sudo usermod -aG tty $USER".'
+                    )
+                else:
+                    raise
+        else:
+            raise
+
+
 device = None
+
+
 def build_device():
     global device
     if device: return
     device = aggregate_devices('kbd')
 
+
 def init():
     build_device()
     build_tables()
 
+
 pressed_modifiers = set()
+
 
 def listen(callback):
     build_device()
@@ -154,12 +172,12 @@ def listen(callback):
             continue
 
         scan_code = code
-        event_type = KEY_DOWN if value else KEY_UP # 0 = UP, 1 = DOWN, 2 = HOLD
+        event_type = KEY_DOWN if value else KEY_UP  # 0 = UP, 1 = DOWN, 2 = HOLD
 
         pressed_modifiers_tuple = tuple(sorted(pressed_modifiers))
         names = to_name[(scan_code, pressed_modifiers_tuple)] or to_name[(scan_code, ())] or ['unknown']
         name = names[0]
-            
+
         if name in all_modifiers:
             if event_type == KEY_DOWN:
                 pressed_modifiers.add(name)
@@ -167,11 +185,14 @@ def listen(callback):
                 pressed_modifiers.discard(name)
 
         is_keypad = scan_code in keypad_scan_codes
-        callback(KeyboardEvent(event_type=event_type, scan_code=scan_code, name=name, time=time, device=device_id, is_keypad=is_keypad, modifiers=pressed_modifiers_tuple))
+        callback(KeyboardEvent(event_type=event_type, scan_code=scan_code, name=name, time=time, device=device_id,
+                               is_keypad=is_keypad, modifiers=pressed_modifiers_tuple))
+
 
 def write_event(scan_code, is_down):
     build_device()
     device.write_event(EV_KEY, scan_code, int(is_down))
+
 
 def map_name(name):
     build_tables()
@@ -183,11 +204,14 @@ def map_name(name):
         for entry in from_name[parts[1]]:
             yield entry
 
+
 def press(scan_code):
     write_event(scan_code, True)
 
+
 def release(scan_code):
     write_event(scan_code, False)
+
 
 def type_unicode(character):
     codepoint = ord(character)
@@ -206,7 +230,10 @@ def type_unicode(character):
         scan_code, _ = next(map_name(key))
         release(scan_code)
 
+
 if __name__ == '__main__':
     def p(e):
         print(e)
+
+
     listen(p)
