@@ -20,7 +20,9 @@ from linvam.util import (get_language_code, get_voice_packs_folder_path, get_lan
                          KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey, Command,
                          Config)
 
+COMMAND_NAME_COMMA_SPLIT_REGGEX = r",(?![^\[]*\])"
 
+# pylint: disable=too-many-locals
 def _expand_optional_brackets(text):
     """
     Expands optional words in square brackets to create all variations.
@@ -29,6 +31,7 @@ def _expand_optional_brackets(text):
     Examples:
         "power up [the ship]" -> ["power up the ship", "power up"]
         "power up [the ship, the engines]" -> ["power up the ship", "power up the engines", "power up"]
+        # pylint: disable=line-too-long
         "open [the, a] menu [now]" -> ["open the menu now", "open a menu now", "open the menu", "open a menu", "open menu now", "open menu"]
 
     Args:
@@ -227,7 +230,7 @@ class ProfileExecutor(threading.Thread):
             return
         w_commands = self.m_profile['commands']
         for w_command in w_commands:
-            parts = w_command['name'].strip().lower().split(',')
+            parts = re.split(COMMAND_NAME_COMMA_SPLIT_REGGEX, w_command['name'].strip().lower())
             for part in parts:
                 # Expand optional brackets to create all variations
                 variations = _expand_optional_brackets(part.strip())
@@ -500,7 +503,7 @@ class ProfileExecutor(threading.Thread):
         w_commands = self.m_profile['commands']
         command = None
         for w_command in w_commands:
-            parts = w_command['name'].split(',')
+            parts = re.split(COMMAND_NAME_COMMA_SPLIT_REGGEX, w_command['name'].strip().lower())
             for part in parts:
                 # Expand optional brackets to match all variations
                 variations = _expand_optional_brackets(part.strip())
