@@ -1,5 +1,7 @@
+import itertools
 import json
 import os
+import re
 import shlex
 import signal
 import subprocess
@@ -17,6 +19,87 @@ from linvam.soundfiles import SoundFiles
 from linvam.util import (get_language_code, get_voice_packs_folder_path, get_language_name, YDOTOOLD_SOCKET_PATH,
                          KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey, Command,
                          Config)
+
+
+def _expand_optional_brackets(text):
+    """
+    Expands optional words in square brackets to create all variations.
+    Commas within brackets create alternatives.
+
+    Examples:
+        "power up [the ship]" -> ["power up the ship", "power up"]
+        "power up [the ship, the engines]" -> ["power up the ship", "power up the engines", "power up"]
+        "open [the, a] menu [now]" -> ["open the menu now", "open a menu now", "open the menu", "open a menu", "open menu now", "open menu"]
+
+    Args:
+        text: Command text potentially containing optional sections in square brackets
+
+    Returns:
+        List of all possible command variations
+    """
+    # Find all bracketed sections and their positions
+    bracket_pattern = re.compile(r'\[([^\]]+)\]')
+    matches = list(bracket_pattern.finditer(text))
+
+    if not matches:
+        # No brackets found, return original text
+        return [text]
+
+    # Extract the parts: text segments and optional segments with alternatives
+    segments = []
+    last_end = 0
+
+    for match in matches:
+        # Add the text before this bracket
+        if match.start() > last_end:
+            segments.append(('fixed', text[last_end:match.start()]))
+
+        # Add the optional content (without brackets)
+        # Split by comma to get alternatives within the bracket
+        bracket_content = match.group(1)
+        alternatives = [alt.strip() for alt in bracket_content.split(',')]
+
+        # For optional brackets, we have: None (excluded) + all alternatives
+        segments.append(('optional', alternatives))
+        last_end = match.end()
+
+    # Add any remaining text after the last bracket
+    if last_end < len(text):
+        segments.append(('fixed', text[last_end:]))
+
+    # Build list of choices for each bracket: [None] + alternatives
+    # For each optional segment, we can choose None or any of its alternatives
+    optional_segments = [seg for seg in segments if seg[0] == 'optional']
+
+    # Create choice lists: each optional bracket has [None] + [alt1, alt2, ...]
+    choice_lists = []
+    for seg_type, alternatives in optional_segments:
+        choices = [None] + alternatives  # None means "don't include"
+        choice_lists.append(choices)
+
+    # Generate all combinations using cartesian product
+    variations = []
+    for combination in itertools.product(*choice_lists):
+        # Build this variation
+        parts = []
+        optional_idx = 0
+
+        for seg_type, content in segments:
+            if seg_type == 'fixed':
+                parts.append(content)
+            else:  # optional
+                choice = combination[optional_idx]
+                if choice is not None:  # Include this choice
+                    parts.append(choice)
+                optional_idx += 1
+
+        # Join and clean up extra whitespace
+        variation = ''.join(parts)
+        variation = ' '.join(variation.split())  # Normalize whitespace
+        if variation:  # Only add non-empty variations
+            variations.append(variation)
+
+    return variations if variations else [text]
 
 
 def _execute_external_command(cmd_name, is_async):
@@ -146,7 +229,10 @@ class ProfileExecutor(threading.Thread):
         for w_command in w_commands:
             parts = w_command['name'].strip().lower().split(',')
             for part in parts:
-                self.commands_list.append(part)
+                # Expand optional brackets to create all variations
+                variations = _expand_optional_brackets(part.strip())
+                for variation in variations:
+                    self.commands_list.append(variation)
         print('Profile: ' + self.m_profile['name'])
         save_to_commands_file(self.commands_list)
         # this is a dirty fix until the whole keywords recognition is refactored
@@ -416,8 +502,13 @@ class ProfileExecutor(threading.Thread):
         for w_command in w_commands:
             parts = w_command['name'].split(',')
             for part in parts:
-                if part.lower() == cmd_name:
-                    command = w_command
+                # Expand optional brackets to match all variations
+                variations = _expand_optional_brackets(part.strip())
+                for variation in variations:
+                    if variation.lower() == cmd_name:
+                        command = w_command
+                        break
+                if command is not None:
                     break
 
             if command is not None:
