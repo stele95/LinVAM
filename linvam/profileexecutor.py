@@ -20,6 +20,7 @@ from linvam.util import (get_language_code, get_voice_packs_folder_path, get_lan
                          KEYS_SPLITTER, save_to_commands_file, is_push_to_listen, get_push_to_listen_hotkey, Command,
                          Config)
 
+COMMAND_NAME_COMMA_SPLIT_REGGEX = r",(?![^\[]*\])"
 
 def _expand_optional_brackets(text):
     """
@@ -227,7 +228,7 @@ class ProfileExecutor(threading.Thread):
             return
         w_commands = self.m_profile['commands']
         for w_command in w_commands:
-            parts = w_command['name'].strip().lower().split(',')
+            parts = re.split(COMMAND_NAME_COMMA_SPLIT_REGGEX, w_command['name'].strip().lower())
             for part in parts:
                 # Expand optional brackets to create all variations
                 variations = _expand_optional_brackets(part.strip())
@@ -500,7 +501,7 @@ class ProfileExecutor(threading.Thread):
         w_commands = self.m_profile['commands']
         command = None
         for w_command in w_commands:
-            parts = w_command['name'].split(',')
+            parts = re.split(COMMAND_NAME_COMMA_SPLIT_REGGEX, w_command['name'].strip().lower())
             for part in parts:
                 # Expand optional brackets to match all variations
                 variations = _expand_optional_brackets(part.strip())
