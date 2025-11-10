@@ -22,6 +22,7 @@ from linvam.util import (get_language_code, get_voice_packs_folder_path, get_lan
 
 COMMAND_NAME_COMMA_SPLIT_REGGEX = r",(?![^\[]*\])"
 
+# pylint: disable=too-many-locals
 def _expand_optional_brackets(text):
     """
     Expands optional words in square brackets to create all variations.
@@ -30,6 +31,7 @@ def _expand_optional_brackets(text):
     Examples:
         "power up [the ship]" -> ["power up the ship", "power up"]
         "power up [the ship, the engines]" -> ["power up the ship", "power up the engines", "power up"]
+        # pylint: disable=line-too-long
         "open [the, a] menu [now]" -> ["open the menu now", "open a menu now", "open the menu", "open a menu", "open menu now", "open menu"]
 
     Args:
