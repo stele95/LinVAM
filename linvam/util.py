@@ -181,6 +181,7 @@ def save_to_commands_file(commands):
         f.close()
 
 
+# pylint: disable=too-many-return-statements
 def get_language_code(language_name):
     if language_name in ['English', 'english', 'en']:
         return 'en-us'
@@ -197,6 +198,7 @@ def get_language_code(language_name):
     return None
 
 
+# pylint: disable=too-many-return-statements
 def get_language_name(language_name):
     if language_name in ['English', 'english', 'en']:
         return 'English'
