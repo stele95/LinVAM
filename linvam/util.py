@@ -81,7 +81,8 @@ def get_supported_languages():
         'Russian',
         'Chinese',
         'French',
-        'German'
+        'German',
+        'Spanish'
     ]
 
 
@@ -191,6 +192,8 @@ def get_language_code(language_name):
         return 'fr'
     if language_name in ['German', 'de']:
         return 'de'
+    if language_name in ['Spanish', 'es']:
+        return 'es'
     return None
 
 
@@ -205,6 +208,8 @@ def get_language_name(language_name):
         return 'French'
     if language_name in ['German', 'de']:
         return 'German'
+    if language_name in ['Spanish', 'es']:
+        return 'Spanish'
     return None
 
 
