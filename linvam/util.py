@@ -81,7 +81,8 @@ def get_supported_languages():
         'Russian',
         'Chinese',
         'French',
-        'German'
+        'German',
+        'Spanish'
     ]
 
 
@@ -180,6 +181,7 @@ def save_to_commands_file(commands):
         f.close()
 
 
+# pylint: disable=too-many-return-statements
 def get_language_code(language_name):
     if language_name in ['English', 'english', 'en']:
         return 'en-us'
@@ -191,9 +193,12 @@ def get_language_code(language_name):
         return 'fr'
     if language_name in ['German', 'de']:
         return 'de'
+    if language_name in ['Spanish', 'es']:
+        return 'es'
     return None
 
 
+# pylint: disable=too-many-return-statements
 def get_language_name(language_name):
     if language_name in ['English', 'english', 'en']:
         return 'English'
@@ -205,6 +210,8 @@ def get_language_name(language_name):
         return 'French'
     if language_name in ['German', 'de']:
         return 'German'
+    if language_name in ['Spanish', 'es']:
+        return 'Spanish'
     return None
 
 
