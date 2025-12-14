@@ -1,0 +1,3 @@
+# give python keyboard module access to read input events - used for setting up commands by LinVAM
+SUBSYSTEM=="misc", MODE="0666" GROUP="input"
+SUBSYSTEM=="tty", MODE="0666" GROUP="input"
