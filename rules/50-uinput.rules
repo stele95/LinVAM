@@ -1,2 +1,2 @@
 # give python keyboard module access to read input events - used for setting up commands by LinVAM
-KERNEL=="uinput", MODE="0660", GROUP="input", TAG+="uaccess"
+KERNEL=="uinput", TAG+="uaccess", MODE="0660", GROUP="input"
