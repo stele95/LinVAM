@@ -85,23 +85,15 @@ The recommended way for the manual installation is by using [`pipx`](https://pyp
 
 You will have to use the desktop mode on the Steam Deck for installing and setting up ``LinVAM``
 
-- Install `pip` and [`pipx`](https://pypa.github.io/pipx/) to benefit from isolated environments by running in the terminal:
+- Run the following command in the terminal to clone the repository, enter scripts folder and execute pip setup script:
 
-      python -m ensurepip --upgrade && python3 -m pip install --user pipx && python3 -m pipx ensurepath
+      git clone https://github.com/stele95/LinVAM/ && cd LinVAM/scripts/ && sh steam-deck-setup-pip.sh
 
-- Download the latest release source code from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it, enter scripts folder, open terminal in that folder and execute the following command:
+- You will have to restart your terminal after running the previous command
 
-      sh steam-deck-install.sh
+- Go to scripts folder and open terminal there, run `steam-deck-install.sh`
 
 - Restart your device when finished
-
-Since SteamOS is built around the read-only root partition, you will have to do the following steps after every SteamOS update:
-- Update SteamOS and restart your Steam Deck
-- Run the following command from the scripts folder
-
-      sh steam-deck-configure-uinput-access.sh
-
-- Restart your Steam Deck
 
 </details>
 
