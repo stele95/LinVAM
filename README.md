@@ -7,6 +7,9 @@ Linux Voice Activated Macros
 * [Install](#install)
   * [Available packages](#available-packages)
     * [AUR](#aur)
+  * [Nix flake](#nix-flake)
+    * [NixOS](#nixos)
+    * [Other distros](#other-distros)
   * [Install manually](#install-manually)
     * [Requirements](#requirements)
     * [Installation steps](#installation-steps)
@@ -52,6 +55,35 @@ If a package is available for your distribution, that's the recommended way for 
 [![AUR](https://img.shields.io/aur/version/linvam)](https://aur.archlinux.org/packages/linvam)
 
 After installing from AUR, run ``sudo usermod -aG tty,input $USER`` to allow [uinput access without sudo](#udev-rule-for-input) and restart your PC.
+
+### Nix flake
+You will need ``nix-command`` and ``flakes`` enabled, as well your user being in groups ``input`` and ``tty``
+
+Follow the steps below to configure those things for your distro. Once configured, clone this repo, enter it with ``cd LinVAM`` and run ``nix run .`` to use the application.
+
+#### NixOS
+Set the following in your ``configuration.nix``
+```
+# Replace john with your username
+
+users.users.john.extraGroups = [
+  "input"
+  "tty"
+];
+
+nix.settings.experimental-features = [
+  "nix-command"
+  "flakes"
+];
+```
+
+#### Other distros
+You can use Nix on nearly any Linux distro, but this section will not explicitly cover how to get Nix itself up and running. There are plenty of good guides out there though (like [this one](https://nix.dev/manual/nix/2.28/installation/index.html)).
+
+Once Nix is working, run ``sudo usermod -aG input,tty $USER`` and put the following in ``$XDG_CONFIG_HOME/nix/nix.conf``
+```
+experimental-features = nix-command flakes
+```
 
 ### Install manually
 
