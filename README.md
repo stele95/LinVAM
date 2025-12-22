@@ -37,6 +37,7 @@ Currently supported languages (just for voice input, UI is in English):
 - Chinese
 - French
 - German
+- Spanish
 
 Utilising [VOSK-API](https://github.com/alphacep/vosk-api), a lightweight voice to text engine you can specify voice commands for the tool to recognise and actions to perform.
 
@@ -69,7 +70,9 @@ After installing from AUR, run ``sudo usermod -aG tty,input $USER`` to allow [ui
 <details>
 <summary>PC</summary>
 
-The recommended way for the manual installation is by using [`pipx`](https://pypa.github.io/pipx/) to benefit from isolated environments
+The recommended way for the manual installation is by using [`pipx`](https://pypa.github.io/pipx/) to benefit from isolated environments.
+
+Existing scripts expect that your OS is using a modern `systemd` with a session-based model (`uaccess`) and `udev` rules
 - Download the latest release source code from the [Releases page](https://github.com/stele95/LinVAM/releases), extract it, enter scripts folder, open terminal in that folder and execute the following command:
 
       sh install.sh
@@ -102,6 +105,7 @@ You will have to use the desktop mode on the Steam Deck for installing and setti
 <details>
 <summary>PC</summary>
 
+- Existing scripts expect that your OS is using a modern `systemd` with a session-based model (`uaccess`) and `udev` rules
 - Run ``configure-uinput-access.sh`` from the scripts folder if you didn't install by running ``install.sh``, this will set up [Udev rule for input](#udev-rule-for-input)
 
 </details>
