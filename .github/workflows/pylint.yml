@@ -1,6 +1,16 @@
 name: Pylint
 
-on: [push]
+on:
+  push:
+  pull_request:
+    branches: [ "master" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   pylint:
@@ -9,9 +19,9 @@ jobs:
       matrix:
         python-version: ["3.13"]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
@@ -20,7 +30,7 @@ jobs:
         sudo apt-get -y install qt6-base-dev
         python -m pip install --upgrade pip
         pip install pylint setuptools
-        pip install -r requirements.txt
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py' ':!:*ui_*.py')
