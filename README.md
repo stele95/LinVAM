@@ -99,8 +99,6 @@ experimental-features = nix-command flakes
 - [ydotool](https://github.com/ReimuNotMoe/ydotool) (optional)
 
 #### Installation steps
-<details>
-<summary>PC</summary>
 
 The recommended way for the manual installation is by using [`pipx`](https://pypa.github.io/pipx/) to benefit from isolated environments.
 
@@ -111,43 +109,12 @@ Existing scripts expect that your OS is using a modern `systemd` with a session-
 
 - Restart your device when finished
 
-</details>
-
-####
-
-<details>
-<summary>Steam Deck</summary>
-
-You will have to use the desktop mode on the Steam Deck for installing and setting up ``LinVAM``
-
-- Run the following command in the terminal to clone the repository, enter scripts folder and execute pip setup script:
-
-      git clone https://github.com/stele95/LinVAM/ && cd LinVAM/scripts/ && sh steam-deck-setup-pip.sh
-
-- You will have to restart your terminal after running the previous command
-
-- Go to scripts folder and open terminal there, run `steam-deck-install.sh`
-
-- Restart your device when finished
-
-</details>
-
 ## Configuring uinput access
 ### TL/DR
-<details>
-<summary>PC</summary>
 
 - Existing scripts expect that your OS is using a modern `systemd` with a session-based model (`uaccess`) and `udev` rules
 - Run ``configure-uinput-access.sh`` from the scripts folder if you didn't install by running ``install.sh``, this will set up [Udev rule for input](#udev-rule-for-input)
 
-</details>
-
-<details>
-<summary>Steam Deck</summary>
-
-- Run ``steam-deck-configure-uinput-access.sh`` from the scripts folder if you didn't install by running ``steam-deck-install.sh``, this will set up [Udev rule for input](#udev-rule-for-input)
-
-</details>
 
 ### Manual configuration
 #### Udev rule for input
@@ -172,26 +139,12 @@ Start LinVAM from your list of applications or by typing ``linvam`` in the termi
 
 ### Usage with Steam
 
-<details>
-<summary>PC</summary>
-
 After setting up profiles in the GUI app, you can add ``linvamrun --profile='Profile name' -- %command%`` to the game launch options for starting the console app for listening when opening games.
 
 You can also use ``--language='languageName'`` for specifying a language. If ``--language`` argument is not used, app defaults to language selected in the GUI app.
 
 ![Steam launch options](https://raw.githubusercontent.com/stele95/LinVAM/master/.img/steam.png)
-</details>
 
-####
-
-<details>
-<summary>Steam Deck</summary>
-
-After setting up profiles in the GUI app, you can add ``linvamrun --profile='Profile name' -- %command%`` to the game launch options for starting the console app for listening when opening games.
-
-You can also use ``--language='languageName'`` for specifying a language. If ``--language`` argument is not used, app defaults to language selected in the GUI app.
-
-</details>
 
 ### Display LinVAM profile and language in MangoHud
 If you are using [MangoHud](https://github.com/flightlessmango/MangoHud), you can set it up for displaying selected LinVAM profile and language.
